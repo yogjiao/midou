@@ -5,6 +5,8 @@ var node_modules = path.resolve(__dirname, 'node_modules');
 var pathToReact = path.resolve(node_modules, 'react/dist/react.min.js');
 var pathToReactDom = path.resolve(node_modules, 'react-dom/dist/react-dom.js');
 var pathToReactRouter = path.resolve(node_modules, 'react-router/umd/ReactRouter.min.js');
+var pathToEs6Promise = path.resolve(node_modules, 'es6-promise/dist/es6-promise.js');
+var pathToFetch = path.resolve(node_modules, 'whatwg-fetch/fetch.js');
 
 var process = require('process');
 var cwd = process.cwd();
@@ -12,16 +14,17 @@ var cwd = process.cwd();
 var config = {
     context: cwd,
     resolve: {
-        // alias: {
-        //   'react': pathToReact,
-        //   'react-dom': pathToReactDom,
-        //   'react-router': pathToReactRouter
-        // }
+        alias: {
+          // 'react': pathToReact,
+          // 'react-dom': pathToReactDom,
+          // 'react-router': pathToReactRouter
+          "es6-promise": pathToEs6Promise,
+          "whatwg-fetch": pathToFetch
+        }
     },
     entry: {
       "main": ["./index.js"],
-      "reacts": ['react', 'react-dom', 'react-router'],
-      "pollify": ['es6-promise', 'whatwg-fetch']
+      "vendors": ['react', 'react-dom', 'react-router']
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -61,14 +64,16 @@ var config = {
       resolve: {
         extensions: ['', '.js', '.json', '.coffee']
       },
-      noParse: [pathToReact, pathToReactRouter, pathToReactDom]
+      noParse: [pathToReact, pathToReactRouter, pathToReactDom, pathToEs6Promise, pathToFetch]
     },
     plugins: [
-      new webpack.ProvidePlugin({
-        Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-        fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
-      }),
-      new webpack.optimize.CommonsChunkPlugin("vendors.js", ["reacts", 'pollify'], Infinity)
+      // Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
+      // fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
+      // new webpack.ProvidePlugin({
+      //    Promise: 'imports?this=>global!es6-promise',
+      //    fetch: 'imports?this=>global!whatwg-fetch',
+      // }),
+      new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js')
 
     ],
     resolveLoader: {
