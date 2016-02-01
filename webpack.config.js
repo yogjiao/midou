@@ -14,6 +14,8 @@ var cwd = process.cwd();
 var config = {
     context: cwd,
     resolve: {
+        // root:[__dirname],
+        modulesDirectories: ["web_modules", "node_modules", "components"],
         alias: {
           // 'react': pathToReact,
           // 'react-dom': pathToReactDom,
@@ -23,20 +25,21 @@ var config = {
         }
     },
     entry: {
-      "main": ["./index.js"],
+      "main": ["./page/index.js"],
       "vendors": ['react', 'react-dom', 'react-router']
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
-        publicPath: "dist"
+        chunkFilename: '[id].chunk.js',
+        publicPath: "/dist/"
     },
     module: {
         loaders: [
           // LESS
           {
             test: /\.less$/,
-            loader: 'style!css!less'
+            loader: 'style!css!less?{"modifyVars": {"color": "red"}}' //
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,
@@ -64,7 +67,7 @@ var config = {
       resolve: {
         extensions: ['', '.js', '.json', '.coffee']
       },
-      noParse: [pathToReact, pathToReactRouter, pathToReactDom, pathToEs6Promise, pathToFetch]
+      noParse: [ pathToEs6Promise, pathToFetch]
     },
     plugins: [
       // Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
@@ -74,6 +77,8 @@ var config = {
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
       new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js')
+      //new ExtractTextPlugin('styles.css')
+
 
     ],
     resolveLoader: {
