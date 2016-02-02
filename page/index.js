@@ -9,9 +9,9 @@ import '../routers/less/index.less'
 
 import 'es6-promise'
 import 'whatwg-fetch'
-
-
-
+import fastclick  from 'fastclick'
+//React.initializeTouchEvents(true);
+fastclick(document.body);
 
 const rootRoute = {
   component: 'div',

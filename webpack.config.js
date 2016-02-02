@@ -7,7 +7,7 @@ var pathToReactDom = path.resolve(node_modules, 'react-dom/dist/react-dom.js');
 var pathToReactRouter = path.resolve(node_modules, 'react-router/umd/ReactRouter.min.js');
 var pathToEs6Promise = path.resolve(node_modules, 'es6-promise/dist/es6-promise.js');
 var pathToFetch = path.resolve(node_modules, 'whatwg-fetch/fetch.js');
-
+var pathToFastClick = path.resolve(node_modules, 'fastclick/lib/fastclick.js');
 var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
@@ -21,7 +21,8 @@ var config = {
           // 'react-dom': pathToReactDom,
           // 'react-router': pathToReactRouter
           "es6-promise": pathToEs6Promise,
-          "whatwg-fetch": pathToFetch
+          "whatwg-fetch": pathToFetch,
+          "fastclick": pathToFastClick
         }
     },
     entry: {
@@ -67,7 +68,7 @@ var config = {
       resolve: {
         extensions: ['', '.js', '.json', '.coffee']
       },
-      noParse: [ pathToEs6Promise, pathToFetch]
+      noParse: [ pathToEs6Promise, pathToFetch, pathToFastClick]
     },
     plugins: [
       // Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
