@@ -57,8 +57,8 @@ class UnderwearSearchPanel extends React.Component {
           <div className="tags">
             <ul className="clearfix">
               {(() => {
-                let tagsList = this.state.allTags.map(()=>{
-                  
+                return this.state.allTags.map((val, index)=>{
+                  return `<li>${val}</li>`
                 })
               })()}
             </ul>
