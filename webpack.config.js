@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+
 var node_modules = path.resolve(__dirname, 'node_modules');
 
 var pathToReact = path.resolve(node_modules, 'react/dist/react.min.js');
@@ -26,7 +27,7 @@ var config = {
         }
     },
     entry: {
-      "main": ["./page/index.js"],
+      "main": ["./routers/index.js"],
       "vendors": ['react', 'react-dom', 'react-router']
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
@@ -40,7 +41,7 @@ var config = {
           // LESS
           {
             test: /\.less$/,
-            loader: 'style!css!less?{"modifyVars": {"color": "red"}}' //
+            loader: 'style!css!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +'}' //
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,

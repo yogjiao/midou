@@ -1,0 +1,46 @@
+.uw-detail-container{
+  .footer-wrap{
+    height: 60px;
+    width: 100%;
+  }
+  .fixed-stack{
+    position: fixed;
+    bottom: 0;
+    height: 60px;
+    width: 100%;
+    max-width: @max-width;
+    box-sizing: border-box;
+    border-top: 1px solid @border-color;
+    border-bottom: 1px solid #ef586a;
+
+    background-color: #fff;
+    > *{
+      float: left;
+      text-align: center;
+      .lable{
+        color: #797e99;
+        font-size: 12px;
+        padding-top: 5px;
+      }
+    }
+    > :nth-child(1),  > :nth-child(3){
+      padding-top: 8px;
+      width: 25%;
+    }
+    .buy-now{
+      width: 50%;
+      height: 100%;
+      font-size: 24px;
+      background-color: @purple;
+      color: #fff;
+      > *{
+        position: relative;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+    }
+    .iconfont{
+      font-size: 20px;
+    }
+  }
+}

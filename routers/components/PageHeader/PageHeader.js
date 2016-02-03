@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './page-header.less'
+import './PageHeader.less'
 
 // import fetch from '../../components/fetch.js'
 

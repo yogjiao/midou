@@ -1,4 +1,4 @@
-@import "./variables.less";
+
 
 *{
   padding: 0;
@@ -15,7 +15,7 @@ body{
   min-height: 100%;
 }
 #app-container{
-  max-width: 640px;
+  max-width: @max-width;
   margin: 0 auto;
 }
 ul li{
@@ -27,5 +27,5 @@ a{
 }
 
 
-@import "./font.less";
-@import "./common.less";
+@import "./less/font.less";
+@import "./less/common.less";

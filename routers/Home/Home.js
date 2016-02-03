@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './index.less'
+import './Home.less'
 
 // import fetch from '../../components/fetch.js'
 

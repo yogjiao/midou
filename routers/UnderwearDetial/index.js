@@ -1,13 +1,8 @@
-import React from 'react'
-
-class UnderwearDetial extends React.Component {
-  render() {
-    return (
-      <div>
-        我是UnderwearDetial
-      </div>
-    )
+module.exports = {
+  path: 'underwear-detail',
+  getComponent(location, cb) {
+    require.ensure([], (require) => {
+      cb(null, require('./components/UnderwearDetail.js'))
+    })
   }
 }
-
-module.exports = UnderwearDetial
