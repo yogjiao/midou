@@ -14,11 +14,11 @@ import UnderwearDetailSelectModel from 'components/UnderwearDetailSelectModel.js
 
 
 
-
 class Underweardetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      buyModel: 0, //[加入购物车，立即购买]
       pageInfo: {
         pageIndex: 0,
         pageSize: 10,
@@ -90,25 +90,32 @@ class Underweardetail extends React.Component {
         tipsWrap.style.display="none";
       }.bind(this))
       .catch(function(error){
-        alert(error);
         tipsWrap.style.display="none";
       })
   }
-  handleScroll() {
+  handleScrollHandler = (e) => {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
-
-
       this.scrollSearch();
     }
-  }
+  };
+  addShoppingCartHandler = () => {
+    let selectModel = ReactDOM.findDOMNode(this.refs['select-model'])
+
+    selectModel.style.display="block"
+    setTimeout(function(){
+      selectModel.classList.add('on')
+    }, 0)
+
+
+  };
   componentDidMount() {
-    document.addEventListener('scroll', this.handleScroll.bind(this));
+    document.addEventListener('scroll', this.handleScrollHandler);
   }
   componentWillUnmount() {
-    document.removeEventListener('scroll', this.handleScroll.bind(this));
+    document.removeEventListener('scroll', this.handleScrollHandler);
   }
   popSearchPanel(e) {
     ReactDOM.findDOMNode(this.refs['serach-panel']).style.display = 'block'
@@ -121,8 +128,14 @@ class Underweardetail extends React.Component {
         </PageHeader>
         <UnderweardetailBanner img="/media/test.png"/>
         <UnderweardetailInfo />
-        <UnderweardetailFooter />
-        <UnderwearDetailSelectModel />
+        <UnderweardetailFooter
+          buyModel={this.state.buyModel}
+          addShoppingCartHandler={this.addShoppingCartHandler}
+          buyNowHandler={this.buyNowHandler}
+        />
+        <UnderwearDetailSelectModel
+          ref="select-model"
+        />
       </div>
     )
   }

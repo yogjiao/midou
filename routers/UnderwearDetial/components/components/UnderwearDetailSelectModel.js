@@ -4,18 +4,29 @@ import ReactDOM from 'react-dom'
 import 'UnderwearDetailSelectModel.less'
 
 class UnderwearDetailSelectModel extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  closePanelHandler() {
+    ReactDOM.findDOMNode(this).classList.remove('on')
+    ReactDOM.findDOMNode(this).style.display="none"
+  }
   render() {
     return (
-      <div className="select-wraper bg-blur">
+      <div className="select-model-wraper">
+        <div className="bg-blur"></div>
         <div className="select-panel">
-          <dl>
-            <dt><div className="triangle" />请选择尺码</dt>
+          <dl className="cup-wrap">
+            <dt><div className="triangle" />请选择罩杯</dt>
             <dd>
               <div className="char on">A</div>
               <div className="char">B</div>
               <div className="char">C</div>
               <div className="char">D</div>
             </dd>
+          </dl>
+          <dl className="perimeter-wrap">
+            <dt><div className="triangle" />请选择底围</dt>
             <dd>
               <div className="size on">70</div>
               <div className="size">75</div>
@@ -23,7 +34,7 @@ class UnderwearDetailSelectModel extends React.Component {
               <div className="size">85</div>
             </dd>
           </dl>
-          <dl>
+          <dl className="num-wrap">
             <dt><div className="triangle" />请选择数量</dt>
             <dd className="clearfix">
               <div className="select-num">
@@ -33,7 +44,7 @@ class UnderwearDetailSelectModel extends React.Component {
               </div>
             </dd>
           </dl>
-          <dl className="clearfix">
+          <dl className="box-wrap clearfix">
             <dt><div className="triangle" /><div className="btn-turn-box">添加盒子服务</div>请选择盒子服务</dt>
             <dd>
               <div className="size on">70 C</div>
