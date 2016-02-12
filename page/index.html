@@ -6,57 +6,6 @@
 </head>
 <body>
   <div id="app-container">
-    <style>
-    .loader {
-    	position:relative;
-    	display:inline-block;
-    	width:15px;
-    	height:15px;
-    	border:1px solid #2d88df;
-    	border-radius:50%;
-    	-webkit-animation:spin .75s infinite linear;
-    	animation:spin .75s infinite linear
-    }
-    .loader::before,.loader::after {
-    	left:-1px;
-    	top:-1px;
-    	display:none;
-    	position:absolute;
-    	content:'';
-    	width:inherit;
-    	height:inherit;
-    	border:inherit;
-    	border-radius:inherit
-    }
-    .loader-6 {
-    	border-color:transparent;
-    	border-top-color:#2d88df;
-    	-webkit-animation-duration:3s;
-    	animation-duration:3s
-    }
-    .loader-6::after {
-    	display:block;
-    	border-color:transparent;
-    	border-top-color:#2d88df;
-    	-webkit-animation:spin .75s infinite ease-in-out alternate;
-    	animation:spin .75s infinite ease-in-out alternate
-    }
-    @-webkit-keyframes spin {
-    	from {
-    	transform:rotate(0deg)
-    }
-    to {
-    	transform:rotate(360deg)
-    }
-    }@keyframes spin {
-    	from {
-    	transform:rotate(0deg)
-    }
-    to {
-    	transform:rotate(360deg)
-    }
-    }</style>
-				  <div class="loader loader-6"></div>
 
   </div>
   <script src="/dist/vendors.js"></script>

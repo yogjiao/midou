@@ -4,9 +4,6 @@ import { Router, browserHistory } from 'react-router'
 
 //import ocBridge from './components/WebViewJavascriptBridge.js'
 
-
-
-
 import 'es6-promise'
 import 'whatwg-fetch'
 import fastclick  from 'fastclick'
@@ -15,16 +12,20 @@ fastclick(document.body);
 
 import '../page/index.less'
 
+import App from './App/App.js'
+import Home from './Home/Home.js'
+
 
 const rootRoute = {
-  component: 'div',
+  component: App,
   childRoutes: [ {
     path: '/page',
     //component: require('../routers/Home'),
-    indexRoute: { component: require('../routers/Home/Home.js') },
+    //component: require('./App/App.js'),
+    indexRoute: { component: Home },//require('./Home/Home.js')
     childRoutes: [
-      require('../routers/UnderwearList'),
-      require('../routers/UnderwearDetial')
+      require('./UnderwearList'),
+      require('./UnderwearDetial')
     ]
   } ]
 }
