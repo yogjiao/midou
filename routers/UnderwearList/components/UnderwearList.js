@@ -34,17 +34,18 @@ class UnderwearList extends React.Component {
         pageSize: 10,
       },
       prolist: [
-          {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
+        //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
         ]
     };
 
   }
+  /**
+   * generate complete url include query string
+   */
   getUrl() {
     let url = '/test?'
     let searchState = this.refs['serach-panel'].state;
     let tags = searchState.searchParams.tags.map(val => searchState.allTags[parseInt(val)])
-
-
     let params = Object.assign({}, this.state.pageInfo, searchState.searchParams, {tags: tags.join('|')})
 
     Object.keys(params).forEach(function(key, index){
@@ -54,14 +55,14 @@ class UnderwearList extends React.Component {
 
     return url;
   }
-  panelSearch() {
-    let tipsWrap = this.refs["loading-tips"]
-    tipsWrap.style.display="block";
+  /**
+   *  fetch data when parmas changed except pageIndex
+   */
+  panelSearch = () => {
+    this.props.pageSpin.show()
     this.state.pageInfo.pageIndex = 0
 
-    let url = this.getUrl()
-
-    fetch(url)
+    fetch(this.getUrl())
       .then(function(data){
         data = {
           list: [
@@ -69,15 +70,17 @@ class UnderwearList extends React.Component {
             {id: "2", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
           ]
         }
-        let list = data.list;
-        this.setState({prolist: list});
-        ReactDOM.findDOMNode(this.refs['serach-panel']).style.display = 'none'
+        let list = data.list
+        this.setState({prolist: list})
+        this.props.pageSpin.hide();
       }.bind(this))
       .catch(function(error){
-        ReactDOM.findDOMNode(this.refs['serach-panel']).style.display = 'none'
-
-      })
-  }
+        this.props.pageSpin.hide();
+      }.bind(this))
+  };
+  /**
+   *  fetch data when only pageIndex changed
+   */
   scrollSearch() {
     let tipsWrap = this.refs["loading-tips"]
     tipsWrap.style.display="block";
@@ -104,18 +107,21 @@ class UnderwearList extends React.Component {
         tipsWrap.style.display="none";
       })
   }
+  /**
+   * check the page whether changed or not when scrolling
+   */
   handleScroll() {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
-
-
       this.scrollSearch();
     }
   }
   componentDidMount() {
+    this.panelSearch();
     document.addEventListener('scroll', this.handleScroll.bind(this));
+
   }
   componentWillUnmount() {
     document.removeEventListener('scroll', this.handleScroll.bind(this));

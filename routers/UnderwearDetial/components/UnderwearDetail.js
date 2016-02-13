@@ -100,7 +100,7 @@ class Underweardetail extends React.Component {
     if (scrollTop + sHeight > pageHeight - 30) {
       this.scrollSearch();
     }
-  };
+  }; // arrow function must end with semicolon, if not the wepback compile will error
   addShoppingCartHandler = () => {
     let selectModel = ReactDOM.findDOMNode(this.refs['select-model'])
 
@@ -108,8 +108,6 @@ class Underweardetail extends React.Component {
     setTimeout(function(){
       selectModel.classList.add('on')
     }, 0)
-
-
   };
   componentDidMount() {
     document.addEventListener('scroll', this.handleScrollHandler);
