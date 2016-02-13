@@ -13,6 +13,7 @@ var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
 var config = {
+    devtool: 'inline-source-map',
     context: cwd,
     resolve: {
         // root:[__dirname],

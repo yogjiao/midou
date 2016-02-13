@@ -59,7 +59,7 @@ class UnderwearList extends React.Component {
    *  fetch data when parmas changed except pageIndex
    */
   panelSearch = () => {
-    this.props.pageSpin.show()
+  //  this.props.getPageSpin().show()
     this.state.pageInfo.pageIndex = 0
 
     fetch(this.getUrl())
@@ -72,10 +72,10 @@ class UnderwearList extends React.Component {
         }
         let list = data.list
         this.setState({prolist: list})
-        this.props.pageSpin.hide();
+        //this.props.pageSpin.hide();
       }.bind(this))
       .catch(function(error){
-        this.props.pageSpin.hide();
+        //this.props.pageSpin.hide();
       }.bind(this))
   };
   /**
@@ -119,11 +119,13 @@ class UnderwearList extends React.Component {
     }
   }
   componentDidMount() {
+    alert(' componentDidMount list')
     this.panelSearch();
     document.addEventListener('scroll', this.handleScroll.bind(this));
 
   }
   componentWillUnmount() {
+    alert(' componentWillUnmount list')
     document.removeEventListener('scroll', this.handleScroll.bind(this));
   }
   popSearchPanel(e) {
