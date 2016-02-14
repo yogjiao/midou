@@ -59,8 +59,10 @@ class UnderwearList extends React.Component {
    *  fetch data when parmas changed except pageIndex
    */
   panelSearch = () => {
-  //  this.props.getPageSpin().show()
+
     this.state.pageInfo.pageIndex = 0
+
+    this.props.getPageSpin() && this.props.getPageSpin().show()
 
     fetch(this.getUrl())
       .then(function(data){
@@ -72,10 +74,10 @@ class UnderwearList extends React.Component {
         }
         let list = data.list
         this.setState({prolist: list})
-        //this.props.pageSpin.hide();
+        this.props.getPageSpin().toggle();
       }.bind(this))
       .catch(function(error){
-        //this.props.pageSpin.hide();
+        this.props.getPageSpin().toggle();
       }.bind(this))
   };
   /**
@@ -110,16 +112,16 @@ class UnderwearList extends React.Component {
   /**
    * check the page whether changed or not when scrolling
    */
-  handleScroll() {
+  handleScroll = () => {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
       this.scrollSearch();
     }
-  }
+  };
   componentDidMount() {
-    alert(' componentDidMount list')
+
     this.panelSearch();
     document.addEventListener('scroll', this.handleScroll.bind(this));
 

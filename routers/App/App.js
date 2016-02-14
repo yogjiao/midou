@@ -11,13 +11,11 @@ class App extends React.Component {
     //this.state = {}
   }
   componentWillUnmount(){
-    alert(' componentWillMount app')
   }
   componentDidMount(){
-    alert(' componentDidMount app')
-    let test = this.refs['page-spin']
+
   }
-  getPageSpin = () => this.refs['page-spin'].findDOMNode();
+  getPageSpin = () => this.refs['page-spin'];
   render() {
     let children = React.Children.map(this.props.children, child => React.cloneElement(child, {getPageSpin: this.getPageSpin}));
     return (

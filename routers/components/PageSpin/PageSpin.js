@@ -7,16 +7,20 @@ import './PageSpin.less'
 class PageSpin extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {isHidden: false}
   }
   show() {
-    this.refs.panel.style.display = 'none';
+    this.setState({isHidden: false});
   }
   hide() {
-    this.refs.panel.style.display = 'block';
+    this.setState({isHidden: false});
+  }
+  toggle() {
+    this.setState({isHidden: !this.state.isHidden})
   }
   render() {
     return (
-      <div className="page-spin" ref="panel">
+      <div className="page-spin" ref="panel" style={{display: (this.state.isHidden? 'none' : 'block ')}}>
         <div className="loader loader-6"></div>
       </div>
     )
