@@ -2,18 +2,24 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Router, browserHistory } from 'react-router'
 
+//React.initializeTouchEvents(true);
 //import ocBridge from './components/WebViewJavascriptBridge.js'
 
+//pollyfill
 import 'es6-promise'
 import 'whatwg-fetch'
+
+//enhance
 import fastclick  from 'fastclick'
-//React.initializeTouchEvents(true);
+
+//init
 fastclick(document.body);
 
-import '../page/index.less'
 
+import '../page/index.less'
 import App from './App/App.js'
 import Home from './Home/Home.js'
+
 
 
 const rootRoute = {

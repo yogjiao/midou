@@ -9,6 +9,7 @@ var pathToReactRouter = path.resolve(node_modules, 'react-router/umd/ReactRouter
 var pathToEs6Promise = path.resolve(node_modules, 'es6-promise/dist/es6-promise.js');
 var pathToFetch = path.resolve(node_modules, 'whatwg-fetch/fetch.js');
 var pathToFastClick = path.resolve(node_modules, 'fastclick/lib/fastclick.js');
+var pathToUAParser = path.resolve(node_modules, 'ua-parser-js/src/ua-parser.js');
 var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
@@ -16,7 +17,7 @@ var config = {
     devtool: 'inline-source-map',
     context: cwd,
     resolve: {
-        // root:[__dirname],
+        root:[__dirname],
         modulesDirectories: ["web_modules", "node_modules", "components"],
         alias: {
           // 'react': pathToReact,
@@ -24,12 +25,13 @@ var config = {
           // 'react-router': pathToReactRouter
           "es6-promise": pathToEs6Promise,
           "whatwg-fetch": pathToFetch,
-          "fastclick": pathToFastClick
+          "fastclick": pathToFastClick,
+          "UAParser": pathToUAParser
         }
     },
     entry: {
       "main": ["./routers/index.js"],
-      "vendors": ['react', 'react-dom', 'react-router']
+      "vendors": ['react', 'react-dom', 'react-router', 'es6-promise', 'whatwg-fetch', 'fastclick', 'UAParser']
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -70,7 +72,7 @@ var config = {
       resolve: {
         extensions: ['', '.js', '.json', '.coffee']
       },
-      noParse: [ pathToEs6Promise, pathToFetch, pathToFastClick]
+      noParse: [ pathToEs6Promise, pathToFetch, pathToFastClick, /ua-parser\.js/]
     },
     plugins: [
       // Promise: 'imports?this=>global!exports?global.Promise!es6-promise',

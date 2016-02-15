@@ -3,14 +3,25 @@ import ReactDOM from 'react-dom'
 
 import 'UnderwearDetailSelectModel.less'
 
+var update = require('react-addons-update');
+
 class UnderwearDetailSelectModel extends React.Component {
   constructor(props) {
     super(props)
   }
-  closePanelHandler() {
+  show = () => {
+    let selectModel = ReactDOM.findDOMNode(this)
+    selectModel.style.display="block"
+    setTimeout(function(){
+      selectModel.classList.add('on')
+    }, 0)
+  };
+  hide = () => {
     ReactDOM.findDOMNode(this).classList.remove('on')
-    ReactDOM.findDOMNode(this).style.display="none"
-  }
+    setTimeout(function(){
+      ReactDOM.findDOMNode(this).style.display="none"
+    }.bind(this), 1000)
+  };
   render() {
     return (
       <div className="select-model-wraper">
@@ -51,7 +62,7 @@ class UnderwearDetailSelectModel extends React.Component {
               <div className="size">80 A</div>
             </dd>
           </dl>
-          <div className="iconfont">&#xe601;</div>
+          <div className="iconfont" onClick={this.hide}>&#xe601;</div>
           <div className="btn-post">确定</div>
         </div>
       </div>

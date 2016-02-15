@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import './App.less'
 
-import PageSpin from '../components/PageSpin/PageSpin.js'
+import PageSpin from 'PageSpin/PageSpin.js'
 
 class App extends React.Component {
   constructor(props) {
