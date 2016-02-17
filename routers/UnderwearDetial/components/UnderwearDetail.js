@@ -19,7 +19,7 @@ class Underweardetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buyModel: 0, //[加入购物车，立即购买]
+      buyActionModel: 0, //[加入购物车，立即购买]
       pageInfo: {
         pageIndex: 0,
         pageSize: 10,
@@ -66,7 +66,7 @@ class Underweardetail extends React.Component {
         <UnderweardetailBanner img="/media/test.png"/>
         <UnderweardetailInfo />
         <UnderweardetailFooter
-          buyModel={this.state.buyModel}
+          buyActionModel={this.state.buyActionModel}
           addShoppingCartHandler={this.addShoppingCartHandler}
           buyNowHandler={this.buyNowHandler}
         />

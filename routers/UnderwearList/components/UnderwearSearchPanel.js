@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import './UnderwearSearchPanel.less'
-
+import * as util from 'util.js'
 // import fetch from '../../components/fetch.js'
 
 class UnderwearSearchPanel extends React.Component {
@@ -20,26 +20,20 @@ class UnderwearSearchPanel extends React.Component {
     }
 
   }
-  getParentByClass(node, parentClassName, untilNode ) {
-    untilNode = untilNode || document;
-    while ( node != untilNode && !node.classList.contains(parentClassName) ) {
-       node = node.parentNode;
-    }
-    return  node === untilNode ? null : node;
-  }
+
   componentDidMount() {
     ReactDom.findDOMNode(this).addEventListener('click', function(e){
       let target, sourceData
-      if (target = this.getParentByClass(e.target, 'base-size')) {
+      if (target = util.getParentByClass(e.target, 'base-size')) {
         sourceData = Object.assign({}, this.state.searchParams, {baseSize: target.getAttribute('data-val')})
 
         let index = target.getAttribute('data-index')
         let slider = this.refs["slide-box"]
         let width = slider.parentNode.offsetWidth
         this.refs["slide-box"].style.left = target.offsetLeft - (slider.offsetWidth / 2 - 7) + 'px'
-      } else if (target = this.getParentByClass(e.target, 'circle')){
+      } else if (target = util.getParentByClass(e.target, 'circle')){
         sourceData = Object.assign({}, this.state.searchParams, {braSize: target.getAttribute('data-val')})
-      } else if (target = this.getParentByClass(e.target, 'tag')){
+      } else if (target = util.getParentByClass(e.target, 'tag')){
         if (target.classList.contains('on')) {
           let val = target.getAttribute('data-index')
           let index = this.state.searchParams.tags.findIndex((element, index, array)=>{
