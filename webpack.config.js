@@ -1,5 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
+var autoprefixer = require('autoprefixer');
+var precss       = require('precss');
+
 
 var node_modules = path.resolve(__dirname, 'node_modules');
 
@@ -44,7 +47,7 @@ var config = {
           // LESS
           {
             test: /\.less$/,
-            loader: 'style!css!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +'}' //
+            loader: 'style!css!postcss!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +'}' //
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,
@@ -88,6 +91,9 @@ var config = {
     ],
     resolveLoader: {
       //root: path.join(__dirname, 'node_modules')
+    },
+    postcss: function () {
+        return [autoprefixer, precss];
     }
 };
 
