@@ -33,12 +33,13 @@ class ShoppingCartBoxServiceItem extends React.Component {
               </div>
               <div className="column">
                  <div className="prepay">押</div>
+                 <div>&nbsp;</div>
                  <div className="num-mult"><i className="iconfont">&#xe601;</i><span>1</span></div>
               </div>
             </div>
           </div>)
         break;
-      case macros.ROUTER_SHOPPING_CART_EDIT:
+      case ROUTER_SHOPPING_CART_EDIT:
         proItem = (
           <div className="shopping-cart-item clearfix">
             <div className="item-wrap">
@@ -70,7 +71,7 @@ class ShoppingCartBoxServiceItem extends React.Component {
 
     }
 
-    return {proItem}
+    return (<div>{proItem}</div>)
 
   };
 

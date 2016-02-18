@@ -10,4 +10,5 @@ module.exports = {
   "background-color": "#f8fafc",
   "border-color": "#b4b4cb",
   "purple": "#fe9790"
+  "font-gray": "#b4b4cb"
 }

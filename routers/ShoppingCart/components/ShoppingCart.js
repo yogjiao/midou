@@ -30,7 +30,7 @@ class ShoppingCart extends React.Component {
                   {
                       "id": "10",
                       "ts": "2016-02-04 10:18:32",
-                      "goods": [
+                      "goods":
                           [
                               {
                                   "cgid": "1",
@@ -75,7 +75,6 @@ class ShoppingCart extends React.Component {
                                   "try": "1"
                               }
                           ]
-                      ]
                   }
               ]
         }
@@ -93,7 +92,7 @@ class ShoppingCart extends React.Component {
         </PageHeader>
         {
           this.state.prolist.map((item, index) => {
-            return (<ShoppingCartGroup key={index} groupSouce={item.goods} cid={item.id}  actionModel={this.props.actionModel}/>)
+            return (<ShoppingCartGroup key={index} groupSouce={item.goods} cid={item.id}  actionModel={this.props.params.actionModel}/>)
           })
         }
 
