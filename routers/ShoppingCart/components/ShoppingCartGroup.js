@@ -26,12 +26,13 @@ class ShoppingCartGroup extends React.Component {
     for (let i = 1; i < this.props.groupSouce.length; i++ ) {
       let itemSource = this.props.groupSouce[i]
       boxes.push(<ShoppingCartBoxServiceItem
-                  key={i}
-                  groupId={this.props.groupId}
-                  itemId={i}
-                  boxes={countBoxes(this.props.groupSouce[0].cup, this.props.groupSouce[0].bottom_bust)}
-                  source={itemSource}
-                  actionModel={this.props.actionModel}
+                    key={i}
+                    groupId={this.props.groupId}
+                    itemId={i}
+                    boxes={countBoxes(this.props.groupSouce[0].cup, this.props.groupSouce[0].bottom_bust)}
+                    source={itemSource}
+                    actionModel={this.props.actionModel}
+                    isSelectedAll={this.props.isSelectedAll}
                  />)
 
     }
@@ -43,7 +44,9 @@ class ShoppingCartGroup extends React.Component {
           itemId="0"
           source={this.props.groupSouce[0]}
           actionModel={this.props.actionModel}
-          isAddLine={!!this.props.groupSouce[1]} />
+          isAddLine={!!this.props.groupSouce[1]}
+          isSelectedAll={this.props.isSelectedAll}
+        />
 
         {boxes}
       </div>
