@@ -53,7 +53,6 @@ class Underweardetail extends React.Component {
     })
   };
   componentDidMount() {
-
   }
   componentWillUnmount() {
   }

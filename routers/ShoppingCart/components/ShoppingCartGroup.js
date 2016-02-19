@@ -6,9 +6,10 @@ import * as util from 'util.js'
 import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
 import './ShoppingCartGroup.less'
 
-import ShoppingCarProductItem from 'ShoppingCarProductItem.js'
+import ShoppingCartProductItem from 'ShoppingCartProductItem.js'
 import ShoppingCartBoxServiceItem from 'ShoppingCartBoxServiceItem.js'
 let update = require('react-addons-update');
+import {countBoxes} from 'commonApp.js'
 
 class ShoppingCartGroup extends React.Component {
   constructor(props) {
@@ -23,28 +24,27 @@ class ShoppingCartGroup extends React.Component {
   render() {
     let boxes = []
     for (let i = 1; i < this.props.groupSouce.length; i++ ) {
-      let itemSource = this.props.groupSouce[i],
-          count;
-      // scan model
-      if (this.props.actionModel == ROUTER_SHOPPING_CART_SCAN) {
-        boxes.push(<ShoppingCartBoxServiceItem key={i} source={itemSource} actionModel={this.props.actionModel}/>)
-      }
-      // edit model
-      else if (this.props.actionModel == ROUTER_SHOPPING_CART_EDIT) {
-        try{
-          count = parseInt(itemSource.count)
-        }catch(e){
-          count = 0;
-        }
-        for (; count > 0; count--) {
-          boxes.push(<ShoppingCartBoxServiceItem key={`${i}=${count}`} source={update(itemSource, {count: {$set: 1}})} actionModel={this.props.actionModel}/>)
-        }
-      }
+      let itemSource = this.props.groupSouce[i]
+      boxes.push(<ShoppingCartBoxServiceItem
+                  key={i}
+                  groupId={this.props.groupId}
+                  itemId={i}
+                  boxes={countBoxes(this.props.groupSouce[0].cup, this.props.groupSouce[0].bottom_bust)}
+                  source={itemSource}
+                  actionModel={this.props.actionModel}
+                 />)
 
     }
     return (
-      <div>
-        <ShoppingCarProductItem key={0} source={this.props.groupSouce[0]}  actionModel={this.props.actionModel}/>
+      <div className="group-wrap">
+        <ShoppingCartProductItem
+          key="0"
+          groupId={this.props.groupId}
+          itemId="0"
+          source={this.props.groupSouce[0]}
+          actionModel={this.props.actionModel}
+          isAddLine={!!this.props.groupSouce[1]} />
+
         {boxes}
       </div>
     )

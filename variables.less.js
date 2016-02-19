@@ -9,6 +9,6 @@ module.exports = {
   "font-color": "#50556e",
   "background-color": "#f8fafc",
   "border-color": "#b4b4cb",
-  "purple": "#fe9790"
+  "purple": "#fe9790",
   "font-gray": "#b4b4cb"
 }

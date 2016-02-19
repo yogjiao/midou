@@ -2,9 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import 'UnderwearDetailSelectModel.less'
-import * as util from 'util.js'
+import {getParentByClass} from 'util.js'
 
 let update = require('react-addons-update');
+
+import {UNDERWEAR_BRA_SIZE, UNDERWEAR_BASE_SIZE} from 'macros.js'
+import {countBoxes} from 'commonApp.js'
 
 class UnderwearDetailSelectModel extends React.Component {
   constructor(props) {
@@ -32,32 +35,16 @@ class UnderwearDetailSelectModel extends React.Component {
       ReactDOM.findDOMNode(this).style.display="none"
     }.bind(this), 1000)
   };
-  /**
-   * 当用户选择一件内衣的尺码为   底围：X  罩杯:B  那么推荐的尺码为两个，一个是： 底围X－5   罩杯：加大一个杯即C  另一个是：底围X＋5   罩杯：减小一个杯即A
-   *
-   */
-  countBoxes = (braSize, baseSize) => {
-    baseSize = parseInt(baseSize)
-    return [
-      {
-        braSize: String.fromCharCode(Math.min(braSize.charCodeAt(0) + 1, this.props.allBraSize.slice(-1)[0].charCodeAt(0))),
-        baseSize: Math.max(baseSize - 5, this.props.allBaseSize[0])
-      },
-      {
-        braSize: String.fromCharCode(Math.max(braSize.charCodeAt(0) - 1, this.props.allBraSize[0].charCodeAt(0))),
-        baseSize: Math.min(baseSize + 5, this.props.allBaseSize.slice(-1)[0])
-      }
-    ]
-  };
+
   /**
    * use the event proxy to complete all the event;
    */
   panelOperateHandler = (e) => {
     let target, nextState;
 
-    if (target = util.getParentByClass(e.target, 'btn-post')) {
+    if (target = getParentByClass(e.target, 'btn-post')) {
       if (this.buyActionModel == 0) {// add product to shopping cart
-        
+
       } else {// buy now
 
       }
@@ -65,21 +52,21 @@ class UnderwearDetailSelectModel extends React.Component {
     }
 
 
-    if (target = util.getParentByClass(e.target, 'char')) {
+    if (target = getParentByClass(e.target, 'char')) {
       nextState = update(this.state, {
         braSize: {$set: target.getAttribute('data-value')}
       })
-    } else if (target = util.getParentByClass(e.target, 'base-size')) {
+    } else if (target = getParentByClass(e.target, 'base-size')) {
       nextState = update(this.state, {
         baseSize: {$set: target.getAttribute('data-value')}
       })
-    } else if (target = util.getParentByClass(e.target, 'btn-minus')) {
+    } else if (target = getParentByClass(e.target, 'btn-minus')) {
       nextState = update(this.state, {num: {$apply: (num) => Math.max(0, --num)}})
-    } else if (target = util.getParentByClass(e.target, 'btn-add')) {
+    } else if (target = getParentByClass(e.target, 'btn-add')) {
       nextState = update(this.state, {num: {$apply: (num) => ++num}})
-    } else if (target = util.getParentByClass(e.target, 'btn-turn-box')) {
+    } else if (target = getParentByClass(e.target, 'btn-turn-box')) {
       nextState = update(this.state, {isSetupBoxService: {$apply: (is) => !is}})
-    } else if (target = util.getParentByClass(e.target, 'box-size')) {
+    } else if (target = getParentByClass(e.target, 'box-size')) {
       nextState = update(this.state, {selectedBox: {
         braSize: {$set: target.getAttribute('data-bra')},
         baseSize: {$set: target.getAttribute('data-base')}
@@ -94,7 +81,7 @@ class UnderwearDetailSelectModel extends React.Component {
     let nextState
     if (this.state.braSize && this.state.baseSize) {
       nextState= update(this.state, {
-        boxes: {$set: this.countBoxes(this.state.braSize, this.state.baseSize)}
+        boxes: {$set: countBoxes(this.state.braSize, this.state.baseSize)}
       })
     }
     this.setState(nextState)
@@ -105,7 +92,7 @@ class UnderwearDetailSelectModel extends React.Component {
   };
   componentWillUpdate = (nextProps, nextState) => {
     if (nextState.isSetupBoxService) {
-      nextState.boxes = this.countBoxes(nextState.braSize, nextState.baseSize);
+      nextState.boxes = countBoxes(nextState.braSize, nextState.baseSize);
     }
   };
   componentWillReceiveProps = (nextProps) => {
@@ -131,7 +118,7 @@ class UnderwearDetailSelectModel extends React.Component {
             <dd>
               {
                 this.props.allBaseSize.map((val, index) => {
-                  return (<div key={index} data-value={val} className={val == this.state.baseSize? 'size base-size on' : 'size base-size'}>{val}</div>)
+                  return (<div key={index} data-value={val} className={val == this.state.baseSize? 'box-service-item base-size on' : 'box-service-item base-size'}>{val}</div>)
                 })
               }
             </dd>
@@ -154,7 +141,7 @@ class UnderwearDetailSelectModel extends React.Component {
                  this.state.boxes.map((item, index) => {
                     return (<div key={index} className={item.braSize == this.state.selectedBox.braSize
                       && item.baseSize == this.state.selectedBox.baseSize?
-                      'size box-size on':'size box-size'} data-base={item.baseSize} data-bra={item.braSize}>{item.baseSize}{item.braSize}</div>)
+                      'box-service-item box-size on':'box-service-item box-size'} data-base={item.baseSize} data-bra={item.braSize}>{item.baseSize}{item.braSize}</div>)
                   }) : ''
               }
             </dd>
@@ -168,8 +155,8 @@ class UnderwearDetailSelectModel extends React.Component {
 }
 
 UnderwearDetailSelectModel.defaultProps = {
-  allBraSize: ['A','B','C','D'],
-  allBaseSize: ['70', '75', '80', '85']
+  allBraSize: UNDERWEAR_BRA_SIZE,
+  allBaseSize: UNDERWEAR_BASE_SIZE
 
 }
 

@@ -7,7 +7,7 @@ import './PageSpin.less'
 class PageSpin extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {isHidden: false}
+    this.state = {isHidden: true}
   }
   show() {
     this.setState({isHidden: false});

@@ -19,7 +19,7 @@ class App extends React.Component {
   render() {
     let children = React.Children.map(this.props.children, child => React.cloneElement(child, {getPageSpin: this.getPageSpin}));
     return (
-        <div className="app" ref="dddd">{children}<PageSpin ref="page-spin"></PageSpin></div>
+        <div className="app" ref="dddd"><PageSpin ref="page-spin"></PageSpin>{children}</div>
     )
   }
 }
