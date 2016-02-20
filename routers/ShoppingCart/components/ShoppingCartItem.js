@@ -5,12 +5,6 @@ import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
 
 class ShoppingCartItem extends React.Component {
 
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //
-    // };
-  }
   componentWillMount = () => {
     //this.setState({boxes: countBoxes(this.props.source.cup, this.props.source.bottom_bust)})
   };
@@ -99,7 +93,14 @@ class ShoppingCartItem extends React.Component {
                 { this.props.itemType == '1'? boxes: null}
               </div>
               <div className="extra-col">
-                <i className="iconfont btn-delete">&#xe601;</i>
+                <i
+                  className="iconfont btn-delete"
+                  data-group-id={this.props.groupId}
+                  data-item-id={this.props.itemId}
+                  data-item-type={this.props.itemType}
+                >
+                  &#xe601;
+                </i>
               </div>
             </div>
             <div className="row-wrap">

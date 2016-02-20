@@ -6,8 +6,8 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
 import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
 import {getParentByClass} from 'util.js'
-
-
+import Confirm from 'Confirm/Confirm.js'
+import Prompt from 'Prompt/Prompt.js'
 let update = require('react-addons-update');
 
 
@@ -18,7 +18,9 @@ class ShoppingCart extends React.Component {
     this.state = {
       goodList: [],
       totalPrice: 0,
-      isSelectedAll: false
+      isSelectedAll: false,
+      itemType: -1, // 0: deleteProduct 1: deleteBox
+      promptMsg: ''
     }
 
   }
@@ -49,6 +51,35 @@ class ShoppingCart extends React.Component {
      }, [])
      return item;
     })
+  };
+  /**
+   *  get schema to update this.state.goodList
+   *
+   * @param groupId {number}
+   * @param itemId [number] optianal
+   * @param operateSchema {Object} eg: {cup: {$set: 'A'}, bottom_bust: {$set: 75}}
+   *
+   * eg: update(this.state.goodList, {1: {goods: {1: {cup: {$set: '75C'}}}}})
+   */
+  getUpdateSchema = (groupId, itemId, operateSchema) => {
+    let schema = {}
+    let temp = schema
+    let keys = ['goodList']//['goodList', groupId, 'goods', itemId]
+
+    if (typeof itemId == 'undefined') {
+      operateSchema = groupId
+    } else if (typeof operateSchema == 'undefined') {
+      operateSchema = itemId
+      keys = keys.concat([groupId, 'goods'])
+    } else {
+      keys = keys.concat([groupId, 'goods', itemId])
+    }
+    keys.forEach((item, index) => {
+       let holder = index == (keys.length - 1)? operateSchema :　{};
+       temp = temp[item] = holder
+    })
+
+    return schema
   };
   /**
    * calculate all product price
@@ -101,40 +132,47 @@ class ShoppingCart extends React.Component {
       this.unselectAll(nextState)
     }
   };
-  /**
-   *  get schema to update this.state.goodList
-   *
-   * @param groupId {number}
-   * @param itemId [number] optianal
-   * @param operateSchema {Object} eg: {cup: {$set: 'A'}, bottom_bust: {$set: 75}}
-   *
-   * eg: update(this.state.goodList, {1: {goods: {1: {cup: {$set: '75C'}}}}})
-   */
-  getUpdateSchema = (groupId, itemId, operateSchema) => {
-    let schema = {}
-    let temp = schema
-    let keys = ['goodList', groupId, 'goods']
 
-    if (typeof operateSchema == 'undefined') {
-      operateSchema = itemId
-    } else {
-      keys.push(itemId)
-    }
-    keys.forEach((item, index) => {
-       let holder = index == (keys.length - 1)? operateSchema :　{};
-       temp = temp[item] = holder
-    })
-
-    return schema
-  };
   /**
    * get groupId and itemId from target's attribute;
    */
-  getTargetIds = (target) => {
+  getTargetDataAttres = (target) => {
     return {
       groupId: target.getAttribute('data-group-id'),
       itemId: target.getAttribute('data-item-id'),
+      itemType: target.getAttribute('data-item-type')
     }
+  };
+  /**
+   *  delete product item
+   */
+  deleteProductHandler = () => {
+    //this.deleteItemId
+    let schema = this.getUpdateSchema({
+      $splice: [[this.deleteGroupId, 1]]
+    })
+    let nextState = update(this.state, schema)
+    nextState.itemType = -1
+    this.setState(nextState)
+  };
+  /**
+   *  delete box service item
+   */
+  deleteBoxHandler = () => {
+    let schema = this.getUpdateSchema(this.deleteGroupId, {
+      $splice: [[this.deleteItemId, 1]]
+    })
+
+    let nextState = update(this.state, schema)
+    nextState.itemType = -1
+    this.setState(nextState)
+  };
+  /**
+   * cancel deleting item that is product item or box service item
+   */
+  deleteCancelHandler = () => {
+    let nextState = update(this.state, {itemType: {$set: -1}})
+    this.setState(nextState)
   };
   editHandler = (e) => {
     let target,
@@ -152,7 +190,7 @@ class ShoppingCart extends React.Component {
 
     if (target = getParentByClass(e.target, 'btn-add')) {
 
-      let {groupId, itemId} = this.getTargetIds(target)
+      let {groupId, itemId} = this.getTargetDataAttres(target)
       let schema = this.getUpdateSchema(groupId, itemId,
           {count: {$apply: (val) => {return ++val} }})
       nextState = update(this.state, schema)
@@ -164,20 +202,29 @@ class ShoppingCart extends React.Component {
 
     } else if (target = getParentByClass(e.target, 'btn-minus')) {
 
-      let {groupId, itemId} = this.getTargetIds(target)
+      let count = 0
+      let tempNextState
+      let {groupId, itemId} = this.getTargetDataAttres(target)
       let schema = this.getUpdateSchema(groupId, itemId,
-          {count: {$apply: (val) => {return --val} }})
+          {count: {$apply: (val) => { count = --val; return count;} }})
+      tempNextState = update(this.state, schema)
+      if (count == 0) {
+        nextState = update(this.state, {promptMsg: {$set: '如果想删除该产品，请单击删除按钮'}})
+        this.refs['prompt'].show();
+      } else {
 
-      nextState = update(this.state, schema)
-
-      schema = this.getUpdateSchema(groupId,
-          {$splice: [[-1, 1]]})
-
-      nextState = update(nextState, schema)
+        nextState = tempNextState
+        let goods = nextState.goodList[groupId].goods
+        if (goods[0].count < (goods.length - 1)) {
+          schema = this.getUpdateSchema(groupId,
+              {$splice: [[-1, 1]]})
+          nextState = update(nextState, schema)
+        }
+      }
 
     } else if (target = getParentByClass(e.target, 'box-service-item')) {
 
-      let {groupId, itemId} = this.getTargetIds(target)
+      let {groupId, itemId} = this.getTargetDataAttres(target)
       let schema = this.getUpdateSchema(groupId, itemId,
           {
             cup: {$set: target.getAttribute('data-bra-size') },
@@ -187,7 +234,7 @@ class ShoppingCart extends React.Component {
       nextState = update(this.state, schema)
 
     } else if (target = getParentByClass(e.target, 'radio-select')) {//isSelected
-      let {groupId, itemId} = this.getTargetIds(target)
+      let {groupId, itemId} = this.getTargetDataAttres(target)
       let schema = this.getUpdateSchema(groupId, itemId,
           {
             isSelected: {$apply: val => !val }
@@ -205,7 +252,16 @@ class ShoppingCart extends React.Component {
       this.triggerSelectAll(nextState)
 
     } else if (target = getParentByClass(e.target, 'btn-delete')) {
-      
+      let {groupId, itemId, itemType} = this.getTargetDataAttres(target)
+      this.deleteGroupId = groupId
+      this.deleteItemId = itemId
+      nextState = update(this.state, {itemType: {$set: parseInt(itemType)}})
+
+    } else if (target = getParentByClass(e.target, 'btn-check-out')) {
+      if (this.state.totalPrice == 0) {
+        nextState = update(this.state, {promptMsg: {$set: '请至少选择一件商品'}})
+        this.refs['prompt'].show();
+      }
     }
 
     nextState && this.setState(nextState)
@@ -271,6 +327,28 @@ class ShoppingCart extends React.Component {
     nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
+    let confirm
+    switch (this.state.itemType) {
+      case 0:
+        confirm = (
+          <Confirm
+            confirmHandler={this.deleteProductHandler}
+            msg='你确定要删除该产品吗？'
+            cancelHandler={this.deleteCancelHandler}
+          />
+        )
+        break;
+      case 1:
+      confirm = (
+        <Confirm
+          confirmHandler={this.deleteBoxHandler}
+          msg='你确定要删除改试穿产品吗？'
+          cancelHandler={this.deleteCancelHandler}
+        />
+      )
+        break;
+
+    }
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
 
@@ -307,6 +385,8 @@ class ShoppingCart extends React.Component {
             <div className="btn-check-out">结算</div>
           </div>
         </div>
+        {confirm}
+        <Prompt msg={this.state.promptMsg} ref="prompt"/>
       </div>
     )
   }
