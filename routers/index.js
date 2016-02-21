@@ -32,7 +32,8 @@ const rootRoute = {
     childRoutes: [
       require('./UnderwearList'),
       require('./UnderwearDetial'),
-      require('./ShoppingCart')
+      require('./ShoppingCart'),
+      require('./UserOrderCreated'),
     ]
   } ]
 }

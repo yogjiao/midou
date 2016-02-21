@@ -25,7 +25,7 @@ class ShoppingCartItem extends React.Component {
                 '' :
                 (
                   <div className="extra-col">
-                    <div className="prepay">押</div>
+                    <div className="prepay-icon">押</div>
                   </div>
                 )}
 

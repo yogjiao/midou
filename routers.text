@@ -1,0 +1,7 @@
+
+/index.html 首页
+/underwear-list 产品列表
+/underwear-detail/:productId 产品详情
+/shopping-cart/scan  查看购物车
+/shopping-cart/edit  编辑购物车
+/order-created  创建订单
