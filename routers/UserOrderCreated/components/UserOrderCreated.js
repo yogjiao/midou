@@ -4,10 +4,10 @@ import { Link } from 'react-router'
 import {getParentByClass} from 'util.js'
 
 import PageHeader from 'PageHeader/PageHeader.js'
-import UserOrderItem from 'UserOrderItem/UserOrderItem.js'
 
 let update = require('react-addons-update');
 
+import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 
 import './UserOrderCreated.less'
 class UserOrderCreated extends React.Component {
@@ -15,6 +15,7 @@ class UserOrderCreated extends React.Component {
     super(props);
     this.state = {
       headerName: '我的订单',
+      goodList: []
     }
 
   }
@@ -59,15 +60,27 @@ class UserOrderCreated extends React.Component {
                                   "deposit": "0.00",
                                   "total_price": "99.00",
                                   "try": "1"
+                              },
+                              {
+                                  "cgid": "2",
+                                  "gid": "1",
+                                  "name": "商品名",
+                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
+                                  "count": "2",
+                                  "color": "0",
+                                  "bottom_bust": "75",
+                                  "cup": "A",
+                                  "price": "99.00",
+                                  "deposit": "0.00",
+                                  "total_price": "99.00",
+                                  "try": "1"
                               }
                           ]
                   }
               ]
         }
-        if (this.props.params.actionModel == ROUTER_SHOPPING_CART_EDIT) {
-          data.cart = this.flatBoxServiceData(data.cart);
-        }
         this.setState({goodList: data.cart})
+
         this.props.getPageSpin().hide();
 
       })
@@ -75,16 +88,20 @@ class UserOrderCreated extends React.Component {
   };
   componentWillReceiveProps = (props) => {
   };
-  componentWillUpdate = (nextProps, nextState) => {
-    nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
-  };
   render() {
     return (
       <div className="order-created-container">
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont">&#xe601;</i>
         </PageHeader>
-        <UserOrderItem />
+        {
+           this.state.goodList.map((item, index) => {
+            return (<UserOrderCreatedGroup
+                      key={index}
+                      source={item}
+                    />)
+          })
+        }
       </div>
     )
   }
