@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import {getParentByClass} from 'util.js'
 
 import PageHeader from 'PageHeader/PageHeader.js'
-
+import Selection from 'Selection/Selection.js'
 let update = require('react-addons-update');
 
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
@@ -102,6 +102,51 @@ class UserOrderCreated extends React.Component {
                     />)
           })
         }
+        <dl className="input-group">
+          <dt className="ff-Medium">收货人信息</dt>
+          <dd>
+             <div className="info-wrap font-gray">
+                添加收货人信息
+             </div>
+             <div>
+               <div className="info-wrap">平晶晶 </div>
+               <div className="info-wrap">15999567444</div>
+               <div className="info-wrap">广东省  深圳市  南山区  桃源村34栋206</div>
+             </div>
+             <i className="iconfont">&#xe601;</i>
+          </dd>
+        </dl>
+        <dl className="input-group">
+          <dt className="ff-Medium">选择支付方式</dt>
+          <dd>
+             <div className="info-wrap font-gray">
+                支付宝
+             </div>
+             <i className="iconfont">&#xe601;</i>
+          </dd>
+          <dd>
+             <div className="info-wrap font-gray">
+                微信
+             </div>
+             <i className="iconfont">&#xe601;</i>
+          </dd>
+        </dl>
+        <dl className="input-group">
+          <dt className="ff-Medium">选择优惠方式</dt>
+          <dd>
+             <div className="info-wrap font-gray">
+                选择优惠方式
+             </div>
+             <i className="iconfont">&#xe601;</i>
+          </dd>
+        </dl>
+        <Selection
+          source={[{value: 1, text: 3}, {value: 1, text: 3}]}
+          selectedIndex="1"
+          selectedvalue="1"
+          selectedText="3"
+          itemType="1"
+        />
       </div>
     )
   }
