@@ -1,8 +1,8 @@
 module.exports = {
-  path: 'order-created',
+  path: 'order',
   getComponent(location, cb) {
     require.ensure([], (require) => {
-      cb(null, require('UserOrderCreated.js'))
+      cb(null, require('UserOrder.js'))
     })
   }
 }

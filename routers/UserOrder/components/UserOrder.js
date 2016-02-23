@@ -9,11 +9,12 @@ let update = require('react-addons-update');
 
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 
-import './UserOrderCreated.less'
-class UserOrderCreated extends React.Component {
+import './UserOrder.less'
+class UserOrder extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      isHiddenSpin: true,
       headerName: '我的订单',
       goodList: []
     }
@@ -22,7 +23,7 @@ class UserOrderCreated extends React.Component {
   componentWillMount = () => {
   };
   componentDidMount = () => {
-    this.props.getPageSpin() && this.props.getPageSpin().show()
+   this.setState({isHiddenSpin: false})
 
     fetch('/app/get_cart')
       .then(data => {
@@ -79,12 +80,12 @@ class UserOrderCreated extends React.Component {
                   }
               ]
         }
-        this.setState({goodList: data.cart})
+        this.setState({goodList: data.cart, isHiddenSpin: true})
 
-        this.props.getPageSpin().hide();
+
 
       })
-      .catch(error => this.props.getPageSpin().hide())
+      .catch(error => this.setState({isHiddenSpin: true}))
   };
   componentWillReceiveProps = (props) => {
   };
@@ -140,16 +141,9 @@ class UserOrderCreated extends React.Component {
              <i className="iconfont">&#xe601;</i>
           </dd>
         </dl>
-        <Selection
-          source={[{value: 1, text: 3}, {value: 1, text: 3}]}
-          selectedIndex="1"
-          selectedvalue="1"
-          selectedText="3"
-          itemType="1"
-        />
       </div>
     )
   }
 }
 
-module.exports = UserOrderCreated
+module.exports = UserOrder

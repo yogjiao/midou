@@ -1,5 +1,5 @@
 module.exports = {
-  path: 'underwear-detail/:productId',
+  path: 'underwear/:productId',
   getComponent(location, cb) {
     require.ensure([], (require) => {
       cb(null, require('UnderwearDetail.js'))

@@ -34,7 +34,7 @@ const rootRoute = {
       require('./UnderwearDetial'),
       require('./ShoppingCart').created,
       require('./ShoppingCart').edited,
-      require('./UserOrderCreated'),
+      require('./UserOrder'),
       require('./ReceiverInfo'),
     ]
   } ]
