@@ -4,12 +4,6 @@ import ReactDOM from 'react-dom'
 import './Selection.less'
 
 class Selection extends React.Component {
-  hide = () => {
-    ReactDOM.findDOMNode(this.refs['select-bg-layout']).style.display='none';
-  };
-  show = () => {
-      ReactDOM.findDOMNode(this.refs['select-bg-layout']).style.display='block';
-  };
   render() {
     let itemList
     switch ('' + this.props.itemType) {
@@ -54,10 +48,12 @@ class Selection extends React.Component {
 
     }
 
+    let style = {}
+    style.display = this.props.isHidden? 'none' : 'block'
     return (
       <div
+        style={style}
         className={'select-bg-layout' + ' ' + 'item-type-' + this.props.itemType}
-        ref="select-bg-layout"
         onClick={this.props.selectionHandler}
       >
         <div className="select-container" ref="select-container">

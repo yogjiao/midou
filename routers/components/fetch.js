@@ -9,12 +9,9 @@ function checkStatus(response) {
 }
 
 export default function() {
-    fetch.apply(null, arguments)
-      .then(checkStatus)
-      .then(function(data){
-        return JSON.parse(data)
-      })
-      .catch(function(error){
-        console.log(error.message)
-      })
+  return fetch.apply(null, arguments)
+          .then(checkStatus)
+          .then(function(response){
+            return response.json()
+          })
   }
