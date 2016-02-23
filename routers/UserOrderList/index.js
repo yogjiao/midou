@@ -1,8 +1,8 @@
 module.exports = {
-  path: 'order',
+  path: 'orders',
   getComponent(location, cb) {
     require.ensure([], (require) => {
-      cb(null, require('UserOrder.js'))
+      cb(null, require('UserOrderList.js'))
     })
   }
 }

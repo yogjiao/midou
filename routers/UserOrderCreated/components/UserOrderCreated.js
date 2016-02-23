@@ -9,8 +9,8 @@ let update = require('react-addons-update');
 
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 
-import './UserOrder.less'
-class UserOrder extends React.Component {
+import './UserOrderCreated.less'
+class UserOrderCreated extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
@@ -146,4 +146,4 @@ class UserOrder extends React.Component {
   }
 }
 
-module.exports = UserOrder
+module.exports = UserOrderCreated
