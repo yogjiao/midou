@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
+import PageSpin from 'PageSpin/PageSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
 import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
 import {getParentByClass} from 'util.js'
@@ -16,6 +17,7 @@ class ShoppingCart extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      isHiddenSpin: true,
       goodList: [],
       totalPrice: 0,
       isSelectedAll: false,
@@ -269,8 +271,7 @@ class ShoppingCart extends React.Component {
   componentWillMount = () => {
   };
   componentDidMount = () => {
-    this.props.getPageSpin() && this.props.getPageSpin().show()
-
+    this.setState({isHiddenSpin: false})
     fetch('/app/get_cart')
       .then(data => {
         data = {
@@ -315,11 +316,12 @@ class ShoppingCart extends React.Component {
         if (this.props.params.actionModel == ROUTER_SHOPPING_CART_EDIT) {
           data.cart = this.flatBoxServiceData(data.cart);
         }
-        this.setState({goodList: data.cart})
-        this.props.getPageSpin().hide();
+        this.setState({goodList: data.cart, isHiddenSpin: true})
 
       })
-      .catch(error => this.props.getPageSpin().hide())
+      .catch(error => {
+        this.setState({isHiddenSpin: true})
+      })
   };
   componentWillReceiveProps = (props) => {
   };
@@ -387,6 +389,7 @@ class ShoppingCart extends React.Component {
         </div>
         {confirm}
         <Prompt msg={this.state.promptMsg} ref="prompt"/>
+        <PageSpin isHidden={this.state.isHiddenSpin}/>
       </div>
     )
   }
