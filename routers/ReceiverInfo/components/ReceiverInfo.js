@@ -3,15 +3,16 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
-import {ROUTER_RECIEVER_INFO_SCAN, ROUTER_RECIEVER_INFO_EDIT} from 'macros.js'
+import {ROUTER_RECIEVER_INFO_SCAN, ROUTER_RECIEVER_INFO_EDIT, FETCH_RECEIVER_INFO} from 'macros.js'
 import {getParentByClass} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
-let update = require('react-addons-update');
+import fetchable from 'fetch.js'
 
+let update = require('react-addons-update')
 
 import './ReceiverInfo.less'
 class ReceiverInfo extends React.Component {
@@ -19,62 +20,42 @@ class ReceiverInfo extends React.Component {
     super(props);
     this.state = {
       isHiddenSpin: false,
-      headerName: '收货人信息',
+      title: '添加收货人信息',
+      /*
+      "name": "测试姓名",
+      "phone": "18588886666",
+      "province": "1",
+      "city": "1",
+      "detail": "南山区白石洲1"
+      */
     }
 
   }
+  fetchReceiverInfo = (callback) => {
+    fetchable(`${FETCH_RECEIVER_INFO}/${this.props.params.receiverInfoId}`)
+      .then((data) => {
+        callback(data.address)
+      })
+      .catch((e) => {
+        this.setState({isHiddenSpin: true});
+      })
+
+  };
   componentWillMount = () => {
+    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_SCAN) {
+      this.state.title = '添加收货人信息'
+    } else {
+      this.state.title = '编辑收货人信息'
+    }
   };
   componentDidMount = () => {
-
-    fetch('/app/get_cart')
-      .then(data => {
-        data = {
-          cart: [
-                  {
-                      "id": "10",
-                      "ts": "2016-02-04 10:18:32",
-                      "goods":
-                          [
-                              {
-                                  "cgid": "1",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "70",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "198.00",
-                                  "try": "0"
-                              },
-                              {
-                                  "cgid": "2",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "75",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "99.00",
-                                  "try": "1"
-                              }
-                          ]
-                  }
-              ]
-        }
-        if (this.props.params.actionModel == ROUTER_SHOPPING_CART_EDIT) {
-          data.cart = this.flatBoxServiceData(data.cart);
-        }
-        this.setState({goodList: data.cart, isHiddenSpin: true})
-
+    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_SCAN) {
+      this.fetchReceiverInfo( data => {
+        data.isHiddenSpin = true
+        this.setState(data)
       })
-      .catch(error => {this.setState({isHiddenSpin: true})})
+    }
+
   };
   componentWillReceiveProps = (props) => {
   };
@@ -89,16 +70,16 @@ class ReceiverInfo extends React.Component {
           <div>保存</div>
         </PageHeader>
         <div className="receiver-item">
-          <input placeholder="收货人姓名" />
+          <input placeholder="收货人姓名" value={this.state.name} />
         </div>
         <div className="receiver-item">
-          <input placeholder="手机号码" />
+          <input placeholder="手机号码" value={this.state.phone}/>
         </div>
         <div className="receiver-item">
-          <ProvinceSelection source={provinces} provinceId="1" cityId="1"/>
+          <ProvinceSelection source={provinces} provinceId={this.state.province} cityId={this.state.city}/>
         </div>
         <div className="receiver-item">
-          <textarea placeholder="详细地址" />
+          <textarea placeholder="详细地址" value={this.state.detail} />
         </div>
         <PageSpin isHidden={this.state.isHiddenSpin} />
       </div>

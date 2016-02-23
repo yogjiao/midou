@@ -12,3 +12,4 @@ export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 export let FETCH_BASE_URL = '/app'
 
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
+export let FETCH_RECEIVER_INFO = FETCH_BASE_URL + '/get_address'

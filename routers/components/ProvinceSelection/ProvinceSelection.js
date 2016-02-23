@@ -66,19 +66,7 @@ class ProvinceSelection extends React.Component {
 
       switch ('' + this.state.textType) {
         case '1':
-          nextState.provinceId = params.value
-          nextState.provinceName = params.text
-          nextState.isHiddenSpin = false
-          nextState.isHiddenSelection = true
-          this.setState(nextState)
-          this.fetchCities(params.value, (data) => {
-            nextState = {}
-            nextState.cityData = data
-            nextState.cityId = data[0].id
-            nextState.cityName = data[0].name
-            nextState.isHiddenSpin = true
-            this.setState(nextState)
-          })
+          freshWhenProvinceIdChanged(params.value,)
           break;
         case '2':
           nextState = {}
@@ -95,6 +83,45 @@ class ProvinceSelection extends React.Component {
 
     nextState && this.setState(nextState)
   };
+  /**
+   * fresh component when the provinceId changed
+   * @param {number} [provinceId=this.props.provinceId]
+   * @param {number} [cityId=this.props.cityId]
+   */
+  freshWhenProvinceIdChanged = (provinceId = this.props.provinceId, cityId = this.props.cityId) => {
+
+    // if (typeof cityId == 'undefined') {
+    //   callback = provinceId
+    //   provinceId = this.props.provinceId
+    //   cityId = this.props.cityId
+    // } else if (typeof callback == 'undefined') {
+    //   callback = cityId
+    //   cityId = this.props.cityId
+    // }
+    this.setState({isHiddenSpin: false, isHiddenSelection: true})
+
+    // fetch data
+    this.fetchCities(provinceId, (data) => {
+      let tempCityId
+      if (provinceId == this.props.provinceId && cityId == this.props.cityId) {
+        tempCityId = this.props.cityId
+      } else {
+        tempCityId = data[0].id
+      }
+      let pItem = this.getItemById(this.props.source, provinceId)
+      let cItem = this.getItemById(data, tempCityId)
+      let nextState = {
+          provinceId: pItem.id,
+          provinceName: pItem.name,
+          cityId: cItem.id,
+          cityName: cItem.name,
+          cityData: data,
+          isHiddenSpin: true
+        }
+
+      this.setState(nextState);
+    })
+  };
   fetchCities = (provinceId, callback) => {
     callback = callback || function(){}
     fetchable(`${FETCH_CITIES}/${provinceId}`, {method: 'get'})
@@ -102,30 +129,22 @@ class ProvinceSelection extends React.Component {
         callback(data.city)
       })
       .catch(error => {
-        debugger;
         this.setState({isHiddenSpin: true})
       })
   };
   componentDidMount = (e) => {
     //this.refs['selection'].show();
     if (this.props.provinceId) {
-      this.setState({isHiddenSpin: false})
-      this.fetchCities(this.props.provinceId, (data) => {
-        let pItem = this.getItemById(this.props.source, this.props.provinceId)
-        let cItem = this.getItemById(data, this.props.cityId)
-        this.setState({
-            provinceId: pItem.id,
-            provinceName: pItem.name,
-            cityId: cItem.id,
-            cityName: cItem.name,
-            cityData: data,
-            isHiddenSpin: true
-          });
-      })
+      this.freshWhenProvinceIdChanged();
     }
   };
   componentWillUpdate = (nextProps, nextState) => {
 
+  };
+  componentWillReceiveProps = (nextProps, nextState) => {
+    if (nextProps.provinceId) {
+      freshWhenProvinceIdChanged(nextProps.provinceId)
+    }
   };
   render() {
     let source
