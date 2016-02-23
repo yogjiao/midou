@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 
 import './App.less'
 
-import PageSpin from 'PageSpin/PageSpin.js'
 
 class App extends React.Component {
   constructor(props) {
@@ -17,9 +16,9 @@ class App extends React.Component {
   }
   getPageSpin = () => this.refs['page-spin'];
   render() {
-    let children = React.Children.map(this.props.children, child => React.cloneElement(child, {getPageSpin: this.getPageSpin}));
+    //let children = React.Children.map(this.props.children, child => React.cloneElement(child, {getPageSpin: this.getPageSpin}));
     return (
-        <div className="app" ref="dddd"><PageSpin ref="page-spin"></PageSpin>{children}</div>
+        <div className="app" ref="dddd">{this.props.children}</div>
     )
   }
 }
