@@ -66,7 +66,7 @@ class ProvinceSelection extends React.Component {
 
       switch ('' + this.state.textType) {
         case '1':
-          freshWhenProvinceIdChanged(params.value,)
+          freshWhenProvinceIdChanged(params.value)
           break;
         case '2':
           nextState = {}
@@ -88,28 +88,16 @@ class ProvinceSelection extends React.Component {
    * @param {number} [provinceId=this.props.provinceId]
    * @param {number} [cityId=this.props.cityId]
    */
-  freshWhenProvinceIdChanged = (provinceId = this.props.provinceId, cityId = this.props.cityId) => {
-
-    // if (typeof cityId == 'undefined') {
-    //   callback = provinceId
-    //   provinceId = this.props.provinceId
-    //   cityId = this.props.cityId
-    // } else if (typeof callback == 'undefined') {
-    //   callback = cityId
-    //   cityId = this.props.cityId
-    // }
+  freshWhenProvinceIdChanged = (provinceId, cityId) => {
     this.setState({isHiddenSpin: false, isHiddenSelection: true})
 
     // fetch data
     this.fetchCities(provinceId, (data) => {
-      let tempCityId
-      if (provinceId == this.props.provinceId && cityId == this.props.cityId) {
-        tempCityId = this.props.cityId
-      } else {
-        tempCityId = data[0].id
+      if (cityId) {
+        cityId = data[0].id
       }
       let pItem = this.getItemById(this.props.source, provinceId)
-      let cItem = this.getItemById(data, tempCityId)
+      let cItem = this.getItemById(data, cityId)
       let nextState = {
           provinceId: pItem.id,
           provinceName: pItem.name,
@@ -132,19 +120,16 @@ class ProvinceSelection extends React.Component {
         this.setState({isHiddenSpin: true})
       })
   };
-  componentDidMount = (e) => {
+  componentDidMount = () => {
     //this.refs['selection'].show();
     if (this.props.provinceId) {
-      this.freshWhenProvinceIdChanged();
+      this.freshWhenProvinceIdChanged(this.props.provinceId, this.props.cityId);
     }
   };
   componentWillUpdate = (nextProps, nextState) => {
 
   };
   componentWillReceiveProps = (nextProps, nextState) => {
-    if (nextProps.provinceId) {
-      freshWhenProvinceIdChanged(nextProps.provinceId)
-    }
   };
   render() {
     let source
