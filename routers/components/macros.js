@@ -1,4 +1,21 @@
-export let  SHARE_HANLER = 'share'
+
+/******** callHandler - js call bc *******/
+
+
+
+/********* registerHandler - oc call js -*******/
+
+// get user info from app
+export let CALL_HANDLER_GET_USER_INFO = 'getUserInfoFromApp'
+
+// call out login panel
+export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'callOutLoginPanel'
+
+//notify app to checkout
+export let CALL_HANDLER_CHECKOUT = 'notifyAppToCheckout'
+
+// share to social circle
+export let  CALL_HANDLER_SHARE = 'shareToSocialCircle'
 
 // for router
 export let ROUTER_SHOPPING_CART_SCAN = 'scan'
@@ -9,6 +26,7 @@ export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 
 /********* url *************/
+
 // base directory
 export let FETCH_BASE_URL = '/app'
 

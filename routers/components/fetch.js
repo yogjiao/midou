@@ -1,3 +1,4 @@
+import {getUserInfoFromApp} from 'webviewInterface.js'
 function checkStatus(response) {
   if (response.status == 200 ) {
     return response
@@ -8,10 +9,16 @@ function checkStatus(response) {
   }
 }
 
-export default function() {
-  return fetch.apply(null, arguments)
-          .then(checkStatus)
-          .then(function(response){
-            return response.json()
-          })
-  }
+
+
+export default function(url, options = {}) {
+  getUserInfoFromApp()
+    .then((data) => {
+      let header = options.headers
+      fetch.apply(null, arguments)
+    })
+    .then(checkStatus)
+    .them(function(response){
+      return response.json()
+    })
+}
