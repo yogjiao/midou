@@ -41,7 +41,7 @@ export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
     bridge.callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
         //loginInfo = response
-        resolve(response)
+        resolve({loginToken: response.token, userName: response.userName})
       })
   });
 }

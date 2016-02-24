@@ -1,10 +1,9 @@
 import React from 'react'
-
 import PageSpin from 'PageSpin/PageSpin.js'
 import HomeListItem from 'HomeListItem.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import {FETCH_INDEX_DATA} from 'macros.js'
-import fetchable from 'fetch.js'
+import {fetchable} from 'fetch.js'
 import './Home.less'
 class Home extends React.Component {
   constructor(props) {
@@ -20,8 +19,8 @@ class Home extends React.Component {
   }
   fetchListData = () => {
     let url = `${FETCH_INDEX_DATA}/${this.state.pageIndex}/${this.state.numberPerPage}`
-    fetchable(url, {
-        headers:{"x-midou-token": TEST_TOKEN}})
+    this.setState({isHiddenPageSpin: false})
+    fetchable(url)
       .then((data) => {
         debugger;
       })

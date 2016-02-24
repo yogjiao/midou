@@ -42,3 +42,5 @@ export let FETCH_RECEIVER_INFO = FETCH_BASE_URL + '/get_address'
 
 // test Cookie token
 export let TEST_TOKEN = 'token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNDUzODg1MjM3LCJleHAiOjE3NjkyNDUyMzd9.chIaWYg_3_Y9wuMMuYGluDtjDxDz7kDxdXGebpP1cX4'
+export let MIDOU_TOKEN = 'x-midou-token'
+export let NOT_LOGIN_ERROR = 'use is not login'

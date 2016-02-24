@@ -17,7 +17,7 @@ var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
 var config = {
-    devtool: 'inline-source-map',
+    //devtool: 'inline-source-map',
     context: cwd,
     resolve: {
         root:[__dirname],
@@ -84,7 +84,12 @@ var config = {
       //    Promise: 'imports?this=>global!es6-promise',
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
-      new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js')
+      new webpack.optimize.OccurenceOrderPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }),
+      new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js'),
+
       //new ExtractTextPlugin('styles.css')
 
 
