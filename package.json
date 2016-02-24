@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "build": "webpack",
-    "dev": "webpack-dev-server  --devtool eval --progress --colors --hot  --inline --content-base"
+    "dev": "webpack-dev-server  --devtool eval --progress --colors --hot --port 80 --inline --content-base"
   },
   "keywords": [
     "midou"

@@ -1,48 +1,20 @@
 .home-container{
-  background-color: @background-color;
+  .bg-wrap{
+    background: linear-gradient(to bottom, @blue, @background-color);
+    position: absolute;
+    left: 0;
+    top:0;
+    width: 100%;
+    height: 600px;
+  }
   .list-wrap{
+    position: relative;
     padding: 20px;
   }
   .pro-list{
 
   }
-  .list-item{
-   margin-bottom: 20px;
-   border-radius: 8px;
-   overflow: hidden;
-   box-shadow: 1px 2px 10px 3px rgba(200, 200, 200, 0.1);
-  }
-  .img-wrap{
-    a{
-      display: block;
-    }
-    img{
-      width: 100%;
-    }
-  }
-  .pro-name{
-    display: block;
-    position: relative;
-    padding: 0 20px;
-    p{
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      line-height: 50px;
-    }
-    i{
-      position: absolute;
-      top: 0;
-      right: 10px;
-      height: 100%;
-      line-height: 50px;
-    }
-  }
-  .tips-loading{
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    display: none;
-  }
+
+
 
 }

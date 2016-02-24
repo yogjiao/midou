@@ -1,72 +1,56 @@
 import React from 'react'
 
+import PageSpin from 'PageSpin/PageSpin.js'
+import HomeListItem from 'HomeListItem.js'
+import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
+import {FETCH_INDEX_DATA, TEST_TOKEN} from 'macros.js'
+import fetchable from 'fetch.js'
 import './Home.less'
-
-// import fetch from '../../components/fetch.js'
-
-class HomeListItem extends React.Component {
-  render() {
-    return (
-      <li className="list-item" >
-        <div className="img-wrap"><a href={this.props.href}><img src={this.props.img} alt="" /></a></div>
-        <a href={this.props.href} className="pro-name">
-          <p>{this.props.name}{this.props.id}</p>
-          <i className="iconfont">&#xe601;</i>
-        </a>
-      </li>
-    )
-  }
-};
-
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {prolist: [
-      {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-      {id: "2", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
-    ]};
+    this.state = {
+      pageIndex: 0,
+      numberPerPage: 5,
+      isHiddenPageSpin: false,
+      isHiddenScrollingSpin: true,
+      prolist: []
+    };
 
   }
-  handleScroll() {
+  fetchListData = () => {
+    let url = `${FETCH_INDEX_DATA}/${this.state.pageIndex}/${this.state.numberPerPage}`
+    fetchable(url, {
+        credentials: 'include',
+        headers:{Cookie: TEST_TOKEN, 'Accept': 'application/json'}})
+      .then((data) => {
+        debugger;
+      })
+      .catch((error) => {
+        this.setState({isHiddenPageSpin: true})
+      })
+  };
+  handleScroll = () => {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
-      let tipsWrap = this.refs["loading-tips"]
-      tipsWrap.style.display="block";
-
-      fetch('/test')
-        .then(function(data){
-          data = {
-            list: [
-              {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-              {id: "2", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-              {id: "3", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-              {id: "4", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-              {id: "5", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
-            ]
-          }
-          let list = data.list;
-          this.setState({prolist: list});
-          tipsWrap.style.display="none";
-        }.bind(this))
-        .catch(function(error){
-          alert(error);
-          tipsWrap.style.display="none";
-        })
+      this.fetchListData();
     }
-  }
-  componentDidMount() {
+  };
+  componentDidMount = () => {
+    this.fetchListData()
     document.addEventListener('scroll', this.handleScroll.bind(this));
-  }
-  componentWillUnmount() {
+  };
+  componentWillUnmount = () => {
+
     document.removeEventListener('scroll', this.handleScroll.bind(this));
-  }
+  };
   render() {
-
-
     return (
       <div className="home-container">
+        <div className="bg-wrap">
+        </div>
         <div className="list-wrap">
           <ul className="pro-list">
             {
@@ -75,8 +59,9 @@ class Home extends React.Component {
               })
             }
           </ul>
-          <div className="tips-loading" ref="loading-tips" >数据加载中...</div>
+          <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
         </div>
+        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }
