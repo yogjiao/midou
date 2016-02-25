@@ -10,8 +10,8 @@ function checkStatus(response) {
   }
 }
 
-export let fetchable = () => {
-  return fetch.apply(null, arguments)
+export let fetchable = (...args) => {
+  return fetch.apply(null, args)
             .then(checkStatus)
             .then(function(response){
               return response.json()
