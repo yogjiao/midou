@@ -25,13 +25,17 @@ export let ROUTER_RECIEVER_INFO_EDIT = 'edited'
 export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 
-/********* url *************/
+/********************************url**********************************/
 
 // base directory
 export let FETCH_BASE_URL = '/app'
 
-// fetch page index list data
+// fetch scenes data for index page
 export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_all_scenes_goods'
+
+// fetch goods data for list page
+export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
+
 
 // fetch cities by province id
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'

@@ -1,5 +1,5 @@
 
-/index.html 首页
+/ 首页
 /underwears 产品列表
 /underwear/:productId 产品详情
 /carts   查看购物车

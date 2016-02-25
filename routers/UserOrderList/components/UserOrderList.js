@@ -3,9 +3,14 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 import {getParentByClass} from 'util.js'
 
+
 import PageHeader from 'PageHeader/PageHeader.js'
-import Selection from 'Selection/Selection.js'
-let update = require('react-addons-update');
+import PageSpin from 'PageSpin/PageSpin.js'
+import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
+import {FETCH_GOODS} from 'macros.js'
+import {fetchable} from 'fetch.js'
+let update = require('react-addons-update')
+
 
 import UserOrderListGroup from 'UserOrderListGroup.js'
 
@@ -14,8 +19,8 @@ class UserOrderList extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      headerName: '所有单品',
       isHiddenSpin: true,
-      headerName: '订单详情',
       goodList: []
     }
 
