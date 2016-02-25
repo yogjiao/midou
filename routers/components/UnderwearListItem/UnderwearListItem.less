@@ -1,0 +1,32 @@
+.uw-list-item{
+ width: 48%;
+ margin-bottom: 20px;
+ &:nth-child(2n+1){
+  float: left;
+ }
+ &:nth-child(2n){
+  float: right;
+ }
+ .img-wrap{
+   box-shadow: 0px 0px 5px 1px rgba(200, 200, 200, 0.15);
+   a{
+     display: block;
+   }
+   img{
+     width: 100%;
+   }
+ }
+ .info-wrap{
+   text-align: center;
+   a{
+     display: block;
+     height: 40px;
+     line-height: 40px;
+     overflow: hidden;
+   }
+   .price{
+     color: @purple;
+     font-family: arial;
+   }
+ }
+}

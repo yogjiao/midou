@@ -2,154 +2,180 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 
+import PageHeader from 'PageHeader/PageHeader.js'
+import PageSpin from 'PageSpin/PageSpin.js'
+import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
+import {FETCH_GOODS, FETCH_STATUS_NO_MORE_PRODUCT} from 'macros.js'
+import {fetchable} from 'fetch.js'
+import {getParentByClass} from 'util.js'
+let update = require('react-addons-update')
 
-import './UnderwearList.less'
-import PageHeader from '../../components/PageHeader/PageHeader.js'
+import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import UnderwearSearchPanel from 'UnderwearSearchPanel.js'
 
 // import fetch from '../../components/fetch.js'
 
 
-
-class UnderwearListItem extends React.Component {
-  render() {
-    return (
-      <div className="list-item" >
-        <div className="img-wrap"><a href={this.props.href}><img src={this.props.img} alt="" /></a></div>
-        <div className="info-wrap">
-          <Link to={this.props.href} className="pro-name">{this.props.name}</Link>
-          <div className="price">&yen;99</div>
-        </div>
-      </div>
-    )
-  }
-};
-
+import './UnderwearList.less'
 class UnderwearList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageInfo: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pageIndex: 0,
+      pageSize: 2,
+      isFetching: false,
+      isHaveGoods: true,
+      isHiddenPageSpin: false,
+      isHiddenScrollingSpin: true,
+      isHiddenSearchPanel: true,
+
+      size: 0,
+      braSize: 0, // bra
+      baseSize: 0, // bra
+      category: 0, //0: all, 1：文胸，2:底裤，3:情趣
+      tags: [], // tags
       prolist: [
         //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
         ]
     };
 
   }
-  /**
-   * generate complete url include query string
-   */
-  getUrl() {
-    let url = '/test?'
-    let searchState = this.refs['serach-panel'].state;
-    let tags = searchState.searchParams.tags.map(val => searchState.allTags[parseInt(val)])
-    let params = Object.assign({}, this.state.pageInfo, searchState.searchParams, {tags: tags.join('|')})
+  fetchData = (isScroll = false) => {
+     let size = this.state.size
+     let tags = this.state.tags
+     if (this.state.category == '1') {
+       size = `${this.state.baseSize}-${this.state.braSize}`
+     } else if (this.state.category == '0') {
+       size = 0
+     }
+     if (tags.length == 0) {
+       tags = 0
+     }
+     let url=`${FETCH_GOODS}/${size}/${this.state.category}/`
+       + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
+     this.state.isFetching = true
+     let nextState = {
+       isHiddenScrollingSpin: isScroll? false : true,
+       isHiddenPageSpin: isScroll? true : false
+     }
 
-    Object.keys(params).forEach(function(key, index){
-      let value = params[key]
-      url += `${key}=${value}&`
-    })
+     this.setState(nextState)
 
-    return url;
-  }
-  /**
-   *  fetch data when parmas changed except pageIndex
-   */
-  panelSearch = () => {
+     fetchable(url)
+       .then((data) => {
+         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+           this.state.isHaveGoods = false
+         }
+         let nextState = update(this.state, {
+           prolist: {$push: data.goods},
+           isFetching:{$set: false},
+           isHiddenPageSpin: {$set: true},
+           isHiddenScrollingSpin: {$set: true},
+           isHiddenSearchPanel: {$set: true}
+         })
+         this.setState(nextState)
+       })
+       .catch((error) => {
+         this.setState({
+           isFetching: false,
+           isHiddenPageSpin: true,
+           isHiddenScrollingSpin: true,
+           isHiddenSearchPanel: {$set: true}
+         })
+       })
 
-    this.state.pageInfo.pageIndex = 0
-
-    this.props.getPageSpin() && this.props.getPageSpin().show()
-
-    fetch(this.getUrl())
-      .then(function(data){
-        data = {
-          list: [
-            {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "2", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
-          ]
-        }
-        let list = data.list
-        this.setState({prolist: list})
-        this.props.getPageSpin().toggle();
-      }.bind(this))
-      .catch(function(error){
-        this.props.getPageSpin().toggle();
-      }.bind(this))
   };
-  /**
-   *  fetch data when only pageIndex changed
-   */
-  scrollSearch() {
-    let tipsWrap = this.refs["loading-tips"]
-    tipsWrap.style.display="block";
-
-    let url = this.getUrl()
-    fetch(url)
-      .then(function(data){
-        data = {
-          list: [
-            {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "2", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "3", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "4", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "5", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"},
-            {id: "6", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
-          ]
-        }
-        let list = data.list;
-        this.setState({prolist: list});
-        tipsWrap.style.display="none";
-      }.bind(this))
-      .catch(function(error){
-        alert(error);
-        tipsWrap.style.display="none";
-      })
-  }
+  searchHandler = (e) => {
+    let target,
+        nextState;
+    if (target = getParentByClass(e.target, 'cat')) {
+      nextState = {}
+      let category = target.getAttribute('data-category')
+      nextState = update(this.state, {category: {$set: category}})
+    } else if (target = getParentByClass(e.target, 'base-item')) {
+      nextState = {}
+      let baseSize = target.getAttribute('data-val')
+      nextState = update(this.state, {baseSize: {$set: baseSize}})
+    } else if (target = getParentByClass(e.target, 'bra-item')) {
+      nextState = {}
+      let braSize = target.getAttribute('data-val')
+      nextState = update(this.state, {braSize: {$set: braSize}})
+    } else if (target = getParentByClass(e.target, 'tag')) {
+      nextState = {}
+      let tag = target.getAttribute('data-tag')
+      let index = this.state.tags.indexOf(tag)
+      if (target.classList.contains('on')) {
+        nextState = update(this.state, {tags: {$splice: [[index, 1]]}})
+      } else {
+        nextState = update(this.state, {tags: {$splice: [[index, 0, tag]]}})
+      }
+    } else if (target = getParentByClass(e.target, 'size-item')){
+      nextState = {}
+      let size = target.getAttribute('data-val')
+      nextState = update(this.state, {size: {$set: size}})
+    } else if (target = getParentByClass(e.target, 'btn-sure')) {
+      this.state.isHaveGoods = true
+      this.state.prolist = []
+      this.fetchData()
+    }
+    else if (target = getParentByClass(e.target, 'btn-close')) {
+      nextState = {}
+      nextState.isHiddenSearchPanel = true
+    }
+    nextState && this.setState(nextState)
+  };
   /**
    * check the page whether changed or not when scrolling
    */
-  handleScroll = () => {
+  scrollingHandler = () => {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
-      this.scrollSearch();
+      if (this.state.isFetching || !this.state.isHaveGoods) return
+
+      this.setState({isHiddenScrollingSpin: false})
+      this.state.pageIndex++
+      this.fetchData(true)
     }
   };
-  componentDidMount() {
-
-    this.panelSearch();
-    document.addEventListener('scroll', this.handleScroll.bind(this));
-
-  }
-  componentWillUnmount() {
-    alert(' componentWillUnmount list')
-    document.removeEventListener('scroll', this.handleScroll.bind(this));
-  }
-  popSearchPanel(e) {
-    ReactDOM.findDOMNode(this.refs['serach-panel']).style.display = 'block'
-  }
+  openFilterHanler = () => {
+    this.setState({isHiddenSearchPanel: false})
+  };
+  backHandler = () => {
+    let test = this;
+    this.props.history.goBack();
+  };
+  componentWillUnmount = () => {
+    document.removeEventListener('scroll', this.scrollingHandler);
+  };
+  componentDidMount = () => {
+    this.fetchData();
+    document.addEventListener('scroll', this.scrollingHandler);
+  };
   render() {
     return (
       <div className="uw-list-container">
         <PageHeader headerName="所有单品">
-          <div className="menu-search" onClick={this.popSearchPanel.bind(this)}>筛选</div>
+         <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
+          <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
         </PageHeader>
         <div className="list-wrap">
           <div className="adjuxt-wrap clearfix">
               {
-                this.state.prolist.map(function(pro) {
-                  return <UnderwearListItem key={pro.id} {...pro}/>;
+                this.state.prolist.map(function(item) {
+                  return <UnderwearListItem key={item.id} source={item}/>;
                 })
               }
             </div>
-          <div className="tips-loading" ref="loading-tips" >数据加载中...</div>
+          <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
         </div>
-        <UnderwearSearchPanel ref='serach-panel' panelSearch={this.panelSearch.bind(this)}/>
+        <UnderwearSearchPanel
+          isHidden={this.state.isHiddenSearchPanel}
+          {...this.state}
+          searchHandler={this.searchHandler}
+        />
+        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }
