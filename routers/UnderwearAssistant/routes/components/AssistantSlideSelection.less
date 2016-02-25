@@ -1,0 +1,41 @@
+.as-container{
+  margin-top: 50px;
+  .as-justify-wrap{
+    position: relative;
+    margin: 0 50px;
+
+  }
+  .as-line{
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    height: 1px;
+    background-color: #b4b4cb;
+  }
+  .as-item-wrap{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+  }
+  .as-item{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: center;
+    color: #b4b4cb;
+    p{
+      flex-basis: 100%;
+    }
+    i{
+      flex-basis: 100%;
+      padding-top: 15px;
+      visibility:hidden;
+    }
+    &.on{
+      color: @purple;
+      i{
+        visibility: visible;
+      }
+    }
+  }
+}

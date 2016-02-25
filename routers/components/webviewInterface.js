@@ -39,7 +39,7 @@ export let callHandler = handler('callHandler');
 //let loginInfo = {}
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
-    bridge.callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
+    callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
         //loginInfo = response
         resolve({loginToken: response.token, userName: response.userName})
       })
@@ -47,21 +47,21 @@ export let getUserInfoFromApp = function() {
 }
 export let callOutLoginPanel = function() {
   return new Promise((resolve, reject) => {
-    bridge.callHandler(CALL_HANDLER_CALL_OUT_LOGIN_PANEL, {}, function(response) {
+    callHandler(CALL_HANDLER_CALL_OUT_LOGIN_PANEL, {}, function(response) {
         resolve(response)
       })
   });
 }
 export let notifyAppToCheckout = function() {
   return new Promise((resolve, reject) => {
-    bridge.callHandler(CALL_HANDLER_CHECKOUT, {}, function(response) {
+    callHandler(CALL_HANDLER_CHECKOUT, {}, function(response) {
         resolve(response)
       })
   });
 }
 export let shareToSocialCircle = function() {
   return new Promise((resolve, reject) => {
-    bridge.callHandler(CALL_HANDLER_SHARE, {}, function(response) {
+    callHandler(CALL_HANDLER_SHARE, {}, function(response) {
         resolve(response)
       })
   });

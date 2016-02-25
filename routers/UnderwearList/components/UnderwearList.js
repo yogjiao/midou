@@ -143,7 +143,6 @@ class UnderwearList extends React.Component {
     this.setState({isHiddenSearchPanel: false})
   };
   backHandler = () => {
-    let test = this;
     this.props.history.goBack();
   };
   componentWillUnmount = () => {

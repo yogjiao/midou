@@ -6,6 +6,8 @@ import {FETCH_INDEX_DATA} from 'macros.js'
 import {fetchable} from 'fetch.js'
 let update = require('react-addons-update')
 
+import {getUserInfoFromApp} from 'webviewInterface.js'
+
 import './Home.less'
 class Home extends React.Component {
   constructor(props) {
@@ -66,11 +68,18 @@ class Home extends React.Component {
 
     document.removeEventListener('scroll', this.handleScroll.bind(this));
   };
+  test = () => {
+    getUserInfoFromApp()
+      .then(function(data){
+        alert(data)
+      })
+  };
   render() {
     return (
       <div className="home-container">
         <div className="bg-wrap">
         </div>
+        <div className="test" onClick={this.test}>点击获取用户信息</div>
         <div className="list-wrap">
           <ul className="pro-list">
             {

@@ -40,12 +40,46 @@ export let UNDERWEAR_TYPES = [
     {id: "2", name:  "底裤"},
     {id: "3", name:  "情趣"}
 ]
-
+export let CHEST_FEATRUES_1 = [
+    {id: "1", name:  "聚拢"},
+    {id: "2", name:  "正中"},
+    {id: "3", name:  "外扩"}
+]
+export let CHEST_FEATRUES_2 = [
+    {id: "1", name:  "翘挺"},
+    {id: "2", name:  "一般"},
+    {id: "3", name:  "松软"}
+]
+export let CHEST_FEATRUES_3 = [
+    {id: "1", name:  "小底盘"},
+    {id: "2", name:  "中等底盘"},
+    {id: "3", name:  "大底盘"}
+]
+export let CHEST_FEATRUES_4 = [
+    {id: "1", name:  "无副乳"},
+    {id: "2", name:  "稍有副乳"},
+    {id: "3", name:  "副乳明显"}
+]
+export let CHEST_FEATRUES_5 = [
+    {id: "1", name:  "薄杯"},
+    {id: "2", name:  "中厚"},
+    {id: "3", name:  "超厚"}
+]
+export let CHEST_FEATRUES_6 = [
+    {id: "1", name:  "彩虹"},
+    {id: "2", name:  "性冷淡"},
+    {id: "3", name:  "成熟"}
+]
+export let CHEST_FEATRUES_7 = [
+    {id: "1", name:  "简洁"},
+    {id: "2", name:  "大件重工"},
+    {id: "3", name:  "轻薄性感"}
+]
 export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
 
 /********************************url**********************************/
-
-// base directory
+export let BASE_DIR = '/page'
+// ajax base directory
 export let FETCH_BASE_URL = '/app'
 
 // fetch scenes data for index page

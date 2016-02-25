@@ -38,6 +38,7 @@ const rootRoute = {
       require('./UserOrderDetail'),
       require('./UserOrderList'),
       require('./ReceiverInfo'),
+      require('./UnderwearAssistant')
     ]
   } ]
 }
