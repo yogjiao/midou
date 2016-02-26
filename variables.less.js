@@ -7,7 +7,7 @@
 module.exports = {
   "max-width": "640px",
   "font-color": "#50556e",
-  "background-color": "#f8fafc",
+  "background-color": "#fafbfd",
   "border-color": "#b4b4cb",
   "purple": "#fe9790",
   "blue": "#9ba4d1",
