@@ -2,7 +2,7 @@ import React from 'react'
 import PageSpin from 'PageSpin/PageSpin.js'
 import HomeListItem from 'HomeListItem.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_INDEX_DATA} from 'macros.js'
+import {FETCH_INDEX_DATA, FETCH_STATUS_NO_MORE_PRODUCT} from 'macros.js'
 import {fetchable} from 'fetch.js'
 let update = require('react-addons-update')
 
@@ -14,7 +14,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      numberPerPage: 2,
+      numberPerPage: 10,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -29,7 +29,7 @@ class Home extends React.Component {
     this.setState({isHiddenPageSpin: false})
     fetchable(url)
       .then((data) => {
-        if (data.rea == 2) {
+        if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveGoods = false
         }
         let nextState = update(this.state, {
@@ -53,11 +53,12 @@ class Home extends React.Component {
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
-      if (this.state.isFetching || !this.state.isHaveGoods) return
+      if (this.state.isHaveGoods && !this.state.isFetching){
 
-      this.setState({isHiddenScrollingSpin: false})
-      this.state.pageIndex++
-      this.fetchListData()
+        this.setState({isHiddenScrollingSpin: false})
+        this.state.pageIndex++
+        this.fetchListData()
+      }
     }
   };
   componentDidMount = () => {
@@ -71,7 +72,7 @@ class Home extends React.Component {
   test = () => {
     getUserInfoFromApp()
       .then(function(data){
-        alert(data)
+        alert(JSON.stringify(data));
       })
   };
   render() {

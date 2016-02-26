@@ -16,7 +16,7 @@ import fastclick  from 'fastclick'
 fastclick(document.body);
 
 
-import '../page/index.less'
+import '../app-page/index.less'
 import App from './App/App.js'
 import Home from './Home/Home.js'
 
@@ -25,7 +25,7 @@ import Home from './Home/Home.js'
 const rootRoute = {
   component: App,
   childRoutes: [ {
-    path: '/page',
+    path: '/app-page',
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
     indexRoute: { component: Home },//require('./Home/Home.js')

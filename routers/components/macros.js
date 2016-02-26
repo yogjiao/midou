@@ -6,7 +6,7 @@
 /********* registerHandler - oc call js -*******/
 
 // get user info from app
-export let CALL_HANDLER_GET_USER_INFO = 'getUserInfoFromApp'
+export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 
 // call out login panel
 export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'callOutLoginPanel'
