@@ -93,6 +93,8 @@ class UnderwearSearchPanel extends React.Component {
         </div>
       )
     }
+
+
     return (
       <div className="uw-search-panel on"
         style={{display: (this.props.isHidden? 'none' : 'block ')}}
