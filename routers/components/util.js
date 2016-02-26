@@ -9,3 +9,10 @@ export function getParentByClass(node, parentClassName, untilNode ) {
   }
   return  node === untilNode ? null : node;
 }
+export function pick(source, ...args) {
+  let copy = {}
+  args.forEach(function(key, index){
+    copy[key] = source[key]
+  })
+  return copy
+}

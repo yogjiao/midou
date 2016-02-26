@@ -78,7 +78,9 @@ export let CHEST_FEATRUES_7 = [
 export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
 
 /********************************url**********************************/
-export let BASE_DIR = '/page'
+export let BASE_PAGE_DIR = '/app-page'
+
+export let BASE_STATIC_DIR = '/app-static'
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
 
@@ -88,6 +90,8 @@ export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_all_scenes_goods'
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
 
+//fetch good's detail
+export let FETCH_GOOD = FETCH_BASE_URL + '/get_goods_detail'
 
 // fetch cities by province id
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
