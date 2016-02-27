@@ -12,10 +12,11 @@ export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'callOutLoginPanel'
 
 //notify app to checkout
-export let CALL_HANDLER_CHECKOUT = 'notifyAppToCheckout'
+export let CALL_HANDLER_CHECKOUT = 'orderInfoCallback'
 
 // share to social circle
-export let  CALL_HANDLER_SHARE = 'shareToSocialCircle'
+export let  CALL_HANDLER_SHARE = 'shareInCallback'
+//export let  CALL_HANDLER_ = 'shareInCallback'
 
 // for router
 export let ROUTER_SHOPPING_CART_SCAN = 'scan'
@@ -124,6 +125,14 @@ export let NOT_LOGIN_ERROR = 'use is not login'
 //     "2007": "市不存在",
 //     "3001": "订单超时未支付，已经自动取消",
 //     "3002": "已经支付了订单",
+//     "3003": "未查询到支付信息",
+//     "3004": "使用优惠券出错",
+//     "4000": "该手机号已经注册过了",
+//     "4001": "短信服务异常",
+//     "4002": "账户或密码错误",
+//     "4003": "账户不存在",
+//     "4004": "账户违规，不能购买",
 //     "9000": "其他原因"
 // }
+
 export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'

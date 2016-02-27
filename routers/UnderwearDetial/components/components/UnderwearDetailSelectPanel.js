@@ -107,11 +107,11 @@ class UnderwearDetailSelectPanel extends React.Component {
       case '3':
         sizeEl = (
           <dl className="cup-wrap">
-            <dt><div className="triangle" />请选择罩杯</dt>
+            <dt><div className="triangle" />请选择尺码</dt>
             <dd>
               {
                 UNDERWEAR_SIZE.map((val, index) => {
-                  return (<div key={index} data-value={val} className={val == this.props.size? 'char-circle bra-size  on' : 'char-circle bra-size'}>{val}</div>)
+                  return (<div key={index} data-value={val} className={val == this.props.size? 'char-circle no-bra-size  on' : 'char-circle no-bra-size'}>{val}</div>)
                 })
               }
             </dd>
@@ -122,7 +122,13 @@ class UnderwearDetailSelectPanel extends React.Component {
 
     }
     return (
-      <div className="select-model-wraper on" onClick={this.props.selectHandler}>
+
+      <div
+        className={this.props.isHidden?
+          'select-model-wrap' :
+          'select-model-wrap on'}
+        onClick={this.props.selectHandler}
+      >
         <div className="bg-blur"></div>
         <div className="select-panel">
           {braEl}
@@ -142,8 +148,8 @@ class UnderwearDetailSelectPanel extends React.Component {
           </dl>
 
           {boxesEl}
-          <div className="iconfont" onClick={this.hide}>&#xe602;</div>
-          <div className="btn-post" >确定</div>
+          <div className="iconfont close-select-panel">&#xe602;</div>
+          <div className="btn-post">确定</div>
         </div>
       </div>
     )

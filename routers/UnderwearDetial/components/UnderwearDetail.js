@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {countBoxes} from 'commonApp.js'
-import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, POST_TO_CART} from 'macros.js'
+import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, POST_TO_CART, BASE_PAGE_DIR} from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
@@ -67,15 +67,6 @@ class Underweardetail extends React.Component {
    * arrow function must end with semicolon, if not the wepback compile will error
    * add product to shopping car handler
    */
-  addShoppingCartHandler = () => {
-    this.refs['select-model'].show();
-  };
-  /**
-   * buy immediately handler
-   */
-  buyNowHandler = () => {
-    this.refs['select-model'].show();
-  };
   /**
    * share with social circle
    */
@@ -101,8 +92,12 @@ class Underweardetail extends React.Component {
    data.goods = data.goods.concat(boxes)
 
    fetchMock(`${POST_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
-      .then(function(data){
-        debugger;
+      .then((data) => {
+        if (this.state.buyActionModel == 1) {
+          this.props.history.push(`${BASE_PAGE_DIR}/carts/scan`)
+          this.props.history.goForward()
+        }
+
       })
 
   };
@@ -125,7 +120,7 @@ class Underweardetail extends React.Component {
       this.state.goods.inventory.find( (item, index) => {
         return item['size'] == size;
       })
-    return target.count
+    return target && target.count || 0
   };
   selectHandler = (e) => {
     let target,
@@ -139,7 +134,11 @@ class Underweardetail extends React.Component {
       nextState = update(this.state, {
         baseSize: {$set: target.getAttribute('data-value')}
       })
-    } else if (target = getParentByClass(e.target, 'btn-minus')) {
+    } else if (target = getParentByClass(e.target, 'no-bra-size')) {
+      nextState = update(this.state, {
+        size: {$set: target.getAttribute('data-value')}
+      })
+    }else if (target = getParentByClass(e.target, 'btn-minus')) {
       let index = target.getAttribute('data-index')
       if (index) {
         let schema = {}
@@ -176,8 +175,14 @@ class Underweardetail extends React.Component {
           {$apply: (num) => Math.min(++num, inventory)}})
       }
     } else if (target = getParentByClass(e.target, 'btn-post')) {
+      nextState = update(this.state, {
+        isHiddenSelectPanel: {$set: true}
+      })
       this.postDataToCartHandler()
-    } else if (target = getParentByClass(e.target, 'box-size')) {
+    } else if (target = getParentByClass(e.target, 'close-select-panel')) {
+      nextState = update(this.state, {
+        isHiddenSelectPanel: {$set: true}
+      })
     }
     nextState && this.setState(nextState)
   };
@@ -186,6 +191,23 @@ class Underweardetail extends React.Component {
    */
   backHandler = () => {
     this.props.history.goBack()
+  };
+  buyHandler = (e) => {
+    let target,
+        nextState
+
+    if (target = getParentByClass(e.target, 'push-to-cart')) {
+      nextState = update(this.state, {
+        isHiddenSelectPanel: {$set: false},
+        buyActionModel: {$set: 0}
+      })
+    } else if (target = getParentByClass(e.target, 'buy-now')) {
+      nextState = update(this.state, {
+        isHiddenSelectPanel: {$set: false},
+        buyActionModel: {$set: 1}
+      })
+    }
+    nextState && this.setState(nextState)
   };
   componentWillUpdate = (nextProps, nextState) => {
     switch (this.state.category) {
@@ -222,12 +244,10 @@ class Underweardetail extends React.Component {
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>
         <UnderweardetailFooter
-          buyActionModel={this.state.buyActionModel}
-          addShoppingCartHandler={this.addShoppingCartHandler}
-          buyNowHandler={this.buyNowHandler}
+          buyHandler={this.buyHandler}
         />
         <UnderwearDetailSelectPanel
-          isHidden={this.state.isHiddenSearchPanel}
+          isHidden={this.state.isHiddenSelectPanel}
           {...this.state}
           selectHandler={this.selectHandler}
         />
