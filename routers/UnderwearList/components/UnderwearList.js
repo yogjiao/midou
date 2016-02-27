@@ -40,7 +40,7 @@ class UnderwearList extends React.Component {
     };
 
   }
-  fetchData = (isScroll = false) => {
+  fetchData = (isScrollingFetch = false) => {
      let size = this.state.size
      let tags = this.state.tags
      if (this.state.category == '1') {
@@ -55,8 +55,8 @@ class UnderwearList extends React.Component {
        + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
      this.state.isFetching = true
      let nextState = {
-       isHiddenScrollingSpin: isScroll? false : true,
-       isHiddenPageSpin: isScroll? true : false
+       isHiddenScrollingSpin: isScrollingFetch? false : true,
+       isHiddenPageSpin: isScrollingFetch? true : false
      }
 
      this.setState(nextState)

@@ -4,8 +4,14 @@ import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
+import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
-import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT, FETCH_CARTS} from 'macros.js'
+import {
+    ROUTER_SHOPPING_CART_SCAN,
+    ROUTER_SHOPPING_CART_EDIT,
+    FETCH_CARTS,
+    FETCH_STATUS_NO_MORE_PRODUCT
+  } from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
@@ -25,7 +31,7 @@ class ShoppingCart extends React.Component {
       promptMsg: '',
 
       pageIndex: 0,
-      pageSize: 1,
+      pageSize: 2,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -152,48 +158,37 @@ class ShoppingCart extends React.Component {
       itemType: target.getAttribute('data-item-type')
     }
   };
-  fetchCartData = () => {
-    this.setState({isHiddenSpin: false})
-    let url = `${FETCH_CARTS}/${this.state.pageIndex}/${this.state.pageSize}`
-    fetchMock(url)
-      .then(data => {
-        this.setState({goodList: data.cart, isHiddenSpin: true})
+  fetchCartData = (isScrollingFetch = false) => {
+     this.state.isFetching = true
+     let url = `${FETCH_CARTS}/${this.state.pageIndex}/${this.state.pageSize}`
+     let nextState = {
+       isHiddenScrollingSpin: isScrollingFetch? false : true,
+       isHiddenPageSpin: isScrollingFetch? true : false
+     }
 
-      })
-      .catch(error => {
-        this.setState({isHiddenSpin: true})
-      })
-  };
-  /**
-   *  delete product item
-   */
-  deleteProductHandler = () => {
-    //this.deleteItemId
-    let schema = this.getUpdateSchema({
-      $splice: [[this.deleteGroupId, 1]]
-    })
-    let nextState = update(this.state, schema)
-    nextState.itemType = -1
-    this.setState(nextState)
-  };
-  /**
-   *  delete box service item
-   */
-  deleteBoxHandler = () => {
-    let schema = this.getUpdateSchema(this.deleteGroupId, {
-      $splice: [[this.deleteItemId, 1]]
-    })
+     this.setState(nextState)
 
-    let nextState = update(this.state, schema)
-    nextState.itemType = -1
-    this.setState(nextState)
-  };
-  /**
-   * cancel deleting item that is product item or box service item
-   */
-  deleteCancelHandler = () => {
-    let nextState = update(this.state, {itemType: {$set: -1}})
-    this.setState(nextState)
+     fetchMock(url)
+       .then((data) => {
+         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+           this.state.isHaveGoods = false
+         }
+         let nextState = update(this.state, {
+           goodList: {$push: data.cart},
+           isFetching:{$set: false},
+           isHiddenPageSpin: {$set: true},
+           isHiddenScrollingSpin: {$set: true}
+         })
+         this.setState(nextState)
+       })
+       .catch((error) => {
+         this.setState({
+           isFetching: false,
+           isHiddenPageSpin: true,
+           isHiddenScrollingSpin: true
+         })
+       })
+
   };
   editHandler = (e) => {
     let target,
@@ -287,10 +282,58 @@ class ShoppingCart extends React.Component {
 
     nextState && this.setState(nextState)
   };
-  componentWillMount = () => {
+  handleScroll = () => {
+    let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
+    let sHeight = window.innerHeight;//可视窗大小
+    var pageHeight = document.documentElement.scrollHeight;
+    if (scrollTop + sHeight > pageHeight - 30) {
+      if (this.state.isHaveGoods && !this.state.isFetching){
+        this.setState({isHiddenScrollingSpin: false})
+        this.state.pageIndex++
+        this.fetchCartData()
+      }
+    }
+  };
+  /**
+   *  delete product item
+   */
+  deleteProductHandler = () => {
+    //this.deleteItemId
+    let schema = this.getUpdateSchema({
+      $splice: [[this.deleteGroupId, 1]]
+    })
+    let nextState = update(this.state, schema)
+    nextState.itemType = -1
+    this.setState(nextState)
+  };
+  /**
+   *  delete box service item
+   */
+  deleteBoxHandler = () => {
+    let schema = this.getUpdateSchema(this.deleteGroupId, {
+      $splice: [[this.deleteItemId, 1]]
+    })
+
+    let nextState = update(this.state, schema)
+    nextState.itemType = -1
+    this.setState(nextState)
+  };
+  /**
+   * cancel deleting item that is product item or box service item
+   */
+  deleteCancelHandler = () => {
+    let nextState = update(this.state, {itemType: {$set: -1}})
+    this.setState(nextState)
+  };
+
+
+  componentWillUnmount = () => {
+
+    document.removeEventListener('scroll', this.handleScroll.bind(this));
   };
   componentDidMount = () => {
     this.fetchCartData()
+    document.addEventListener('scroll', this.handleScroll.bind(this));
   };
   componentWillReceiveProps = (props) => {
   };
@@ -322,7 +365,10 @@ class ShoppingCart extends React.Component {
     }
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
-        <PageHeader headerName="购物车编辑">
+        <PageHeader
+          headerName={this.props.params.actionModel == ROUTER_SHOPPING_CART_SCAN?
+            '购物车' : '编辑购物车'}
+        >
           <div />
           <div className="menu-search" onClick={this.shareHanler}>完成</div>
         </PageHeader>
@@ -331,7 +377,7 @@ class ShoppingCart extends React.Component {
             return (<ShoppingCartGroup
                       groupId={index}
                       key={index}
-                      groupSouce={item.goods}
+                      source={item.goods}
                       cid={item.id}
                       actionModel={this.props.params.actionModel}
                       isSelectedAll={this.state.isSelectedAll}
@@ -339,7 +385,7 @@ class ShoppingCart extends React.Component {
                     )
           })
         }
-
+        <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
         <div className="check-out-wrap">
           <div className="justify-wrap">
             <div className="select-all">
@@ -358,7 +404,7 @@ class ShoppingCart extends React.Component {
         </div>
         {confirm}
         <Prompt msg={this.state.promptMsg} ref="prompt"/>
-        <PageSpin isHidden={this.state.isHiddenSpin}/>
+        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }
