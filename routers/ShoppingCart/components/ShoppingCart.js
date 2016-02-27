@@ -5,7 +5,8 @@ import { Link } from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
-import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
+import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT, FETCH_CARTS} from 'macros.js'
+import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
@@ -17,12 +18,18 @@ class ShoppingCart extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
-      isHiddenSpin: true,
       goodList: [],
       totalPrice: 0,
       isSelectedAll: false,
       itemType: -1, // 0: deleteProduct 1: deleteBox
-      promptMsg: ''
+      promptMsg: '',
+
+      pageIndex: 0,
+      pageSize: 1,
+      isHiddenPageSpin: false,
+      isHiddenScrollingSpin: true,
+      isFetching: false,
+      isHaveGoods: true,
     }
 
   }
@@ -144,6 +151,18 @@ class ShoppingCart extends React.Component {
       itemId: target.getAttribute('data-item-id'),
       itemType: target.getAttribute('data-item-type')
     }
+  };
+  fetchCartData = () => {
+    this.setState({isHiddenSpin: false})
+    let url = `${FETCH_CARTS}/${this.state.pageIndex}/${this.state.pageSize}`
+    fetchMock(url)
+      .then(data => {
+        this.setState({goodList: data.cart, isHiddenSpin: true})
+
+      })
+      .catch(error => {
+        this.setState({isHiddenSpin: true})
+      })
   };
   /**
    *  delete product item
@@ -271,57 +290,7 @@ class ShoppingCart extends React.Component {
   componentWillMount = () => {
   };
   componentDidMount = () => {
-    this.setState({isHiddenSpin: false})
-    fetch('/app/get_cart')
-      .then(data => {
-        data = {
-          cart: [
-                  {
-                      "id": "10",
-                      "ts": "2016-02-04 10:18:32",
-                      "goods":
-                          [
-                              {
-                                  "cgid": "1",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "70",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "198.00",
-                                  "try": "0"
-                              },
-                              {
-                                  "cgid": "2",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "75",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "99.00",
-                                  "try": "1"
-                              }
-                          ]
-                  }
-              ]
-        }
-        if (this.props.params.actionModel == ROUTER_SHOPPING_CART_EDIT) {
-          data.cart = this.flatBoxServiceData(data.cart);
-        }
-        this.setState({goodList: data.cart, isHiddenSpin: true})
-
-      })
-      .catch(error => {
-        this.setState({isHiddenSpin: true})
-      })
+    this.fetchCartData()
   };
   componentWillReceiveProps = (props) => {
   };
@@ -353,8 +322,8 @@ class ShoppingCart extends React.Component {
     }
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
-
         <PageHeader headerName="购物车编辑">
+          <div />
           <div className="menu-search" onClick={this.shareHanler}>完成</div>
         </PageHeader>
         {

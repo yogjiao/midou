@@ -19,7 +19,7 @@ class ShoppingCartItem extends React.Component {
         lastColumn = (
           <div className="column">
             <div className="row-wrap">
-              <div className="info-col">雪国精灵</div>
+              <div className="info-col">{this.props.source.name}</div>
               {
                 this.props.itemType == '0'?
                 '' :
@@ -33,13 +33,13 @@ class ShoppingCartItem extends React.Component {
             <div className="row-wrap">
               <div className="info-col">
                 <i>尺码:</i>
-                <span className="arial pl5">75C</span>
+                <span className="arial pl5">{this.props.source.size.replace('-', '')}</span>
               </div>
             </div>
             <div className="row-wrap">
-              <div className="info-col price">&yen; 60</div>
+              <div className="info-col price">&yen; {this.props.source.price}</div>
               <div className="extra-col num-mult">
-                <i className="iconfont">&#xe601;</i>
+                <i className="iconfont">&#xe602;</i>
                 <span>1</span>
               </div>
             </div>
@@ -131,7 +131,7 @@ class ShoppingCartItem extends React.Component {
         </div>
         <div className="column">
           <div className="img-wrap">
-            <img src="/media/test.png" />
+            <img src={this.props.source.main_img} />
           </div>
         </div>
         {lastColumn}
