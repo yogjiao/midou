@@ -6,8 +6,8 @@ import { Link } from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {countBoxes} from 'commonApp.js'
-import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT} from 'macros.js'
-import {fetchable} from 'fetch.js'
+import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, POST_TO_CART} from 'macros.js'
+import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
 
@@ -27,8 +27,6 @@ class Underweardetail extends React.Component {
       isHaveGoods: true,
       isHiddenPageSpin: false,
       isHiddenSelectPanel: true,
-      pageIndex: 0,
-      pageSize: 2,
 
       size: 0,
       braSize: 0, // bra
@@ -86,18 +84,52 @@ class Underweardetail extends React.Component {
       alert('分享成功了' + JSON.stringify(data))
     })
   };
-  selectHandler = (e) => {
-    let target, nextState;
+  postDataToCartHandler = () => {
+    let data = {goods: []}
+    let temp = pick(this.state.goods, 'id', 'category')
+    data.goods[0] =
+      Object.assign(temp, {
+        count: this.state.count,
+        size: this.state.size ||
+          (this.state.baseSize + '-' + this.state.braSize),
+        try: 0,
+        color: 0
+      })
+   let boxes = this.state.boxes.filter( item => {
+     return item.count > 0
+   })
+   data.goods = data.goods.concat(boxes)
 
-    if (target = getParentByClass(e.target, 'btn-post')) {
-      if (this.buyActionModel == 0) {// add product to shopping cart
+   fetchMock(`${POST_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
+      .then(function(data){
+        debugger;
+      })
 
-      } else {// buy now
-
+  };
+  processMinus = (count) => {
+    let len = this.state.boxes.length;
+    let rest = count
+    for (let i = len - 1; i >= 0; i--) {
+      let box = this.state.boxes[i]
+      rest = count - box.count
+      if (rest <= 0 ) {
+          box.count = box.count - count
+          break
+      } else {
+        box.count = 0;
       }
-      return
     }
-
+  };
+  getInventoryBySize = (size) => {
+    let target =
+      this.state.goods.inventory.find( (item, index) => {
+        return item['size'] == size;
+      })
+    return target.count
+  };
+  selectHandler = (e) => {
+    let target,
+        nextState
 
     if (target = getParentByClass(e.target, 'bra-size')) {
       nextState = update(this.state, {
@@ -108,24 +140,44 @@ class Underweardetail extends React.Component {
         baseSize: {$set: target.getAttribute('data-value')}
       })
     } else if (target = getParentByClass(e.target, 'btn-minus')) {
-      nextState = update(this.state, {num: {$apply: (num) => Math.max(0, --num)}})
-    } else if (target = getParentByClass(e.target, 'btn-add')) {
-      //nextState = update(this.state, {num: {$apply: (num) => ++num}})
       let index = target.getAttribute('data-index')
-      let schema = {}
-      schema[index] = {count: {$apply: (num) => ++num }}
       if (index) {
+        let schema = {}
+        schema[index] = {count: {
+          $apply: (num) => Math.max(--num, 0)
+         }
+        }
         nextState = update(this.state, {boxes: schema})
       } else {
-        nextState = update(this.state, {count: {$apply: (num) => ++num}})
+        nextState = update(this.state, {count: {$apply: (num) => Math.max(--num, 0)}})
       }
-    } else if (target = getParentByClass(e.target, 'btn-turn-box')) {
-      nextState = update(this.state, {isSetupBoxService: {$apply: (is) => !is}})
+    } else if (target = getParentByClass(e.target, 'btn-add')) {
+      //nextState = update(this.state, {num: {$apply: (num) => ++num}})
+
+      let index = target.getAttribute('data-index')
+      if (index) {
+        let anotherIndex = this.state.boxes.length - 1 - index;
+        let inventory =
+          this.getInventoryBySize(this.state.boxes[index].size)
+        let schema = {}
+        schema[index] = {count: {
+          $apply: (num) => {
+            let anotherCount = this.state.boxes[anotherIndex].count
+            return Math.min(++num, (this.state.count - anotherCount))
+          }
+         }
+        }
+        nextState = update(this.state, {boxes: schema})
+      } else {
+        let inventory =
+          this.getInventoryBySize(this.state.size ||
+            (this.state.baseSize + '-' + this.state.braSize))
+        nextState = update(this.state, {count:
+          {$apply: (num) => Math.min(++num, inventory)}})
+      }
+    } else if (target = getParentByClass(e.target, 'btn-post')) {
+      this.postDataToCartHandler()
     } else if (target = getParentByClass(e.target, 'box-size')) {
-      nextState = update(this.state, {selectedBox: {
-        braSize: {$set: target.getAttribute('data-bra')},
-        baseSize: {$set: target.getAttribute('data-base')}
-      }})
     }
     nextState && this.setState(nextState)
   };
@@ -136,15 +188,24 @@ class Underweardetail extends React.Component {
     this.props.history.goBack()
   };
   componentWillUpdate = (nextProps, nextState) => {
-    if ((nextState.braSize && nextState.baseSize) &&
-        (this.state.braSize != nextState.braSize ||
-        this.state.braSize != nextState.baseSize)) {
-      nextState.boxes = countBoxes(nextState.braSize, nextState.baseSize)
-      nextState.boxes.map((item, index) => {
-        let temp = pick(this.state.goods, 'id', 'category')
-        // Object.assign({count: 1, try: 1, color: 0} , item)
-         return Object.assign(item , temp, {count: 0, try: 1, color: 0});
-      })
+    switch (this.state.category) {
+      case '1':
+      if ((nextState.braSize && nextState.baseSize) &&
+          (this.state.braSize != nextState.braSize ||
+          this.state.baseSize != nextState.baseSize)) {
+        nextState.boxes = countBoxes(nextState.braSize, nextState.baseSize)
+        nextState.boxes.map((item, index) => {
+          let temp = pick(this.state.goods, 'id', 'category')
+          temp.size = item.baseSize + '-' + item.braSize
+          // Object.assign({count: 1, try: 1, color: 0} , item)
+           return Object.assign(item , temp, {count: 0, try: 1, color: 0});
+        })
+      }
+
+      if (this.state.count > nextState.count) {
+        this.processMinus(1);
+      }
+        break;
 
     }
   };
