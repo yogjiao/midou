@@ -70,7 +70,7 @@ class UserOrderCreated extends React.Component {
                <div className="info-wrap">15999567444</div>
                <div className="info-wrap">广东省  深圳市  南山区  桃源村34栋206</div>
              </div>
-             <i className="iconfont">&#xe601;</i>
+             <i className="iconfont">&#xe600;</i>
           </dd>
         </dl>
         <dl className="input-group">
@@ -79,13 +79,13 @@ class UserOrderCreated extends React.Component {
              <div className="info-wrap font-gray">
                 支付宝
              </div>
-             <i className="iconfont">&#xe601;</i>
+             <i className="iconfont">&#xe600;</i>
           </dd>
           <dd>
              <div className="info-wrap font-gray">
                 微信
              </div>
-             <i className="iconfont">&#xe601;</i>
+             <i className="iconfont">&#xe600;</i>
           </dd>
         </dl>
         <dl className="input-group">
@@ -94,7 +94,7 @@ class UserOrderCreated extends React.Component {
              <div className="info-wrap font-gray">
                 选择优惠方式
              </div>
-             <i className="iconfont">&#xe601;</i>
+             <i className="iconfont">&#xe600;</i>
           </dd>
         </dl>
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>

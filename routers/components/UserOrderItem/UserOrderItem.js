@@ -18,10 +18,10 @@ class UserOrderItem extends React.Component {
     switch (pageType) {
       case '1':
         if (itemType == 1) {
-          row_3 = (<div className="arial"><i className="iconfont">&#xe601;</i>{this.props.source.count}</div>)
+          row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
-          row_3 = (<div className="arial"><i className="iconfont">&#xe601;</i>{this.props.source.count}</div>)
+          row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
         }
         break;
       case '2':

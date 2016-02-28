@@ -36,7 +36,8 @@ const rootRoute = {
       require('./UserOrderCreated'),
       require('./UserOrderDetail'),
       require('./UserOrderList'),
-      require('./ReceiverInfo'),
+      require('./ReceiverInfo').add,
+      require('./ReceiverInfo').edit,
       require('./UnderwearAssistant')
     ]
   } ]

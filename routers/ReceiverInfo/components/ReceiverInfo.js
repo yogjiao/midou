@@ -3,14 +3,20 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
-import {ROUTER_RECIEVER_INFO_SCAN, ROUTER_RECIEVER_INFO_EDIT, FETCH_RECEIVER_INFO} from 'macros.js'
-import {getParentByClass} from 'util.js'
+import {
+    ROUTER_RECIEVER_INFO_ADD,
+    ROUTER_RECIEVER_INFO_EDIT,
+    FETCH_RECEIVER_INFO,
+    PUT_RECEIVER_INFO,
+    FETCH_SUCCESS
+  } from 'macros.js'
+import {getParentByClass, pick} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
-import fetchable from 'fetch.js'
+import {fetchAuth, fetchMock} from 'fetch.js'
 
 let update = require('react-addons-update')
 
@@ -19,69 +25,113 @@ class ReceiverInfo extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
-      isHiddenSpin: false,
-      title: '添加收货人信息',
-      /*
-      "name": "测试姓名",
-      "phone": "18588886666",
-      "province": "1",
-      "city": "1",
-      "detail": "南山区白石洲1"
-      */
+      isHiddenPageSpin: false,
+      promptMsg: '',
+      id: 0,
+      name: '',
+      phone:'',
+      province: '1',
+      city: '',
+      detail: ''
     }
 
   }
-  fetchReceiverInfo = (callback) => {
-    fetchable(`${FETCH_RECEIVER_INFO}/${this.props.params.receiverInfoId}`)
+  fetchReceiverInfo = () => {
+    let url = `${FETCH_RECEIVER_INFO}/${this.props.params.receiverInfoId}`
+    fetchMock(url)
       .then((data) => {
-        callback(data.address)
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState(data.address)
+        }
       })
       .catch((e) => {
-        this.setState({isHiddenSpin: true});
+
+      })
+      .then(() => {
+        this.setState({isHiddenPageSpin: true});
       })
 
   };
+  nameChangeHanler = (event) => {
+    this.setState({name: event.target.value.substr(0, 50)});
+  };
+  phoneChangeHanler = (event) => {
+    this.setState({phone: event.target.value.replace(/\D/g, '').substr(0, 11)});
+  };
+  detailChangeHanler = (event) => {
+    this.setState({detail: event.target.value.substr(0, 100)});
+  };
+  backHandler = () => {
+    this.props.history.back()
+  };
+  addressChangeHandler = (provinceId, cityId) => {
+    this.state.province = provinceId
+    this.state.city = cityId
+  };
+  saveHanler = () => {
+    let url = `${PUT_RECEIVER_INFO}/${this.state.id}`
+    let data = pick(this.state, 'id','name','phone','province','city','detail')
+    fetchMock(url, {method: 'post', body: JSON.stringify(data)})
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let nextState = {}
+          if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+            nextState = {promptMsg: '收货人信息添加成功', isHiddenPrompt: false}
+          } else {
+            tnextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
+          }
+          this.setState(nextState)
+          this.refs['prompt'].show();
+        }
+      })
+      .catch(() => {
+
+      })
+      .then(() => {
+
+      })
+  };
   componentWillMount = () => {
-    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_SCAN) {
-      this.state.title = '添加收货人信息'
+    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+      this.state.isHiddenPageSpin = true
+      this.state.headerName = '添加收货人信息'
     } else {
-      this.state.title = '编辑收货人信息'
+      this.state.headerName = '编辑收货人信息'
+      this.state.id = this.props.params.receiverInfoId
     }
   };
   componentDidMount = () => {
-    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_SCAN) {
-      this.fetchReceiverInfo( data => {
-        data.isHiddenSpin = true
-        this.setState(data)
-      })
+    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_EDIT) {
+      this.fetchReceiverInfo()
     }
 
   };
   componentWillReceiveProps = (props) => {
   };
   componentWillUpdate = (nextProps, nextState) => {
-
   };
+
   render() {
     return (
       <div className="reciever-info-container" onClick={this.editHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont">&#xe601;</i>
-          <div>保存</div>
+          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+          <div className="btn-save" onClick={this.saveHanler}>保存</div>
         </PageHeader>
         <div className="receiver-item">
-          <input placeholder="收货人姓名" value={this.state.name} />
+          <input placeholder="收货人姓名" value={this.state.name} onChange={this.nameChangeHanler}/>
         </div>
         <div className="receiver-item">
-          <input placeholder="手机号码" value={this.state.phone}/>
+          <input placeholder="手机号码" value={this.state.phone} onChange={this.phoneChangeHanler}/>
         </div>
         <div className="receiver-item">
-          <ProvinceSelection source={provinces} provinceId={this.state.province} cityId={this.state.city}/>
+          <ProvinceSelection source={provinces} provinceId={this.state.province} cityId={this.state.city} onAddressChange={this.addressChangeHandler}/>
         </div>
         <div className="receiver-item">
-          <textarea placeholder="详细地址" value={this.state.detail} />
+          <textarea placeholder="详细地址"  value={this.state.detail} onChange={this.detailChangeHanler}/>
         </div>
-        <PageSpin isHidden={this.state.isHiddenSpin} />
+        <PageSpin isHidden={this.state.isHiddenPageSpin} />
+        <Prompt isHidden={this.state.isHiddenPrompt} msg={this.state.promptMsg} ref="prompt" />
       </div>
 
     )
