@@ -14,6 +14,7 @@ import {
   } from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass} from 'util.js'
+import {countBoxes} from 'commonApp.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 let update = require('react-addons-update');
@@ -100,16 +101,15 @@ class ShoppingCart extends React.Component {
    * calculate all product price
    * @param nextState [Object] optianal
    */
-  calculateTotalPrice = (goodList, isSelectedAll) => {
+  calculateTotalPrice = (goodList) => {
     let price = 0;
     goodList = goodList || this.state.goodList
-    isSelectedAll = typeof isSelectedAll != 'undefined'? isSelectedAll : this.state.isSelectedAll
     goodList.forEach((item, index) => {
-      item.goods.forEach((item, index) => {
-        if (item.isSelected) {
-          price += item.price * item.count
-        }
-      })
+      if (item.goods[0].isSelected) {
+        item.goods.forEach((item, index) => {
+            price += item.price * item.count
+        })
+      }
     })
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
@@ -121,9 +121,7 @@ class ShoppingCart extends React.Component {
   selectAll = (nextState) => {
     nextState = nextState || this.state
     nextState.goodList.forEach((item, index) => {
-      item.goods.forEach((item, index) => {
-        item.isSelected = true
-      })
+      item.goods[0].isSelected = true
     })
   };
   /**
@@ -132,9 +130,7 @@ class ShoppingCart extends React.Component {
   unselectAll = (nextState) => {
     nextState = nextState || this.state
     nextState.goodList.forEach((item, index) => {
-      item.goods.forEach((item, index) => {
-        item.isSelected = false
-      })
+      item.goods[0].isSelected = false
     })
   };
   /**
@@ -173,8 +169,9 @@ class ShoppingCart extends React.Component {
          if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
            this.state.isHaveGoods = false
          }
+         let splice = [this.state.goodList.length, 0].concat(data.cart)
          let nextState = update(this.state, {
-           goodList: {$push: data.cart},
+           goodList: {$splice: [splice]},
            isFetching:{$set: false},
            isHiddenPageSpin: {$set: true},
            isHiddenScrollingSpin: {$set: true}
@@ -205,7 +202,6 @@ class ShoppingCart extends React.Component {
 
 
     if (target = getParentByClass(e.target, 'btn-add')) {
-
       let {groupId, itemId} = this.getTargetDataAttres(target)
       let schema = this.getUpdateSchema(groupId, itemId,
           {count: {$apply: (val) => {return ++val} }})
@@ -237,17 +233,6 @@ class ShoppingCart extends React.Component {
           nextState = update(nextState, schema)
         }
       }
-
-    } else if (target = getParentByClass(e.target, 'box-service-item')) {
-
-      let {groupId, itemId} = this.getTargetDataAttres(target)
-      let schema = this.getUpdateSchema(groupId, itemId,
-          {
-            cup: {$set: target.getAttribute('data-bra-size') },
-            bottom_bust: {$set: target.getAttribute('data-base-size')}
-          })
-
-      nextState = update(this.state, schema)
 
     } else if (target = getParentByClass(e.target, 'radio-select')) {//isSelected
       let {groupId, itemId} = this.getTargetDataAttres(target)
@@ -326,7 +311,18 @@ class ShoppingCart extends React.Component {
     this.setState(nextState)
   };
 
-
+  componentWillMount = () => {
+    switch (this.props.params.actionModel) {
+      case ROUTER_SHOPPING_CART_SCAN:
+        this.state.headerName = '购物车'
+        this.state.menuName = '编辑'
+        break;
+      case ROUTER_SHOPPING_CART_EDIT:
+        this.state.headerName = '编辑购物车'
+        this.state.menuName = '完成'
+        break;
+    }
+  };
   componentWillUnmount = () => {
 
     document.removeEventListener('scroll', this.handleScroll.bind(this));
@@ -366,11 +362,10 @@ class ShoppingCart extends React.Component {
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
         <PageHeader
-          headerName={this.props.params.actionModel == ROUTER_SHOPPING_CART_SCAN?
-            '购物车' : '编辑购物车'}
+          headerName={this.state.headerName}
         >
-          <div />
-          <div className="menu-search" onClick={this.shareHanler}>完成</div>
+          <div></div>
+          <div className="menu-search" onClick={this.menuHanler}>{this.state.menuName}</div>
         </PageHeader>
         {
           this.state.goodList.map((item, index) => {
