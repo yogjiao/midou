@@ -9,6 +9,10 @@ class ShoppingCartItemScan extends React.Component {
     let to = 'http://baidu.com' //`${BASE_PAGE_DIR/underwear/${this.props.id}}`
     let holder = (<span>&nbsp;</span>)
     let line = this.props.isHaveLine? (<div className="line"></div>) : ''
+    let ids = {};
+    ids['data-group-id'] = this.props.groupId;
+    ids['data-item-id'] = this.props.itemId;
+    ids['data-item-type'] = this.props.itemType;
     return (
       <div className="item-wrap clearfix">
         <ul className="columns">
@@ -16,8 +20,8 @@ class ShoppingCartItemScan extends React.Component {
               {
                 this.props.itemType == '0'?
                   this.props.source.isSelected?
-                  (<div className="raido iconfont on">&#xe602;</div>) :
-                  (<div className="raido iconfont">&#xe601;</div>):
+                  (<div className="raido select-radio iconfont on" {...ids}>&#xe602;</div>) :
+                  (<div className="raido select-radio iconfont" {...ids}>&#xe601;</div>):
                 ''
               }
            </li>

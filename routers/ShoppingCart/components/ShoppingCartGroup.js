@@ -21,7 +21,9 @@ class ShoppingCartGroup extends React.Component {
          let params = {
            key: index,
            source: item,
-           actionModel: this.props.actionModel,
+           itemId: index,
+           groupId: this.props.groupId,
+           actionModel: this.props.actionModel
          }
          if (index == 0) {
            params.itemType = '0'
