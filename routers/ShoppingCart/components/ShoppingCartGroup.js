@@ -14,7 +14,6 @@ import './ShoppingCartGroup.less'
 class ShoppingCartGroup extends React.Component {
   render() {
     let elements = []
-
     switch (this.props.actionModel) {
       case ROUTER_SHOPPING_CART_SCAN:
         let isHaveLine = this.props.source.length > 1? true : false

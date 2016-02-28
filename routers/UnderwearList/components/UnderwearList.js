@@ -22,7 +22,7 @@ class UnderwearList extends React.Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      pageSize: 2,
+      pageSize: 6,
       isFetching: false,
       isHaveGoods: true,
       isHiddenPageSpin: false,

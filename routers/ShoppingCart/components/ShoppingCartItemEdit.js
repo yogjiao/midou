@@ -18,9 +18,10 @@ class ShoppingCartItemEdit extends React.Component {
   render = () => {
     let to = 'http://baidu.com' //`${BASE_PAGE_DIR/underwear/${this.props.id}}`
     let lastColumn
+    let ids = {}
     switch (this.props.itemType) {
       case '0':
-        let ids = {}//pick(this.props, 'groupId', 'itemId', 'itemType')
+        //ids = {}//pick(this.props, 'groupId', 'itemId', 'itemType')
         ids['data-group-id'] = this.props.groupId;
         ids['data-item-id'] = this.props.itemId;
         ids['data-item-type'] = this.props.itemType;
@@ -34,7 +35,7 @@ class ShoppingCartItemEdit extends React.Component {
                </div>
              </div>
              <div className="ajust-wrap">
-               <div className="iconfont">&#xe608;</div>
+               <div className="iconfont btn-delete" {...ids}>&#xe608;</div>
              </div>
           </li>
         )
@@ -42,10 +43,13 @@ class ShoppingCartItemEdit extends React.Component {
       case '1':
         lastColumn = this.props.boxes.map( (item, index) => {
           let boxData = this.findBoxAndIndex(`${item.baseSize}-${item.braSize}`, this.props.source) || {}
-          let ids = {}
-          ids['data-group-id'] = this.props.groupId;
-          ids['data-item-id'] = boxData.cursor > -1? boxData.cursor + 1 : -1;
-          ids['data-item-type'] = this.props.itemType;
+          //let ids = {}
+          ids['data-group-id'] = this.props.groupId
+          ids['data-item-id'] = boxData.cursor > -1? boxData.cursor + 1 : -1
+          ids['data-item-type'] = this.props.itemType
+          ids['data-base-size'] = item.baseSize
+          ids['data-bra-size'] = item.braSize
+          ids['data-cgid'] = boxData.box.cgid
           return (
             <div className="ajust-wrap" key={index}>
                <div className="box-service-item">{`${item.baseSize}${item.braSize}`}</div>
@@ -70,9 +74,13 @@ class ShoppingCartItemEdit extends React.Component {
       <div className="item-wrap clearfix">
         <ul>
            <li className="column">
-             {this.props.itemType == '0'?
-               (<div className="raido iconfont">&#xe601;</div>):''
-             }
+           {
+             this.props.itemType == '0'?
+               this.props.source.isSelected?
+               (<div className="raido select-radio iconfont on" {...ids}>&#xe602;</div>) :
+               (<div className="raido select-radio iconfont" {...ids}>&#xe601;</div>):
+             ''
+           }
            </li>
            <li className="column">
               <Link to={to} className="img-wrap"><img src="/media/test.png" /></Link>

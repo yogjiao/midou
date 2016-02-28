@@ -13,8 +13,12 @@ class ShoppingCartItemScan extends React.Component {
       <div className="item-wrap clearfix">
         <ul className="columns">
            <li className="column">
-              {this.props.itemType == '0'?
-                (<div className="raido iconfont">&#xe601;</div>):''
+              {
+                this.props.itemType == '0'?
+                  this.props.source.isSelected?
+                  (<div className="raido iconfont on">&#xe602;</div>) :
+                  (<div className="raido iconfont">&#xe601;</div>):
+                ''
               }
            </li>
            <li className="column">

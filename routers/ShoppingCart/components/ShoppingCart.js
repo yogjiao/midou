@@ -7,12 +7,16 @@ import PageSpin from 'PageSpin/PageSpin.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
 import {
+    BASE_PAGE_DIR,
     ROUTER_SHOPPING_CART_SCAN,
     ROUTER_SHOPPING_CART_EDIT,
+    FETCH_SUCCESS,
     FETCH_CARTS,
     FETCH_STATUS_NO_MORE_PRODUCT,
     PUT_BOX_SERVICE,
-    POST_EDIT_CART
+    DELETE_BOX_SERVICE,
+    EDIT_CART_GOODS,
+    DELETE_CART_GOODS
   } from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass} from 'util.js'
@@ -32,11 +36,12 @@ class ShoppingCart extends React.Component {
       isSelectedAll: false,
       itemType: -1, // 0: deleteProduct 1: deleteBox
       promptMsg: '',
-
-      pageIndex: 0,
+      confirmMsg: '你确定要删除该产品吗？',
+      lastGoodsId: 0,
       pageSize: 2,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
+      isHiddenConfirm: true,
       isFetching: false,
       isHaveGoods: true,
     }
@@ -100,6 +105,17 @@ class ShoppingCart extends React.Component {
     return schema
   };
   /**
+   *
+   */
+  getDataByIndexPath = (groupId, itemId) => {
+    let target = this.state.goodList;
+    target = target[groupId]
+    if (itemId) {
+      target = target.goods[itemId]
+    }
+    return target
+  };
+  /**
    * calculate all product price
    * @param nextState [Object] optianal
    */
@@ -107,11 +123,15 @@ class ShoppingCart extends React.Component {
     let price = 0;
     goodList = goodList || this.state.goodList
     goodList.forEach((item, index) => {
-      if (item.goods[0].isSelected) {
-        item.goods.forEach((item, index) => {
+      item.goods.forEach((item, index) => {
+        if (item.isSelected) {
+          if (index == 0) {
             price += item.price * item.count
-        })
-      }
+          } else {
+            price += item.deposit * item.count
+          }
+        }
+      })
     })
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
@@ -151,36 +171,19 @@ class ShoppingCart extends React.Component {
    */
   getTargetDataAttres = (target) => {
     return {
-      groupId: target.getAttribute('data-group-id'),
-      itemId: target.getAttribute('data-item-id'),
-      itemType: target.getAttribute('data-item-type')
+      groupId: target.getAttribute('data-group-id'), // group index
+      itemId: target.getAttribute('data-item-id'), // item index
+      itemType: target.getAttribute('data-item-type'),// item 0  no-try 1 try
+      baseSize: target.getAttribute('data-base-size'),
+      braSize: target.getAttribute('data-bra-size'),
+      cgid: target.getAttribute('data-cgid')
     }
   };
-  putBoxService = () => {
-    let url = `${PUT_BOX_SERVICE}`
-    let nextState = {isFetching: true}
-    this.setState(nextState)
-
-    fetchMock(url, {method: 'post'})
-      .then((data) => {
-        let splice = [this.state.goodList.length, 0].concat(data.cart)
-        let nextState = update(this.state, {
-          goodList: {$splice: [splice]},
-          isFetching:{$set: false},
-          isHiddenPageSpin: {$set: true}
-        })
-        this.setState(nextState)
-      })
-      .catch((error) => {
-        this.setState({
-          isFetching: false,
-          isHiddenPageSpin: true,
-        })
-      })
-
+  assignDataPramas = (target) => {
+    Object.assign(this, this.getTargetDataAttres(target))
   };
   fetchCartData = (isScrollingFetch = false) => {
-     let url = `${FETCH_CARTS}/${this.state.pageIndex}/${this.state.pageSize}`
+     let url = `${FETCH_CARTS}/${this.state.lastGoodsId}/${this.state.pageSize}`
      let nextState = {
        isFetching: true,
        isHiddenScrollingSpin: isScrollingFetch? false : true,
@@ -194,6 +197,7 @@ class ShoppingCart extends React.Component {
          if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
            this.state.isHaveGoods = false
          }
+
          let splice = [this.state.goodList.length, 0].concat(data.cart)
          let nextState = update(this.state, {
            goodList: {$splice: [splice]},
@@ -201,6 +205,7 @@ class ShoppingCart extends React.Component {
            isHiddenPageSpin: {$set: true},
            isHiddenScrollingSpin: {$set: true}
          })
+         nextState.lastGoodsId = data.cart.slice(-1)[0].id
          this.setState(nextState)
        })
        .catch((error) => {
@@ -212,6 +217,139 @@ class ShoppingCart extends React.Component {
        })
 
   };
+  editCartGoods = (delta) => {
+    let itemData = this.getDataByIndexPath(this.groupId, this.itemId)
+    let group = this.state.goodList[this.groupId]
+    let cid = group.id
+    let cgid = itemData['cgid']
+    let url = `${EDIT_CART_GOODS}/${cid}/${cgid}`
+    let nextState = {isFetching: true}
+    this.setState(nextState)
+
+    let data = {
+        "cid": cid,
+        "cgid": cgid,
+        "gid": itemData.gid,
+        "count": (parseInt(itemData.count) + delta),
+        "color": 0,
+        "size": itemData.size,
+        "category": itemData.category,
+        "try": itemData.try
+     }
+
+    fetchMock(url, {method: 'post', body: JSON.stringify(data)})// 哥需要价格
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1, data.goods]]})
+          schema.isFetching = {$set: false};
+          schema.isHiddenPageSpin = {$set: true};
+          let nextState = update(this.state, schema)
+          this.setState(nextState)
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+        })
+      })
+  };
+  putBoxService = () => {
+    //let itemData = this.getDataByIndexPath(this.groupId, this.itemId)
+    let group = this.state.goodList[this.groupId]
+    let cid = group.id
+    let cgid = group['goods'][0]['cgid'] //ntid
+    let url = `${PUT_BOX_SERVICE}/${cid}/${cgid}`
+    let nextState = {isFetching: true}
+    this.setState(nextState)
+
+    let data = {
+        "id": group['goods'][0]['gid'],
+        "count": 1,
+        "color": 0,
+        "size": `${this.baseSize}-${this.braSize}`,
+        "category": group['goods'][0]['category'],
+        "try": 1
+     }
+
+    fetchMock(url, {method: 'post', body: JSON.stringify({goods: [data]})})// 哥需要价格
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let schema = this.getUpdateSchema(this.groupId,
+            {$splice: [[group.goods.length, 0, data.goods]]})
+          schema.isFetching = {$set: false}
+          schema.isHiddenPageSpin = {$set: true}
+          let nextState = update(this.state, schema)
+          this.setState(nextState)
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+        })
+      })
+
+  };
+  /**
+   * 购物车记录id (cart id)
+   * 购物车记录里非试穿id (not try id)
+   * 购物车记录里试穿id (try id)
+   */
+  deleteBoxService = () => {
+    let group = this.state.goodList[this.groupId]
+    let cid = group.id
+    let ntid = group['goods'][0]['cgid']
+    let tid = group['goods'][this.itemId]['cgid']
+    let url = `${DELETE_BOX_SERVICE}/${cid}/${ntid}/${tid}`
+    let nextState = {isFetching: true}
+    this.setState(nextState)
+    fetchMock(url)
+      .then((data) => {
+        if (data.rea ==  FETCH_SUCCESS) {
+          let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1]]})
+          schema.isFetching = {$set: false},
+          schema.isHiddenPageSpin = {$set: true}
+          let nextState = update(this.state, schema)
+          this.setState(nextState)
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+        })
+      })
+
+  };
+  deleteCartGoods = () => {
+    let groupId = parseInt(this.groupId)
+    let cid = this.state.goodList[groupId].id
+    let url = `${DELETE_CART_GOODS}/${cid}`
+    let nextState = {
+      isFetching: true,
+      isHiddenPageSpin: false
+    }
+    this.setState(nextState)
+
+    fetchMock(url, {method: 'post'})
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let schema = this.getUpdateSchema({$splice: [[groupId, 1]]})
+          let nextState = update(this.state, schema)
+          nextState.isFetching = false
+          nextState.isHiddenPageSpin = true
+          this.setState(nextState)
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+        })
+      })
+  };
+
   editHandler = (e) => {
     let target,
         nextState;
@@ -227,47 +365,36 @@ class ShoppingCart extends React.Component {
 
 
     if (target = getParentByClass(e.target, 'btn-add')) {
-      let {groupId, itemId} = this.getTargetDataAttres(target)
-      let schema = this.getUpdateSchema(groupId, itemId,
-          {count: {$apply: (val) => {return ++val} }})
-      nextState = update(this.state, schema)
-
-      schema = this.getUpdateSchema(groupId,
-          {$push: [{}]})
-
-      nextState = update(nextState, schema)
+       this.assignDataPramas(target)
+       if (this.itemId == '-1') {
+        this.putBoxService()
+       } else {
+        this.editCartGoods(1)
+       }
 
     } else if (target = getParentByClass(e.target, 'btn-minus')) {
-
-      let count = 0
-      let tempNextState
-      let {groupId, itemId} = this.getTargetDataAttres(target)
-      let schema = this.getUpdateSchema(groupId, itemId,
-          {count: {$apply: (val) => { count = --val; return count;} }})
-      tempNextState = update(this.state, schema)
-      if (count == 0) {
-        nextState = update(this.state, {promptMsg: {$set: '如果想删除该产品，请单击删除按钮'}})
-        this.refs['prompt'].show();
+      this.assignDataPramas(target)
+      if (this.itemId == '-1') return
+      let itemData = this.getDataByIndexPath(this.groupId, this.itemId)
+      if (this.itemId == '0') {
+        if (itemData.count < 2) return
+        this.editCartGoods(-1)
       } else {
-
-        nextState = tempNextState
-        let goods = nextState.goodList[groupId].goods
-        if (goods[0].count < (goods.length - 1)) {
-          schema = this.getUpdateSchema(groupId,
-              {$splice: [[-1, 1]]})
-          nextState = update(nextState, schema)
+        if (itemData.count < 1) return
+        if (itemData.count < 2) {
+          this.deleteBoxService()
+        } else {
+          this.editCartGoods(-1)
         }
       }
-
-    } else if (target = getParentByClass(e.target, 'radio-select')) {//isSelected
-      let {groupId, itemId} = this.getTargetDataAttres(target)
-      let schema = this.getUpdateSchema(groupId, itemId,
-          {
-            isSelected: {$apply: val => !val }
-          })
+    } else if (target = getParentByClass(e.target, 'select-radio')) {//isSelected
+      this.assignDataPramas(target)
+      let schema = this.getUpdateSchema(this.groupId, this.itemId,
+            {isSelected: {$apply: val => !val }})
 
       nextState = update(this.state, schema)
-      if (this.state.goodList[groupId].goods[itemId].isSelected &&
+      
+      if (this.state.goodList[this.groupId].goods[this.itemId].isSelected &&
           this.state.isSelectedAll) {
         nextState.isSelectedAll = false
       }
@@ -279,9 +406,10 @@ class ShoppingCart extends React.Component {
 
     } else if (target = getParentByClass(e.target, 'btn-delete')) {
       let {groupId, itemId, itemType} = this.getTargetDataAttres(target)
-      this.deleteGroupId = groupId
-      this.deleteItemId = itemId
-      nextState = update(this.state, {itemType: {$set: parseInt(itemType)}})
+      this.groupId = groupId
+      this.itemId = itemId
+      this.setState({isHiddenConfirm: false})
+      //nextState = update(this.state, {itemType: {$set: parseInt(itemType)}})
 
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
       if (this.state.totalPrice == 0) {
@@ -300,7 +428,7 @@ class ShoppingCart extends React.Component {
       if (this.state.isHaveGoods && !this.state.isFetching){
         this.setState({isHiddenScrollingSpin: false})
         this.state.pageIndex++
-        this.fetchCartData()
+        this.fetchCartData(true)
       }
     }
   };
@@ -308,20 +436,16 @@ class ShoppingCart extends React.Component {
    *  delete product item
    */
   deleteProductHandler = () => {
-    //this.deleteItemId
-    let schema = this.getUpdateSchema({
-      $splice: [[this.deleteGroupId, 1]]
-    })
-    let nextState = update(this.state, schema)
-    nextState.itemType = -1
-    this.setState(nextState)
+    //this.itemId
+    this.setState({isHiddenConfirm: true})
+    this.deleteCartGoods()
   };
   /**
    *  delete box service item
    */
   deleteBoxHandler = () => {
-    let schema = this.getUpdateSchema(this.deleteGroupId, {
-      $splice: [[this.deleteItemId, 1]]
+    let schema = this.getUpdateSchema(this.groupId, {
+      $splice: [[this.itemId, 1]]
     })
 
     let nextState = update(this.state, schema)
@@ -332,10 +456,21 @@ class ShoppingCart extends React.Component {
    * cancel deleting item that is product item or box service item
    */
   deleteCancelHandler = () => {
-    let nextState = update(this.state, {itemType: {$set: -1}})
-    this.setState(nextState)
+    //let nextState = update(this.state, {itemType: {$set: -1}})
+    this.setState({isHiddenConfirm: true})
   };
+  menuHanler = () => {
+    switch (this.props.params.actionModel) {
 
+      case ROUTER_SHOPPING_CART_SCAN:
+        this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_EDIT}`)
+        break;
+      case ROUTER_SHOPPING_CART_EDIT:
+      //  this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`)
+        break;
+    }
+    this.props.history.goForward()
+  };
   componentWillMount = () => {
     switch (this.props.params.actionModel) {
       case ROUTER_SHOPPING_CART_SCAN:
@@ -362,28 +497,6 @@ class ShoppingCart extends React.Component {
     nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
-    let confirm
-    switch (this.state.itemType) {
-      case 0:
-        confirm = (
-          <Confirm
-            confirmHandler={this.deleteProductHandler}
-            msg='你确定要删除该产品吗？'
-            cancelHandler={this.deleteCancelHandler}
-          />
-        )
-        break;
-      case 1:
-      confirm = (
-        <Confirm
-          confirmHandler={this.deleteBoxHandler}
-          msg='你确定要删除改试穿产品吗？'
-          cancelHandler={this.deleteCancelHandler}
-        />
-      )
-        break;
-
-    }
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
         <PageHeader
@@ -409,11 +522,11 @@ class ShoppingCart extends React.Component {
         <div className="check-out-wrap">
           <div className="justify-wrap">
             <div className="select-all">
-              <i
-                className={this.state.isSelectedAll? 'iconfont on' : 'iconfont'}
-              >
-                &#xe601;
-              </i>
+              {
+                this.state.isSelectedAll?
+                 (<i className="iconfont on">&#xe602;</i>):
+                 (<i className="iconfont">&#xe601;</i>)
+              }
               <span>全选</span>
             </div>
             <div className="total-price">
@@ -422,8 +535,13 @@ class ShoppingCart extends React.Component {
             <div className="btn-check-out">结算</div>
           </div>
         </div>
-        {confirm}
-        <Prompt msg={this.state.promptMsg} ref="prompt"/>
+        <Confirm
+          confirmHandler={this.deleteProductHandler}
+          isHidden={this.state.isHiddenConfirm}
+          msg={this.state.confirmMsg}
+          cancelHandler={this.deleteCancelHandler}
+        />
+        <Prompt msg={this.state.promptMsg} />
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
