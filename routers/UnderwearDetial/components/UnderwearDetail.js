@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {countBoxes} from 'commonApp.js'
-import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, POST_TO_CART, BASE_PAGE_DIR} from 'macros.js'
+import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, PUT_TO_CART, BASE_PAGE_DIR} from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
@@ -91,7 +91,7 @@ class Underweardetail extends React.Component {
    })
    data.goods = data.goods.concat(boxes)
 
-   fetchMock(`${POST_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
+   fetchMock(`${PUT_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
         if (this.state.buyActionModel == 1) {
           this.props.history.push(`${BASE_PAGE_DIR}/carts/scan`)

@@ -10,7 +10,9 @@ import {
     ROUTER_SHOPPING_CART_SCAN,
     ROUTER_SHOPPING_CART_EDIT,
     FETCH_CARTS,
-    FETCH_STATUS_NO_MORE_PRODUCT
+    FETCH_STATUS_NO_MORE_PRODUCT,
+    PUT_BOX_SERVICE,
+    POST_EDIT_CART
   } from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass} from 'util.js'
@@ -154,10 +156,33 @@ class ShoppingCart extends React.Component {
       itemType: target.getAttribute('data-item-type')
     }
   };
+  putBoxService = () => {
+    let url = `${PUT_BOX_SERVICE}`
+    let nextState = {isFetching: true}
+    this.setState(nextState)
+
+    fetchMock(url, {method: 'post'})
+      .then((data) => {
+        let splice = [this.state.goodList.length, 0].concat(data.cart)
+        let nextState = update(this.state, {
+          goodList: {$splice: [splice]},
+          isFetching:{$set: false},
+          isHiddenPageSpin: {$set: true}
+        })
+        this.setState(nextState)
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+        })
+      })
+
+  };
   fetchCartData = (isScrollingFetch = false) => {
-     this.state.isFetching = true
      let url = `${FETCH_CARTS}/${this.state.pageIndex}/${this.state.pageSize}`
      let nextState = {
+       isFetching: true,
        isHiddenScrollingSpin: isScrollingFetch? false : true,
        isHiddenPageSpin: isScrollingFetch? true : false
      }

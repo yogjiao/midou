@@ -102,7 +102,9 @@ export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
 export let FETCH_RECEIVER_INFO = FETCH_BASE_URL + '/get_address'
 
 export let FETCH_CARTS = FETCH_BASE_URL + '/get_cart_page'
-export let POST_TO_CART = FETCH_BASE_URL + '/add_to_cart'
+export let PUT_TO_CART = FETCH_BASE_URL + '/add_to_cart'
+export let PUT_BOX_SERVICE = FETCH_BASE_URL + '/add_try_cart'
+export let POST_EDIT_CART = FETCH_BASE_URL + '/edit_cart'
 // test Cookie token
 export let TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNDUzODg1MjM3LCJleHAiOjE3NjkyNDUyMzd9.chIaWYg_3_Y9wuMMuYGluDtjDxDz7kDxdXGebpP1cX4'
 export let MIDOU_TOKEN_NAME = 'x-midou-token'
