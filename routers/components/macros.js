@@ -101,6 +101,9 @@ export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
 // fetch receiver info by receiverInfoId
 export let FETCH_RECEIVER_INFO = FETCH_BASE_URL + '/get_address'
 export let PUT_RECEIVER_INFO = FETCH_BASE_URL + '/set_address'
+export let FETCH_RECEIVERS = FETCH_BASE_URL + '/get_address_page'
+export let DELETE_RECEIVERS = FETCH_BASE_URL + '/delete_address'
+
 
 export let FETCH_CARTS = FETCH_BASE_URL + '/get_cart_page'
 export let PUT_TO_CART = FETCH_BASE_URL + '/add_to_cart'

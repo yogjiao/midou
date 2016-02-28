@@ -1,0 +1,25 @@
+.receivers-item{
+  display: flex;
+  line-height: 30px;
+  border: 1px solid #dedfe9;
+  border-width: 1px 0;
+  padding: 10px 0;
+  position: relative;
+  margin-bottom: -1px;
+  > :nth-child(1){
+    flex: 1 1 80%;
+    padding-left: 15px;
+  }
+  > :nth-child(2){
+    flex: 1 1 20%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-right: 15px;
+    >*{
+      flex-basis:100%;
+      text-align:right;
+    }
+
+  }
+}
