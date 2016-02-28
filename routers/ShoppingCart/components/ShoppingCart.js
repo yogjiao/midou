@@ -31,6 +31,7 @@ class ShoppingCart extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      selectedIds: [],
       goodList: [],
       totalPrice: 0,
       isSelectedAll: false,
@@ -393,7 +394,7 @@ class ShoppingCart extends React.Component {
             {isSelected: {$apply: val => !val }})
 
       nextState = update(this.state, schema)
-      
+
       if (this.state.goodList[this.groupId].goods[this.itemId].isSelected &&
           this.state.isSelectedAll) {
         nextState.isSelectedAll = false
@@ -415,6 +416,8 @@ class ShoppingCart extends React.Component {
       if (this.state.totalPrice == 0) {
         nextState = update(this.state, {promptMsg: {$set: '请至少选择一件商品'}})
         this.refs['prompt'].show();
+
+        e.preventDefault()
       }
     }
 
@@ -494,9 +497,18 @@ class ShoppingCart extends React.Component {
   componentWillReceiveProps = (props) => {
   };
   componentWillUpdate = (nextProps, nextState) => {
+
+    let ids = []
+    this.state.goodList.forEach( (item, index) => {
+      if (item.goods[0].isSelected) ids.push(item.id)
+    })
+    nextState.selectedIds = ids
     nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
+    let url = this.state.selectedIds.length > 0?
+                (`${BASE_PAGE_DIR}/order/` + this.state.selectedIds.join()):
+                "javascript:void(0);"
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>
         <PageHeader
@@ -532,7 +544,7 @@ class ShoppingCart extends React.Component {
             <div className="total-price">
               <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
             </div>
-            <div className="btn-check-out">结算</div>
+            <Link to={url} className="btn-check-out">结算</Link>
           </div>
         </div>
         <Confirm
@@ -541,7 +553,7 @@ class ShoppingCart extends React.Component {
           msg={this.state.confirmMsg}
           cancelHandler={this.deleteCancelHandler}
         />
-        <Prompt msg={this.state.promptMsg} />
+        <Prompt msg={this.state.promptMsg} ref="prompt"/>
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
