@@ -124,6 +124,9 @@ export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
 export let FETCH_ORDER = FETCH_BASE_URL + '/get_order'
 
 
+export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
+
+
 
 
 // test Cookie token

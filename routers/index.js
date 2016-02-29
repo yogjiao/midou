@@ -40,6 +40,7 @@ const rootRoute = {
       require('./ReceiverInfo').edit,
       require('./Receivers').scan,
       require('./Receivers').edit,
+      require('./ExpressOrder'),
       require('./UnderwearAssistant')
     ]
   } ]
