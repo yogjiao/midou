@@ -13,7 +13,7 @@ class UserOrderCreatedGroup extends React.Component {
   componentWillReceiveProps = (props) => {
   };
   componentWillUpdate = (nextProps, nextState) => {
-    nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+    //nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
     let boxList = []

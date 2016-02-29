@@ -532,7 +532,7 @@ class ShoppingCart extends React.Component {
         }
         <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
         <div className="check-out-wrap">
-          <div className="justify-wrap">
+          <div className="check-out-justify-wrap">
             <div className="select-all">
               {
                 this.state.isSelectedAll?

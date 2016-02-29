@@ -6,7 +6,14 @@ import Prompt from 'Prompt/Prompt.js'
 import Confirm from 'Confirm/Confirm.js'
 import ReceiversItem from 'ReceiversItem.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_RECEIVERS, FETCH_STATUS_NO_MORE_PRODUCT, DELETE_RECEIVERS, FETCH_SUCCESS, BASE_PAGE_DIR, ROUTER_RECIEVER_INFO_ADD} from 'macros.js'
+import {
+  FETCH_RECEIVERS,
+  FETCH_STATUS_NO_MORE_PRODUCT,
+  DELETE_RECEIVERS,
+  FETCH_SUCCESS,
+  BASE_PAGE_DIR,
+  ROUTER_RECIEVER_INFO_ADD,
+  RECEIVERS_EDIT} from 'macros.js'
 import {fetchAuth, fetchMock} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
@@ -123,6 +130,12 @@ class Receivers extends React.Component {
       this.dataId = target.getAttribute('data-id')
       this.dataIndex = target.getAttribute('data-index')
       this.setState({isHiddenConfirm: false})
+    } else if (target = getParentByClass(e.target, 'receivers-item')){
+      if (!this.props.params.receiversModel){
+        let receiver = target.getAttribute('data-source')
+        localStorage.setItem('receiver', receiver);
+        this.props.history.goBack();
+      }
     }
   };
   componentDidMount = () => {
@@ -141,7 +154,12 @@ class Receivers extends React.Component {
       <div className="receivers-container" onClick={this.crudHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
-          <Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>
+          {
+            this.props.params.receiversModel == RECEIVERS_EDIT?
+              (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
+              (<Link to={`${BASE_PAGE_DIR}/receiver/${RECEIVERS_EDIT}`}>管理</Link>)
+          }
+
         </PageHeader>
         <div className="list-wrap">
           <ul className="pro-list">
@@ -155,7 +173,7 @@ class Receivers extends React.Component {
                   return city.id == item.city
                 })
                 item.address = province.name + ' ' + city.name + ' ' + item.detail
-                return <ReceiversItem key={index} {...item} index={index}/>;
+                return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
               })
             }
           </ul>
