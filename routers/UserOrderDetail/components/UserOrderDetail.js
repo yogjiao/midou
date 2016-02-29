@@ -11,7 +11,8 @@ import {fetchMock} from 'fetch.js'
 import {
   FETCH_ORDER,
   FETCH_SUCCESS,
-  PAY_WAY
+  PAY_WAY,
+  YUN_DA
 } from 'macros.js'
 import orderState from 'orderState.js'
 import provinces from 'provinces.js'
@@ -65,6 +66,9 @@ class UserOrderDetail extends React.Component {
        this.setState({isHiddenFillPrice: true})
     }
   };
+  backHandler = () => {
+    this.props.history.goBack();
+  };
   componentWillMount = () => {
   };
   componentDidMount = () => {
@@ -84,7 +88,7 @@ class UserOrderDetail extends React.Component {
     return (
       <div className="order-detail-container" onClick={this.orderHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont">&#xe609;</i>
+          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
         </PageHeader>
         <div className="status-container">
           <div className="status-wrap">
@@ -163,7 +167,7 @@ class UserOrderDetail extends React.Component {
         </dl>
         <div className="flow-wrap">
           <div className="justify-wrap">
-            查看物流
+            <Link to={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</Link>
           </div>
         </div>
         <FillPrice source={this.state.fillPriceSource} isHidden={this.state.isHiddenFillPrice}/>

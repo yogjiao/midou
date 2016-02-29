@@ -18,10 +18,11 @@ class UserOrderListGroup extends React.Component {
   render() {
     let boxList = []
     this.props.source.goods.forEach((item, index) => {
-        if (index == 0) return;
+      if (index > 0) {
         let temp
         temp = <UserOrderItem key={index} source={item} pageType="3" itemType="2"/>
         boxList.push(temp)
+      }
     })
     if (boxList.length > 0) {
       boxList = (<div className="box-list"><div className="sep-line"/>{boxList}</div>)

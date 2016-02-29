@@ -85,6 +85,7 @@ export let CHEST_FEATRUES_7 = [
 
 
 /********************************url**********************************/
+export let YUN_DA = 'http://m.kuaidi100.com/index_all.html?type=yunda&'
 export let BASE_PAGE_DIR = '/app-page'
 
 export let BASE_STATIC_DIR = '/app-static'
@@ -121,7 +122,10 @@ export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
 
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'
 export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
+
+
 export let FETCH_ORDER = FETCH_BASE_URL + '/get_order'
+export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 
 
 export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'

@@ -7,8 +7,11 @@ import {getParentByClass} from 'util.js'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_GOODS} from 'macros.js'
-import {fetchable} from 'fetch.js'
+import {
+    FETCH_ORDERS,
+    FETCH_STATUS_NO_MORE_PRODUCT
+  } from 'macros.js'
+import {fetchMock} from 'fetch.js'
 let update = require('react-addons-update')
 
 
@@ -20,88 +23,67 @@ class UserOrderList extends React.Component {
     super(props);
     this.state = {
       headerName: '所有单品',
-      isHiddenSpin: true,
-      goodList: []
+      lastOrder: 0,
+      pageSize: 2,
+      isHiddenPageSpin: true,
+      orderList: []
     }
 
   }
-  componentWillMount = () => {
+  fetchOrders = (isScrollLoading) => {
+    this.state.isFetching = true
+    let url = `${FETCH_ORDERS}/${this.state.lastOrder}/${this.state.pageSize}`
+    if (isScrollLoading) {
+      this.setState({isHiddenScrollingSpin: false})
+    } else {
+      this.setState({isHiddenPageSpin: false})
+    }
+    fetchMock(url)
+      .then((data) => {
+        if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+          this.state.isHaveGoods = false
+        }
+        let nextState = update(this.state, {
+          orderList: {$push: data.order}
+        })
+        this.state.lastOrder = data.order.slice(-1)[0].id;
+        this.setState(nextState)
+      })
+      .catch((error) => {
+        this.setState({
+          isFetching: false,
+          isHiddenPageSpin: true,
+          isHiddenScrollingSpin: true
+        })
+      })
+  };
+  handleScroll = () => {
+    let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
+    let sHeight = window.innerHeight;//可视窗大小
+    var pageHeight = document.documentElement.scrollHeight;
+    if (scrollTop + sHeight > pageHeight - 30) {
+      if (this.state.isHaveGoods && !this.state.isFetching){
+        this.state.pageIndex++
+        this.fetchOrders(true)
+      }
+    }
   };
   componentDidMount = () => {
-   this.setState({isHiddenSpin: false})
-
-    fetch('/app/get_cart')
-      .then(data => {
-        data = {
-          cart: [
-                  {
-                      "id": "10",
-                      "ts": "2016-02-04 10:18:32",
-                      "goods":
-                          [
-                              {
-                                  "cgid": "1",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "70",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "198.00",
-                                  "try": "0"
-                              },
-                              {
-                                  "cgid": "2",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "75",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "99.00",
-                                  "try": "1"
-                              },
-                              {
-                                  "cgid": "2",
-                                  "gid": "1",
-                                  "name": "商品名",
-                                  "main_img": "http://mielseno.com/view/photo/goods/10eb121750562bc8b3e966eb9158361b42697.jpeg",
-                                  "count": "2",
-                                  "color": "0",
-                                  "bottom_bust": "75",
-                                  "cup": "A",
-                                  "price": "99.00",
-                                  "deposit": "0.00",
-                                  "total_price": "99.00",
-                                  "try": "1"
-                              }
-                          ]
-                  }
-              ]
-        }
-        this.setState({goodList: data.cart, isHiddenSpin: true})
-
-
-
-      })
-      .catch(error => this.setState({isHiddenSpin: true}))
+    this.fetchOrders()
+    document.addEventListener('scroll', this.handleScroll);
   };
-  componentWillReceiveProps = (props) => {
+  componentWillUnmount = () => {
+
+    document.removeEventListener('scroll', this.handleScroll);
   };
   render() {
     return (
       <div className="order-detail-container">
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont">&#xe601;</i>
+          <i className="iconfont">&#xe609;</i>
         </PageHeader>
         {
-           this.state.goodList.map((item, index) => {
+           this.state.orderList.map((item, index) => {
             return (<UserOrderListGroup
                       key={index}
                       source={item}
