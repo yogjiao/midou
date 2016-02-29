@@ -29,7 +29,7 @@ class UserOrderItem extends React.Component {
           row_1 = (<div className="btn-draw-back">退款</div>)
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
-          row_2 = (<div className="btn-box-operate pay-lack">补差价</div>)
+          row_2 = (<div className="btn-box-operate btn-pay-lack">补差价</div>)
           row_3 = (<div className="btn-box-operate return-uw">返回内衣</div>)
         }
         break;
@@ -54,7 +54,7 @@ class UserOrderItem extends React.Component {
         <div className="column">
           <div className="row-wrap">
             <div className="pro-name">雪国精灵</div>
-            <div className="justify-wrap">
+            <div className="order-justify-wrap">
             {row_1}
             </div>
           </div>
@@ -62,13 +62,13 @@ class UserOrderItem extends React.Component {
             <div className="size-wrap">
               尺码：<span className="arial pl5">75C</span>
             </div>
-            <div className="justify-wrap">
+            <div className="order-justify-wrap">
               {row_2}
             </div>
           </div>
           <div className="row-wrap">
             <div className="price arial">&yen; 99</div>
-            <div className="justify-wrap">
+            <div className="order-justify-wrap">
               {row_3}
             </div>
           </div>

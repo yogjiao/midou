@@ -27,6 +27,10 @@ export let RECEIVERS_EDIT = 'edit'
 export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
+export let PAY_WAY = {
+  "zfb": "支付宝",
+  "wx": "微信"
+}
 export let UNDERWEAR_TAGS = [
     {id: "1", name:  "聚拢"},
     {id: "2", name:  "无痕"},
@@ -115,9 +119,11 @@ export let EDIT_CART_GOODS_BY_IDS = FETCH_BASE_URL + '/get_cart'
 
 export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
 
-export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
-
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'
+export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
+export let FETCH_ORDER = FETCH_BASE_URL + '/get_order'
+
+
 
 
 // test Cookie token
