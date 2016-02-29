@@ -18,6 +18,8 @@ import provinces from 'provinces.js'
 let update = require('react-addons-update');
 
 import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
+import FillPrice from './FillPrice.js'
+
 
 import './UserOrderDetail.less'
 class UserOrderDetail extends React.Component {
@@ -25,6 +27,7 @@ class UserOrderDetail extends React.Component {
     super(props);
     this.state = {
       isHiddenPageSpin: true,
+      isHiddenFillPrice: true,
       headerName: '订单详情',
       order: [{goods: []}],
       coupon: [],
@@ -52,6 +55,16 @@ class UserOrderDetail extends React.Component {
         this.setState({isHiddenPageSpin: true})
       })
   };
+  orderHandler = (e) => {
+    let target;
+    if (target = getParentByClass(e.target, 'btn-pay-lack')) {
+       //this.state fillPriceSource
+       let source = JSON.parse(target.getAttribute('data-source'));
+       this.setState({fillPriceSource: source, isHiddenFillPrice: false})
+    } else if (target = getParentByClass(e.target, 'btn-close-fill-price')) {
+       this.setState({isHiddenFillPrice: true})
+    }
+  };
   componentWillMount = () => {
   };
   componentDidMount = () => {
@@ -69,7 +82,7 @@ class UserOrderDetail extends React.Component {
       address = {}
     }
     return (
-      <div className="order-detail-container">
+      <div className="order-detail-container" onClick={this.orderHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont">&#xe609;</i>
         </PageHeader>
@@ -153,6 +166,7 @@ class UserOrderDetail extends React.Component {
             查看物流
           </div>
         </div>
+        <FillPrice source={this.state.fillPriceSource} isHidden={this.state.isHiddenFillPrice}/>
       </div>
     )
   }

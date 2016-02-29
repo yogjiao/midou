@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
+import {Link} from 'react-router'
+import {
+  BASE_PAGE_DIR
+} from 'macros.js'
 import './UserOrderItem.less'
-
 class UserOrderItem extends React.Component {
   /**
    * itemType 1 product item; 2 box service item;
@@ -26,11 +28,12 @@ class UserOrderItem extends React.Component {
         break;
       case '2':
         if (itemType == 1) {
-          row_1 = (<div className="btn-draw-back">退款</div>)
+          row_1 = (<Link className="btn-draw-back" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</Link>)
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
-          row_2 = (<div className="btn-box-operate btn-pay-lack">补差价</div>)
-          row_3 = (<div className="btn-box-operate return-uw">返回内衣</div>)
+          row_2 = (<div className="btn-box-operate btn-pay-lack" data-source={JSON.stringify(this.props.source)}>补差价</div>)
+          row_3 = (<Link className="btn-box-operate return-uw" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</Link>)
+
         }
         break;
       case '3':
@@ -53,7 +56,7 @@ class UserOrderItem extends React.Component {
         </div>
         <div className="column">
           <div className="row-wrap">
-            <div className="pro-name">雪国精灵</div>
+            <div className="pro-name">{this.props.source.name}</div>
             <div className="order-justify-wrap">
             {row_1}
             </div>
