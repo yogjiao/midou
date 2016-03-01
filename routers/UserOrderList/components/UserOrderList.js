@@ -26,7 +26,8 @@ class UserOrderList extends React.Component {
       lastOrder: 0,
       pageSize: 2,
       isHiddenPageSpin: true,
-      orderList: []
+      orderList: [],
+      isHaveGoods: true
     }
 
   }
@@ -44,12 +45,14 @@ class UserOrderList extends React.Component {
           this.state.isHaveGoods = false
         }
         let nextState = update(this.state, {
-          orderList: {$push: data.order}
+          orderList: {$push: data.order},
+          lastOrder: {$set: data.order.slice(-1)[0].id}
         })
-        this.state.lastOrder = data.order.slice(-1)[0].id;
         this.setState(nextState)
       })
       .catch((error) => {
+      })
+      .then(() => {
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -63,7 +66,6 @@ class UserOrderList extends React.Component {
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
       if (this.state.isHaveGoods && !this.state.isFetching){
-        this.state.pageIndex++
         this.fetchOrders(true)
       }
     }

@@ -16,29 +16,46 @@ class UserOrderListGroup extends React.Component {
     //nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
-    let boxList = []
-    this.props.source.goods.forEach((item, index) => {
-      if (index > 0) {
+    let list = []
+
+
+    this.props.source.goods.forEach( (item, index) => {
+      let noTryList = []
+      let tryList = []
+
+      item.forEach((item, index) => {
         let temp
-        temp = <UserOrderItem key={index} source={item} pageType="3" itemType="2"/>
-        boxList.push(temp)
+        if (index == 0) {
+          temp = <UserOrderItem key={index} source={item} pageType="3" itemType="1"/>
+          noTryList.push(temp)
+        } else {
+          temp = <UserOrderItem key={index} source={item} pageType="3" itemType="2"/>
+          tryList.push(temp)
+        }
+      })
+
+      if (tryList.length > 0) {
+        tryList = (<div className="box-list"><div className="sep-line"/>{tryList}</div>)
       }
+      noTryList = noTryList.concat(tryList)
+      noTryList = (<div className="order-group-item" key={index}>{noTryList}</div>)
+
+      list.push(noTryList)
+
     })
-    if (boxList.length > 0) {
-      boxList = (<div className="box-list"><div className="sep-line"/>{boxList}</div>)
-    }
+
+
+
+
+
     return (
-      <div className="order-detail-group">
+      <div className="order-list-group">
         <div className="order-group-header">
           <div className={`state-wrap order-state-${this.props.source.order_state}`}>已支付</div>
-          <div className="order-id"><span>订单号:</span><i className="color-purple">{this.props.source.id}</i></div>
+          <div className="order-id"><span>订单号:</span><i className="color-purple arial">{this.props.source.id}</i></div>
         </div>
-        <UserOrderItem
-          source={this.props.source.goods[0]}
-          pageType="3"
-          itemType="1"
-        />
-        {boxList}
+
+        {list}
 
       </div>
     )
