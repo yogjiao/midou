@@ -33,7 +33,7 @@ class UnderwearAssistant extends React.Component {
     }
     return (
       <div className="assistant-container">
-         <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
+         
          {content}
       </div>
     )

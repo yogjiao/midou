@@ -25,11 +25,13 @@ class AssistantSlideSelection extends React.Component {
                 return (
                   <li
                     key={index}
+                    data-index={index}
+                    data-source={JSON.stringify(item)}
                     className={this.props.selectedIndex == index?
                       'as-item on' :
                       "as-item"}
                    >
-                    <p>{item.name}</p>
+                    <p>{item.text}</p>
                     <i className="iconfont">&#xe60b;</i>
                   </li>
                 )
@@ -43,4 +45,4 @@ class AssistantSlideSelection extends React.Component {
 }
 
 //module.exports = Home
-module.exports = AssistantSlideSelection
+export default AssistantSlideSelection

@@ -3,12 +3,12 @@ import { Link } from 'react-router'
 
 
 import './Age.less'
-class Age extends React.Component {
+class Nighty extends React.Component {
   render() {
     return (
       <div className="age-container">
-         <h2>你的年龄</h2>
-         <div className="select-wrap" data-feature-name="age_group">
+         <h2>你常穿睡衣尺码是</h2>
+         <div className="select-wrap" data-feature-name="sleepwear_size">
            <span>{this.props.source.text}</span>
            <i className="iconfont">&#xe60a;</i>
          </div>
@@ -18,4 +18,4 @@ class Age extends React.Component {
 }
 
 //module.exports = Home
-export default Age
+export default Nighty

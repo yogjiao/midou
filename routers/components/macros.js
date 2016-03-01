@@ -50,6 +50,14 @@ export let UNDERWEAR_TYPES = [
     {id: "3", name:  "情趣"}
 ]
 
+export let ASSISTANT_FEATRUES_AGE = [
+    {value: "70", text:  "70后"},
+    {value: "80", text:  "80后"},
+    {value: "90", text:  "90后"},
+    {value: "00", text:  "00后"}
+]
+
+
 export let ASSISTANT_FEATRUES_BRA_SIZE = [
     {value: "A", text:  "A"},
     {value: "B", text:  "B"},
@@ -64,48 +72,47 @@ export let ASSISTANT_FEATRUES_BASE_SIZE = [
     {value: "85", text:  "85"}
 ]
 
-
-export let ASSISTANT_FEATRUES_AGE = [
-    {value: "70", text:  "70后"},
-    {value: "80", text:  "80后"},
-    {value: "90", text:  "90后"},
-    {value: "00", text:  "00后"}
+export let ASSISTANT_FEATRUES_SIZE = [
+    {value: "S", text:  "S"},
+    {value: "M", text:  "75"},
+    {value: "L", text:  "L"},
+    {value: "XL", text:  "XL"}
 ]
 
-export let ASSISTANT_FEATRUES_1 = [
-    {id: "1", name:  "聚拢"},
-    {id: "2", name:  "正中"},
-    {id: "3", name:  "外扩"}
+export let CHEST_FEATRUES_1 = [
+    {value: "1", text:  "聚拢"},
+    {value: "2", text:  "正中"},
+    {value: "3", text:  "外扩"}
 ]
-export let ASSISTANT_FEATRUES_2 = [
-    {id: "1", name:  "翘挺"},
-    {id: "2", name:  "一般"},
-    {id: "3", name:  "松软"}
+export let CHEST_FEATRUES_2 = [
+    {value: "1", text:  "翘挺"},
+    {value: "2", text:  "一般"},
+    {value: "3", text:  "松软"}
 ]
-export let ASSISTANT_FEATRUES_3 = [
-    {id: "1", name:  "小底盘"},
-    {id: "2", name:  "中等底盘"},
-    {id: "3", name:  "大底盘"}
+export let CHEST_FEATRUES_3 = [
+    {value: "1", text:  "小底盘"},
+    {value: "2", text:  "中等底盘"},
+    {value: "3", text:  "大底盘"}
 ]
-export let ASSISTANT_FEATRUES_4 = [
-    {id: "1", name:  "无副乳"},
-    {id: "2", name:  "稍有副乳"},
-    {id: "3", name:  "副乳明显"}
+export let CHEST_FEATRUES_4 = [
+    {value: "1", text:  "无副乳"},
+    {value: "2", text:  "稍有副乳"},
+    {value: "3", text:  "副乳明显"}
 ]
-export let ASSISTANT_FEATRUES_5 = [
-    {id: "1", name:  "薄杯"},
-    {id: "2", name:  "中厚"},
-    {id: "3", name:  "超厚"}
+export let CHEST_FEATRUES_5 = [
+    {value: "1", text:  "薄杯"},
+    {value: "2", text:  "中厚"},
+    {value: "3", text:  "超厚"}
 ]
-export let ASSISTANT_FEATRUES_6 = [
-    {id: "1", name:  "彩虹"},
-    {id: "2", name:  "性冷淡"},
-    {id: "3", name:  "成熟"}
+export let CHEST_FEATRUES_6 = [
+    {value: "1", text:  "彩虹"},
+    {value: "2", text:  "性冷淡"},
+    {value: "3", text:  "成熟"}
 ]
-export let ASSISTANT_FEATRUES_7 = [
-    {id: "1", name:  "简洁"},
-    {id: "2", name:  "大件重工"},
-    {id: "3", name:  "轻薄性感"}
+export let CHEST_FEATRUES_7 = [
+    {value: "1", text:  "简洁"},
+    {value: "2", text:  "大件重工"},
+    {value: "3", text:  "轻薄性感"}
 ]
 
 
