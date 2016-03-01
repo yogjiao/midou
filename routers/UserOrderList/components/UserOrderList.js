@@ -22,7 +22,7 @@ class UserOrderList extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
-      headerName: '所有单品',
+      headerName: '所有订单',
       lastOrder: 0,
       pageSize: 2,
       isHiddenPageSpin: true,

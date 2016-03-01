@@ -13,7 +13,7 @@ class UserOrderListGroup extends React.Component {
   componentWillReceiveProps = (props) => {
   };
   componentWillUpdate = (nextProps, nextState) => {
-    nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+    //nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
     let boxList = []
@@ -29,6 +29,10 @@ class UserOrderListGroup extends React.Component {
     }
     return (
       <div className="order-detail-group">
+        <div className="order-group-header">
+          <div className={`state-wrap order-state-${this.props.source.order_state}`}>已支付</div>
+          <div className="order-id"><span>订单号:</span><i className="color-purple">{this.props.source.id}</i></div>
+        </div>
         <UserOrderItem
           source={this.props.source.goods[0]}
           pageType="3"
