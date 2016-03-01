@@ -42,42 +42,67 @@ export let UNDERWEAR_TAGS = [
     {id: "8", name:  "情趣"},
     {id: "9", name:  "底裤"}
 ]
+
+
 export let UNDERWEAR_TYPES = [
     {id: "1", name:  "内衣"},
     {id: "2", name:  "底裤"},
     {id: "3", name:  "情趣"}
 ]
-export let CHEST_FEATRUES_1 = [
+
+export let ASSISTANT_FEATRUES_BRA_SIZE = [
+    {value: "A", text:  "A"},
+    {value: "B", text:  "B"},
+    {value: "C", text:  "C"},
+    {value: "D", text:  "D"}
+]
+
+export let ASSISTANT_FEATRUES_BASE_SIZE = [
+    {value: "70", text:  "70"},
+    {value: "75", text:  "75"},
+    {value: "80", text:  "80"},
+    {value: "85", text:  "85"}
+]
+
+
+export let ASSISTANT_FEATRUES_AGE = [
+    {value: "70", text:  "70后"},
+    {value: "80", text:  "80后"},
+    {value: "90", text:  "90后"},
+    {value: "00", text:  "00后"}
+]
+
+export let ASSISTANT_FEATRUES_1 = [
     {id: "1", name:  "聚拢"},
     {id: "2", name:  "正中"},
     {id: "3", name:  "外扩"}
 ]
-export let CHEST_FEATRUES_2 = [
+export let ASSISTANT_FEATRUES_2 = [
     {id: "1", name:  "翘挺"},
     {id: "2", name:  "一般"},
     {id: "3", name:  "松软"}
 ]
-export let CHEST_FEATRUES_3 = [
+export let ASSISTANT_FEATRUES_3 = [
     {id: "1", name:  "小底盘"},
     {id: "2", name:  "中等底盘"},
     {id: "3", name:  "大底盘"}
 ]
-export let CHEST_FEATRUES_4 = [
+export let ASSISTANT_FEATRUES_4 = [
     {id: "1", name:  "无副乳"},
     {id: "2", name:  "稍有副乳"},
     {id: "3", name:  "副乳明显"}
 ]
-export let CHEST_FEATRUES_5 = [
+export let ASSISTANT_FEATRUES_5 = [
     {id: "1", name:  "薄杯"},
     {id: "2", name:  "中厚"},
     {id: "3", name:  "超厚"}
 ]
-export let CHEST_FEATRUES_6 = [
+export let ASSISTANT_FEATRUES_6 = [
     {id: "1", name:  "彩虹"},
     {id: "2", name:  "性冷淡"},
     {id: "3", name:  "成熟"}
 ]
-export let CHEST_FEATRUES_7 = [
+export let ASSISTANT_FEATRUES_7 = [
     {id: "1", name:  "简洁"},
     {id: "2", name:  "大件重工"},
     {id: "3", name:  "轻薄性感"}
@@ -93,7 +118,7 @@ export let BASE_STATIC_DIR = '/app-static'
 export let FETCH_BASE_URL = '/app'
 
 // fetch scenes data for index page
-export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_all_scenes_goods'
+export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
 
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'

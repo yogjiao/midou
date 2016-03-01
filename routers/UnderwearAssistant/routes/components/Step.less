@@ -1,10 +1,27 @@
 .step-container{
-
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  .step-wrap{
+    padding: 0 50px;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .step-index{
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+  }
 }
 .as-next-wrap{
-  padding-top: 50px;
   .btn-next{
-    position: relative;
+    position: fixed;
+    bottom: 50px;
     left: 50%;
     transform: translate(-50%, 0);
     height: 50px;

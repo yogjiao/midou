@@ -14,7 +14,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      numberPerPage: 10,
+      pageSize: 10,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -25,7 +25,7 @@ class Home extends React.Component {
   }
   fetchListData = () => {
     this.state.isFetching = true
-    let url = `${FETCH_INDEX_DATA}/${this.state.pageIndex}/${this.state.numberPerPage}`
+    let url = `${FETCH_INDEX_DATA}/${this.props.params.sceneId}/${this.state.pageIndex}/${this.state.pageSize}`
     this.setState({isHiddenPageSpin: false})
     fetchable(url)
       .then((data) => {
@@ -97,5 +97,4 @@ class Home extends React.Component {
   }
 }
 
-//module.exports = Home
-export default Home
+module.exports = Home

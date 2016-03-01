@@ -4,5 +4,10 @@ module.exports = {
     require.ensure([], (require) => {
       cb(null, require('Step.js'))
     })
+  },
+  onEnter: function(nextState){
+    
+  },
+  onLeave: function(){
   }
 }
