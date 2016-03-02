@@ -3,10 +3,13 @@ import {BASE_STATIC_DIR} from 'macros.js'
 
 import './BoxService.less'
 class BoxService extends React.Component {
+  backHandler = () => {
+    this.props.history.goBack();
+  };
   render = () => {
     return (
       <div className="box-servie-container">
-        <i className="iconfont icon-arrow-left"></i>
+        <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         <div className="img-wrap">
           <img src={`${BASE_STATIC_DIR}/img/box-describe-1.png`} />
         </div>
