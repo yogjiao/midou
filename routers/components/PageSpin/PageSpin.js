@@ -8,7 +8,7 @@ class PageSpin extends React.Component {
   render() {
     return (
       <div className="page-spin" ref="panel" style={{display: (this.props.isHidden? 'none' : 'block ')}}>
-        <div className="loader loader-6"></div>
+        <div className="loader loader-6">{this.props.msg}</div>
       </div>
     )
   }

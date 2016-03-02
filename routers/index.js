@@ -22,7 +22,6 @@ import App from './App/App.js'
 import Home from './Home/Home.js'
 
 
-
 const rootRoute = {
   component: App,
   childRoutes: [ {

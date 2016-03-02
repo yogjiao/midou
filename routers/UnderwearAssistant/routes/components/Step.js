@@ -8,6 +8,9 @@ import {getParentByClass} from 'util.js'
 import AssistantSlideSelection from 'AssistantSlideSelection.js'
 import {
   BASE_PAGE_DIR,
+  BASE_STATIC_DIR,
+  PUT_ASSISTANT_INFO,
+  FETCH_SUCCESS,
 
   ASSISTANT_FEATRUES_AGE,
   ASSISTANT_FEATRUES_BASE_SIZE,
@@ -21,7 +24,7 @@ import {
   CHEST_FEATRUES_6,
   CHEST_FEATRUES_7
 } from 'macros.js'
-import {fetchable} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 
 import Age from 'Age.js'
@@ -29,8 +32,8 @@ import Bra from 'Bra.js'
 import Nighty from 'Nighty.js'
 import Chest from 'Chest.js'
 import Result from 'Result.js'
-
-
+import UpperBust from 'UpperBust.js'
+import UnderBust from 'UnderBust.js'
 import './Step.less'
 class Step extends React.Component {
   constructor(props) {
@@ -42,31 +45,79 @@ class Step extends React.Component {
       featureName: '',
       // featureSource: [],
       // selectedIndex: -1,
+      recommend_bottom_bust: '',
+      recommend_cup: '',
       selectedData: {
-          "age_group": {selectedIndex: -1, text: '选择年龄', featureSource: ASSISTANT_FEATRUES_AGE},
+          "age_group": {selectedIndex: 0, text: '70后', value: '70', featureSource: ASSISTANT_FEATRUES_AGE},
 
           "bottom_bust": {selectedIndex: -1, text: '选择低围', featureSource: ASSISTANT_FEATRUES_BASE_SIZE},
           "cup": {selectedIndex: -1, text: '选择罩杯', featureSource: ASSISTANT_FEATRUES_BRA_SIZE},
 
           "sleepwear_size": {selectedIndex: -1, text: '选择睡衣尺码', featureSource: ASSISTANT_FEATRUES_SIZE},
 
-          "look_gather": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_1, tips: '仔细观察你的胸部，他们是'},
-          "look_stand": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_2, tips: '仔细观察你的胸部，他们是' },
-          "look_chassis": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_3, tips: '仔细观察你的胸部，他们是'},
-          "look_accessory_breast": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_4, tips: '仔细观察你的胸部，他们是'},
-          "thickness": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_5, tips: '仔细观察你的胸部，他们是'},
+          "look_gather": {
+              selectedIndex: 0,
+              featureSource: CHEST_FEATRUES_1,
+              tips: '仔细观察你的胸部，他们是',
+              imgs: ['feature-1-1.png', 'feature-1-2.png', 'feature-1-3.png']
+          },
+          "look_stand": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_2,
+            tips: '仔细观察你的胸部，他们是',
+            imgs: ['feature-2-1.png', 'feature-2-2.png', 'feature-2-3.png']
+          },
+          "look_chassis": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_3,
+            tips: '仔细观察你的胸部，他们是',
+            imgs: ['feature-3-1.png', 'feature-3-2.png', 'feature-3-3.png']
+          },
+          "look_accessory_breast": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_4,
+            tips: '仔细观察你的胸部，他们是',
+            imgs: ['feature-4-1.png', 'feature-4-2.png', 'feature-4-3.png']
+          },
+          "thickness": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_5,
+            tips: '你喜欢哪种厚度？',
+            imgs: ['feature-5-1.png', 'feature-5-2.png', 'feature-5-3.png']
+          },
 
-          "underwear_style": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_6, tips: '仔细观察你的胸部，他们是'},
-          "ordinary_style": {selectedIndex: -1,  featureSource: CHEST_FEATRUES_7, tips: '仔细观察你的胸部，他们是'},
+          "underwear_style": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_6,
+            tips: '打开你的内衣橱，我们能看到什么？',
+            imgs: ['feature-6-1.png', 'feature-6-2.png', 'feature-6-3.png']
+          },
+          "ordinary_style": {
+            selectedIndex: 0,
+            featureSource: CHEST_FEATRUES_7,
+            tips: '平常穿的话，你最中意下面哪件？',
+            imgs: ['feature-7-1.png', 'feature-7-2.png', 'feature-7-3.png']
+          },
 
-          "upper_bust": {},
-          "under_bust": {},
-
+          "upper_bust": {selectedIndex: -1, text:'选择上胸围', tips: '仔细观察你的胸部，他们是'},
+          "under_bust": {selectedIndex: -1,  text:'选择下胸围',   tips: '仔细观察你的胸部，他们是'},
 
       }
     }
 
   }
+  makeSizeItem = (floor, upper, delta) => {
+    let list = []
+    while (floor <= upper) {
+      let temp = {
+        value: floor,
+        text: new Number(floor).toFixed(1)
+      }
+      list.push(temp)
+      floor += delta
+    }
+    return list
+  };
   thisHandler = (e) => {
     let target
     if (target = getParentByClass(e.target, 'select-wrap')) {
@@ -98,6 +149,21 @@ class Step extends React.Component {
     schema.isHiddenSelection = {$set: true}
     return update(this.state, schema)
   };
+  postAssistentData =  () => {
+    let data = {}
+    Object.keys(this.state.selectedData).forEach( (item, index) => {
+      data[item] = this.state.selectedData[item].value
+    });
+    fetchAuth(`${PUT_ASSISTANT_INFO}`, {method: 'post', body: JSON.stringify(data)})
+      .then( (data) => {//{"id":3002,"r":1,"rea":0,"recommend_bottom_bust":75,"recommend_cup":"A"}
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState({
+            recommend_bottom_bust: data.recommend_bottom_bust,
+            recommend_cup: data.recommend_cup
+          })
+        }
+      })
+  };
   selectionHandler = (e) => {
     let target
     let nextState
@@ -113,32 +179,18 @@ class Step extends React.Component {
   componentDidMount = () => {
 
   };
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.params.stepId > this.state.stepNum) {
+      this.postAssistentData()
+    }
+  };
   componentWillUnmount = () => {
   };
   render() {
 
     let {stepId} = this.props.params
-    let selection
     let nextStep = 1 * stepId + 1
-    let selectedIndex, featureSource
-    if (stepId < 4) {
-      try {
-        selectedIndex = this.state.selectedData[this.state.featureName].selectedIndex
-        featureSource = this.state.selectedData[this.state.featureName].featureSource
-      } catch (err) {
-        selectedIndex = -1
-        featureSource = []
-      }
-      selection = (
-        <Selection
-         itemType='1'
-         selectedIndex={selectedIndex}
-         isHidden={this.state.isHiddenSelection}
-         source={featureSource}
-         selectionHandler={this.selectionHandler}
-        />
-      )
-    }
+    let selectedIndex, featureSource, selection
     let content
     switch (stepId) {
       case '1':
@@ -171,12 +223,38 @@ class Step extends React.Component {
       case '10':
         this.state.featureName = 'ordinary_style'
         break;
+      case '11':
+        this.state.selectedData['upper_bust'].featureSource = this.makeSizeItem(60, 120, 0.5)
+        content = (<UpperBust source={this.state.selectedData.upper_bust}/>) //age_group
+        break;
+      case '12':
+        this.state.featureName = 'under_bust'
+        this.state.selectedData['under_bust'].featureSource = this.makeSizeItem(60, 90, 0.5)
+        content = (<UnderBust source={this.state.selectedData.under_bust}/>) //age_group
+        break;
 
     }
-    if (stepId > 3) {
+    if (stepId > 3 && stepId < 11) {
       let props = this.state.selectedData[this.state.featureName]
       content = (
         <Chest {...props}/>
+      )
+    } else {
+      try {
+        selectedIndex = this.state.selectedData[this.state.featureName].selectedIndex
+        featureSource = this.state.selectedData[this.state.featureName].featureSource
+      } catch (err) {
+        selectedIndex = -1
+        featureSource = []
+      }
+      selection = (
+        <Selection
+         itemType='1'
+         selectedIndex={selectedIndex}
+         isHidden={this.state.isHiddenSelection}
+         source={featureSource}
+         selectionHandler={this.selectionHandler}
+        />
       )
     }
 
@@ -186,17 +264,17 @@ class Step extends React.Component {
         {
           isResult?
           (
-            <Result />
+            <Result {...this.state}/>
           ) :
           (
             <div className="step-container" onClick={this.thisHandler}>
-              <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
+              <div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>
               <div className="step-index arial">{`${stepId}/${this.state.stepNum}`}</div>
               <div className="step-wrap">
                 {content}
               </div>
               <div className="as-next-wrap">
-                <Link to={`${BASE_PAGE_DIR}/assistant/step/${nextStep}`} className="btn-next iconfont">&#xe600;</Link>
+                <Link to={`${BASE_PAGE_DIR}/assistant/step/${nextStep}`} className="btn-next icon-gt iconfont"></Link>
               </div>
               {selection}
 

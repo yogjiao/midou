@@ -74,7 +74,7 @@ export let ASSISTANT_FEATRUES_BASE_SIZE = [
 
 export let ASSISTANT_FEATRUES_SIZE = [
     {value: "S", text:  "S"},
-    {value: "M", text:  "75"},
+    {value: "M", text:  "M"},
     {value: "L", text:  "L"},
     {value: "XL", text:  "XL"}
 ]
@@ -161,6 +161,9 @@ export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 
 
 export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
+
+
+export let PUT_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant'
 
 
 

@@ -18,7 +18,7 @@ import {
     EDIT_CART_GOODS,
     DELETE_CART_GOODS
   } from 'macros.js'
-import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
+import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
 import {countBoxes} from 'commonApp.js'
 import Confirm from 'Confirm/Confirm.js'
@@ -193,7 +193,7 @@ class ShoppingCart extends React.Component {
 
      this.setState(nextState)
 
-     fetchMock(url)
+     fetchAuth(url)
        .then((data) => {
          if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
            this.state.isHaveGoods = false
@@ -238,7 +238,7 @@ class ShoppingCart extends React.Component {
         "try": itemData.try
      }
 
-    fetchMock(url, {method: 'post', body: JSON.stringify(data)})// 哥需要价格
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})// 哥需要价格
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1, data.goods]]})
@@ -273,7 +273,7 @@ class ShoppingCart extends React.Component {
         "try": 1
      }
 
-    fetchMock(url, {method: 'post', body: JSON.stringify({goods: [data]})})// 哥需要价格
+    fetchAuth(url, {method: 'post', body: JSON.stringify({goods: [data]})})// 哥需要价格
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId,
@@ -305,7 +305,7 @@ class ShoppingCart extends React.Component {
     let url = `${DELETE_BOX_SERVICE}/${cid}/${ntid}/${tid}`
     let nextState = {isFetching: true}
     this.setState(nextState)
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea ==  FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1]]})
@@ -333,7 +333,7 @@ class ShoppingCart extends React.Component {
     }
     this.setState(nextState)
 
-    fetchMock(url, {method: 'post'})
+    fetchAuth(url, {method: 'post'})
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema({$splice: [[groupId, 1]]})

@@ -1,5 +1,9 @@
 import {getUserInfoFromApp, callOutLoginPanel} from 'webviewInterface.js'
 import {NOT_LOGIN_ERROR, MIDOU_TOKEN_NAME, TEST_TOKEN} from 'macros.js'
+
+import uaParser from 'uaParser.js'
+
+
 function checkStatus(response) {
   if (response.status == 200 ) {
     return response
@@ -45,4 +49,9 @@ export let fetchMock = (url, options = {}) => {
               return response.json()
             })
 }
+
+if (uaParser.getOS().name != 'IOS') {
+  fetchAuth = fetchMock
+}
+
 export default fetchAuth
