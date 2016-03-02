@@ -1,7 +1,13 @@
 
-/ 首页
+basePath: /app-page
+
+/scene/0 首页
 /underwears 产品列表
 /underwear/:productId 产品详情
-/carts   查看购物车
+/carts/scan   查看购物车
 /carts/edited  编辑购物车
 /order  创建订单
+/orders  订单列表
+/box-service  盒子服务
+/customer-service 客服
+/collections 收藏

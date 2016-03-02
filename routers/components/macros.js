@@ -9,14 +9,16 @@
 export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 
 // call out login panel
-export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'callOutLoginPanel'
+export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'calloutLogin'
 
 //notify app to checkout
 export let CALL_HANDLER_CHECKOUT = 'orderInfoCallback'
 
 // share to social circle
 export let  CALL_HANDLER_SHARE = 'shareInCallback'
-//export let  CALL_HANDLER_ = 'shareInCallback'
+ 
+export let CALL_HANDLER_REDIRECT_TO_HOME = 'redirectToHome'
+
 
 // for router
 export let ROUTER_SHOPPING_CART_SCAN = 'scan'

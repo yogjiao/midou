@@ -40,7 +40,7 @@ var config = {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
         chunkFilename: '[id].chunk.js',
-        publicPath: "/app-static/js"
+        publicPath: "/app-static/js/"
     },
     module: {
         loaders: [

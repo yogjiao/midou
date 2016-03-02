@@ -19,7 +19,7 @@ class Home extends React.Component {
       isHiddenScrollingSpin: true,
       isFetching: false,
       isHaveGoods: true,
-      prolist: []
+      goodsList: []
     };
 
   }
@@ -33,7 +33,7 @@ class Home extends React.Component {
           this.state.isHaveGoods = false
         }
         let nextState = update(this.state, {
-          prolist: {$push: data.goods},
+          goodsList: {$push: data.goods},
           isFetching:{$set: false},
           isHiddenPageSpin: {$set: true},
           isHiddenScrollingSpin: {$set: true}
@@ -84,7 +84,7 @@ class Home extends React.Component {
         <div className="list-wrap">
           <ul className="pro-list">
             {
-              this.state.prolist.map(function(pro) {
+              this.state.goodsList.map(function(pro) {
                 return <HomeListItem key={pro.id} {...pro}/>;
               })
             }

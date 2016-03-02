@@ -42,7 +42,9 @@ const rootRoute = {
       require('./Receivers').scan,
       require('./Receivers').edit,
       require('./ExpressOrder'),
-      require('./UnderwearAssistant')
+      require('./UnderwearAssistant'),
+      require('./BoxService'),
+      require('./CustomerService'),
     ]
   } ]
 }
