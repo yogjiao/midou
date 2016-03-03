@@ -69,18 +69,19 @@ class Home extends React.Component {
 
     document.removeEventListener('scroll', this.handleScroll.bind(this));
   };
-  test = () => {
-    getUserInfoFromApp()
-      .then(function(data){
-        alert(JSON.stringify(data));
-      })
-  };
+  // test = () => {
+  //   '<div className="test" onClick={this.test}>点击获取用户信息</div>'
+  //   getUserInfoFromApp()
+  //     .then(function(data){
+  //       alert(JSON.stringify(data));
+  //     })
+  // };
   render() {
     return (
       <div className="home-container">
         <div className="bg-wrap">
         </div>
-        <div className="test" onClick={this.test}>点击获取用户信息</div>
+
         <div className="list-wrap">
           <ul className="pro-list">
             {
