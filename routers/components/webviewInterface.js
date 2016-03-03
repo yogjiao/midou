@@ -42,8 +42,10 @@ export let callHandler = handler('callHandler');
 //let loginInfo = {}
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
+    alert('getUserInfoFromApp')
     callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
         //loginInfo = response
+        alert(response.token)
         resolve({loginToken: response.token, userName: response.userName})
       })
   });
@@ -62,9 +64,9 @@ export let notifyAppToCheckout = function() {
       })
   });
 }
-export let shareToSocialCircle = function() {
+export let shareToSocialCircle = function(data) {
   return new Promise((resolve, reject) => {
-    callHandler(CALL_HANDLER_SHARE, {}, function(response) {
+    callHandler(CALL_HANDLER_SHARE, data, function(response) {
         resolve(response)
       })
   });

@@ -5,8 +5,15 @@ import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
+import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
 import {countBoxes} from 'commonApp.js'
-import {FETCH_GOOD, FETCH_STATUS_NO_MORE_PRODUCT, PUT_TO_CART, BASE_PAGE_DIR} from 'macros.js'
+import {
+  FETCH_GOOD,
+  FETCH_STATUS_NO_MORE_PRODUCT,
+  PUT_TO_CART,
+  BASE_PAGE_DIR,
+
+} from 'macros.js'
 import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
@@ -15,7 +22,7 @@ import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {registerHandler, callHandler} from 'webviewInterface.js'
+import {shareToSocialCircle} from 'webviewInterface.js'
 
 import './UnderwearDetail.less'
 class Underweardetail extends React.Component {
@@ -27,6 +34,7 @@ class Underweardetail extends React.Component {
       isHaveGoods: true,
       isHiddenPageSpin: false,
       isHiddenSelectPanel: true,
+      isHiddenSharePanel: true,
 
       size: 0,
       braSize: 0, // bra
@@ -67,14 +75,7 @@ class Underweardetail extends React.Component {
    * arrow function must end with semicolon, if not the wepback compile will error
    * add product to shopping car handler
    */
-  /**
-   * share with social circle
-   */
-  shareHanler = () => {
-    callHandler(macros.SHARE_HANLER, {}, function(data){
-      alert('分享成功了' + JSON.stringify(data))
-    })
-  };
+
   postDataToCartHandler = () => {
     let data = {goods: []}
     let temp = pick(this.state.goods, 'id', 'category')
@@ -192,6 +193,36 @@ class Underweardetail extends React.Component {
   backHandler = () => {
     this.props.history.goBack()
   };
+  shareHandler = (e) => {
+    let target
+    let nextState = {}
+    if (target = getParentByClass(e.target, 'menu-share')) {
+      nextState.isHiddenSharePanel = false
+    } else if (target = getParentByClass(e.target, 'media-item')) {
+      // "type": "微博,QQ,朋友圈,微信朋友",
+      //         "url": "网址",
+      //         "title": "这是标题",
+      //         "description": "这是描述",
+      //         "imgUrl": "http://www.baidu.com"
+      let goods = this.state.goods
+      let type = target.getAttribute('data-type')
+      let data = {}
+      data.type = type
+      data.url = window.location.href
+      data.title = goods.name
+      data.description = goods.match_intro
+      data.imgUrl = goods.main_img
+
+      shareToSocialCircle(data)
+        .then( (data) => {
+          alert('分享成功了')
+        })
+      nextState.isHiddenSharePanel = true
+    } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
+      nextState.isHiddenSharePanel = true
+    }
+    nextState && this.setState(nextState)
+  };
   buyHandler = (e) => {
     let target,
         nextState
@@ -236,10 +267,10 @@ class Underweardetail extends React.Component {
   };
   render() {
     return (
-      <div className="uw-detail-container">
+      <div className="uw-detail-container" onClick={this.shareHandler}>
         <PageHeader headerName="产品详情">
           <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-          <div className="menu-search" onClick={this.shareHanler}>分享</div>
+          <div className="menu-share" >分享</div>
         </PageHeader>
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>
@@ -250,6 +281,9 @@ class Underweardetail extends React.Component {
           isHidden={this.state.isHiddenSelectPanel}
           {...this.state}
           selectHandler={this.selectHandler}
+        />
+        <ShareToSocialMedia
+          isHidden={this.state.isHiddenSharePanel}
         />
       </div>
     )
