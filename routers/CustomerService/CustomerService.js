@@ -1,12 +1,23 @@
 import React from 'react'
-import {BASE_STATIC_DIR} from 'macros.js'
+import {
+  BASE_STATIC_DIR
+} from 'macros.js'
+
+import {backToUserCenterNativePage} from 'webviewInterface.js'
 
 import './CustomerService.less'
 class CustomerService extends React.Component {
+  backHandler = () => {
+    //this.props.history.goBack();
+    backToUserCenterNativePage()
+      .then((data) => {
+        alert(data.message);
+      })
+  };
   render = () => {
     return (
       <div className="customer-servie-container">
-        <i className="iconfont icon-arrow-left"></i>
+        <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         <h2>联系客服</h2>
         <div className="img-wrap weixin-logo">
           <img src={`${BASE_STATIC_DIR}/img/logo-wx.png`} />

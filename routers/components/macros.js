@@ -16,9 +16,10 @@ export let CALL_HANDLER_CHECKOUT = 'orderInfoCallback'
 
 // share to social circle
 export let  CALL_HANDLER_SHARE = 'shareInCallback'
- 
+
 export let CALL_HANDLER_REDIRECT_TO_HOME = 'redirectToHome'
 
+export let CALL_HANDLER_BACK_TO_NATIVE_PAGE = 'backLast'
 
 // for router
 export let ROUTER_SHOPPING_CART_SCAN = 'scan'

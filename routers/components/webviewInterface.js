@@ -1,10 +1,12 @@
 import {
-          CALL_HANDLER_GET_USER_INFO,
-          CALL_HANDLER_CALL_OUT_LOGIN_PANEL,
-          CALL_HANDLER_CHECKOUT,
-          CALL_HANDLER_SHARE,
-          TEST_TOKEN
-       } from 'macros.js'
+  TEST_TOKEN,
+
+  CALL_HANDLER_GET_USER_INFO,
+  CALL_HANDLER_CALL_OUT_LOGIN_PANEL,
+  CALL_HANDLER_CHECKOUT,
+  CALL_HANDLER_SHARE,
+  CALL_HANDLER_BACK_TO_NATIVE_PAGE
+} from 'macros.js'
 
 
 function setupWebViewJavascriptBridge(callback) {
@@ -62,6 +64,14 @@ export let notifyAppToCheckout = function() {
 export let shareToSocialCircle = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_SHARE, {}, function(response) {
+        resolve(response)
+      })
+  });
+}
+
+export let backToUserCenterNativePage = function() {
+  return new Promise((resolve, reject) => {
+    callHandler(CALL_HANDLER_BACK_TO_NATIVE_PAGE, {}, function(response) {
         resolve(response)
       })
   });

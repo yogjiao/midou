@@ -1,10 +1,15 @@
 import React from 'react'
 import {BASE_STATIC_DIR} from 'macros.js'
+import {backToUserCenterNativePage} from 'webviewInterface.js'
 
 import './BoxService.less'
 class BoxService extends React.Component {
   backHandler = () => {
-    this.props.history.goBack();
+    //this.props.history.goBack();
+    backToUserCenterNativePage()
+      .then((data) => {
+        alert(data.message);
+      })
   };
   render = () => {
     return (
