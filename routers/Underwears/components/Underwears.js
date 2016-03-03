@@ -5,7 +5,11 @@ import { Link } from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_GOODS, FETCH_STATUS_NO_MORE_PRODUCT} from 'macros.js'
+import {
+  FETCH_GOODS,
+  FETCH_COLLECTIONS,
+  FETCH_STATUS_NO_MORE_PRODUCT,
+} from 'macros.js'
 import {fetchable} from 'fetch.js'
 import {getParentByClass} from 'util.js'
 let update = require('react-addons-update')
@@ -16,11 +20,12 @@ import UnderwearSearchPanel from 'UnderwearSearchPanel.js'
 // import fetch from '../../components/fetch.js'
 
 
-import './UnderwearList.less'
-class UnderwearList extends React.Component {
+import './Underwears.less'
+class Underwears extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      headerName: '所有单品',
       pageIndex: 0,
       pageSize: 6,
       isFetching: false,
@@ -53,6 +58,10 @@ class UnderwearList extends React.Component {
      }
      let url=`${FETCH_GOODS}/${size}/${this.state.category}/`
        + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
+
+     if (this.props.route.path == 'collections') {
+       url=`${FETCH_COLLECTIONS}/${this.state.pageIndex}/${this.state.pageSize}`
+     }
      this.state.isFetching = true
      let nextState = {
        isHiddenScrollingSpin: isScrollingFetch? false : true,
@@ -145,6 +154,11 @@ class UnderwearList extends React.Component {
   backHandler = () => {
     this.props.history.goBack();
   };
+  componentWillMount = () => {
+    if (this.props.route.path == "collections") {
+      this.state.headerName = '我的收藏'
+    }
+  };
   componentWillUnmount = () => {
     document.removeEventListener('scroll', this.scrollingHandler);
   };
@@ -155,9 +169,14 @@ class UnderwearList extends React.Component {
   render() {
     return (
       <div className="uw-list-container">
-        <PageHeader headerName="所有单品">
+        <PageHeader headerName={this.state.headerName}>
          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-          <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
+         {
+           this.props.route.path == "collections"?
+           (<div className="menu-search" onClick={this.openFilterHanler}>筛选</div>):
+           ''
+         }
+
         </PageHeader>
         <div className="list-wrap">
           <div className="adjuxt-wrap clearfix">
@@ -180,4 +199,4 @@ class UnderwearList extends React.Component {
   }
 }
 
-module.exports = UnderwearList
+module.exports = Underwears

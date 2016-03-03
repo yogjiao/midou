@@ -134,6 +134,7 @@ export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
 
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
+export let FETCH_COLLECTIONS = FETCH_BASE_URL + '/get_collection_page'
 
 //fetch good's detail
 export let FETCH_GOOD = FETCH_BASE_URL + '/get_goods_detail'
