@@ -1,0 +1,43 @@
+.share-social-container{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  .blur-overlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rbga(255,255,255,0.5);
+  }
+  .share-content{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 0 0 10px 3px rgba(0,0,0,0.2);
+  }
+  h6{
+    color: #9ba4d1;
+  }
+  .media-wrap{
+    display: flex;
+    margin: 0 30px;
+    li{
+      flex: 1 1 50%;
+    }
+    .img-wrap{
+
+    }
+    .share-name{
+      color: #9ba4d1;
+    }
+  }
+  .cancel-shrare{
+    text-align: center;
+    font-weight: bold;
+  }
+}
