@@ -24,7 +24,7 @@ import Home from './Home/Home.js'
 
 const rootRoute = {
   component: App,
-  childRoutes: [ {
+  childRoutes: [ {//createElement
     path: `${BASE_PAGE_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
@@ -45,7 +45,7 @@ const rootRoute = {
       require('./UnderwearAssistant'),
       require('./BoxService'),
       require('./CustomerService'),
-    ]
+      ]
   } ]
 }
 

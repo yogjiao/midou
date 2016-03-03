@@ -5,7 +5,8 @@ import {
   CALL_HANDLER_CALL_OUT_LOGIN_PANEL,
   CALL_HANDLER_CHECKOUT,
   CALL_HANDLER_SHARE,
-  CALL_HANDLER_BACK_TO_NATIVE_PAGE
+  CALL_HANDLER_BACK_TO_NATIVE_PAGE,
+  CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL
 } from 'macros.js'
 
 
@@ -72,6 +73,14 @@ export let shareToSocialCircle = function() {
 export let backToUserCenterNativePage = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_BACK_TO_NATIVE_PAGE, {}, function(response) {
+        resolve(response)
+      })
+  });
+}
+
+export let backToHomeNativePage = function() {
+  return new Promise((resolve, reject) => {
+    callHandler(CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL, {}, function(response) {
         resolve(response)
       })
   });

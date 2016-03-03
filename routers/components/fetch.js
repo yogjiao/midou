@@ -29,10 +29,11 @@ export let fetchAuth = (url, options = {}) => {
                 let headers = options.headers? options.headers : options.headers = {}
                 headers[MIDOU_TOKEN_NAME] = data.loginToken
                 fetch.apply(null, arguments)
-              } else {
-                callOutLoginPanel();
-                throw new Error(NOT_LOGIN_ERROR)
               }
+              // else {
+              //   callOutLoginPanel()
+              //   throw new Error(NOT_LOGIN_ERROR)
+              // }
             })
             .then(checkStatus)
             .then(function(response){

@@ -10,11 +10,11 @@ import {getUserInfoFromApp} from 'webviewInterface.js'
 
 import './Home.less'
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       pageIndex: 0,
-      pageSize: 10,
+      pageSize: 2,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -78,24 +78,33 @@ class Home extends React.Component {
   // };
   render() {
     return (
-      <div className="home-container">
-        <div className="bg-wrap">
-        </div>
+        <div className="home-container">
+          <div className="bg-wrap">
+          </div>
 
-        <div className="list-wrap">
-          <ul className="pro-list">
-            {
-              this.state.goodsList.map(function(pro) {
-                return <HomeListItem key={pro.id} {...pro}/>;
-              })
-            }
-          </ul>
-          <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+          <div className="list-wrap">
+            <ul className="pro-list">
+              {
+                this.state.goodsList.map(function(pro) {
+                  return <HomeListItem key={pro.id} {...pro}/>;
+                })
+              }
+            </ul>
+            <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+          </div>
+          <PageSpin isHidden={this.state.isHiddenPageSpin}/>
         </div>
-        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
-      </div>
     )
   }
 }
-
+// Home.childContextTypes = {
+//     pageSpin: React.PropTypes.node.isRequired
+//   }
+// Home.contextTypes = {
+//     name: React.PropTypes.string.isRequired,
+//     //router: React.PropTypes.func.isRequired
+// }
+// Home.context = {
+//   //pageSpin: pageSpin
+// }
 module.exports = Home

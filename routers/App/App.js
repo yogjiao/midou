@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import './App.less'
 
+
+import './App.less'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    //this.state = {}
   }
   componentWillUnmount(){
   }
@@ -23,6 +23,4 @@ class App extends React.Component {
     )
   }
 }
-
-//App.defaultProps = { pageSpin:  (<PageSpin />)};
 export default App
