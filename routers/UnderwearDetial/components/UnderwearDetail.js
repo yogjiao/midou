@@ -107,7 +107,7 @@ class Underweardetail extends React.Component {
         } else if (data.rea == '2003'){
           this.setState({promptMsg: '你选择的型号没有库存了'})
           this.refs['prompt'].show();
-        } 
+        }
 
       })
       .catch((e) => {

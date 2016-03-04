@@ -39,17 +39,22 @@ export let registerHandler = handler('registerHandler');
 export let callHandler = handler('callHandler');
 
 // cached  user login info
-//let loginInfo = {}
+let loginInfo = {}
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
-    alert('getUserInfoFromApp')
     callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-        //loginInfo = response
-        alert(response.token)
         resolve({loginToken: response.token, userName: response.userName})
       })
   });
 }
+
+// export let getUserInfoFromApp = function() {
+//   return new Promise((resolve, reject) => {
+//     resolve({loginToken: TEST_TOKEN})
+//   });
+// }
+
+
 export let callOutLoginPanel = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_CALL_OUT_LOGIN_PANEL, {}, function(response) {
@@ -57,9 +62,9 @@ export let callOutLoginPanel = function() {
       })
   });
 }
-export let notifyAppToCheckout = function() {
+export let notifyAppToCheckout = function(data) {
   return new Promise((resolve, reject) => {
-    callHandler(CALL_HANDLER_CHECKOUT, {}, function(response) {
+    callHandler(CALL_HANDLER_CHECKOUT, data, function(response) {
         resolve(response)
       })
   });

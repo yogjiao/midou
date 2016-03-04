@@ -77,8 +77,8 @@ class ShoppingCartItemEdit extends React.Component {
            {
              this.props.itemType == '0'?
                this.props.source.isSelected?
-               (<div className="raido select-radio iconfont on" {...ids}>&#xe602;</div>) :
-               (<div className="raido select-radio iconfont" {...ids}>&#xe601;</div>):
+               (<div className="raido select-radio iconfont icon-radio-on" {...ids}></div>) :
+               (<div className="raido select-radio iconfont icon-radio" {...ids}></div>):
              ''
            }
            </li>

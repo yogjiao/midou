@@ -497,9 +497,8 @@ class ShoppingCart extends React.Component {
   componentWillReceiveProps = (props) => {
   };
   componentWillUpdate = (nextProps, nextState) => {
-
     let ids = []
-    this.state.goodList.forEach( (item, index) => {
+    nextState.goodList.forEach( (item, index) => {
       if (item.goods[0].isSelected) ids.push(item.id)
     })
     nextState.selectedIds = ids
@@ -536,8 +535,8 @@ class ShoppingCart extends React.Component {
             <div className="select-all">
               {
                 this.state.isSelectedAll?
-                 (<i className="iconfont on">&#xe602;</i>):
-                 (<i className="iconfont">&#xe601;</i>)
+                 (<i className="iconfont icon-radio-on"></i>):
+                 (<i className="iconfont icon-radio"></i>)
               }
               <span>全选</span>
             </div>

@@ -28,7 +28,7 @@ let fetchAuth = (url, options = {}) => {
               if (data.loginToken) {
                 let headers = options.headers? options.headers : options.headers = {}
                 headers[MIDOU_TOKEN_NAME] = data.loginToken
-                fetch.apply(null, arguments)
+                return fetch(url, options)
               }
               // else {
               //   callOutLoginPanel()
@@ -51,7 +51,7 @@ let fetchMock = (url, options = {}) => {
             })
 };
 
-if (uaParser.getOS().name != 'IOS') {
+if (uaParser.getOS().name != 'iOS') {
   fetchAuth = fetchMock
 }
 

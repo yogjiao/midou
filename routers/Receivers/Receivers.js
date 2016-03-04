@@ -14,7 +14,7 @@ import {
   BASE_PAGE_DIR,
   ROUTER_RECIEVER_INFO_ADD,
   RECEIVERS_EDIT} from 'macros.js'
-import {fetchAuth, fetchMock} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
 let update = require('react-addons-update')
@@ -47,7 +47,7 @@ class Receivers extends React.Component {
       isHiddenPageSpin: false,
       isHiddenConfirm: true
     })
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let nextState = update(this.state, {
@@ -78,7 +78,7 @@ class Receivers extends React.Component {
     } else {
       this.setState({isHiddenPageSpin: false})
     }
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveaddress = false

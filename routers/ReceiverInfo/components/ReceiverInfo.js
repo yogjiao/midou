@@ -16,7 +16,7 @@ import Prompt from 'Prompt/Prompt.js'
 import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
-import {fetchAuth, fetchMock} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 
 let update = require('react-addons-update')
 
@@ -38,7 +38,7 @@ class ReceiverInfo extends React.Component {
   }
   fetchReceiverInfo = () => {
     let url = `${FETCH_RECEIVER_INFO}/${this.props.params.receiverInfoId}`
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState(data.address)
@@ -71,7 +71,7 @@ class ReceiverInfo extends React.Component {
   saveHanler = () => {
     let url = `${PUT_RECEIVER_INFO}/${this.state.id}`
     let data = pick(this.state, 'id','name','phone','province','city','detail')
-    fetchMock(url, {method: 'post', body: JSON.stringify(data)})
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let nextState = {}

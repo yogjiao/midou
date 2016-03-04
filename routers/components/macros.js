@@ -14,10 +14,11 @@ export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'calloutLogin'
 export let CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL = 'redirectToHome'
 
 //notify app to checkout
-export let CALL_HANDLER_CHECKOUT = 'orderInfoCallback'
+export let CALL_HANDLER_CHECKOUT = 'checkoutCallback'
 
 // share to social circle
 export let  CALL_HANDLER_SHARE = 'shareInfoCallback'
+
 
 export let CALL_HANDLER_REDIRECT_TO_HOME = 'redirectToHome'
 

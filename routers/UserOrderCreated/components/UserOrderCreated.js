@@ -7,8 +7,16 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import Selection from 'Selection/Selection.js'
 import Prompt from 'Prompt/Prompt.js'
 import PageSpin from 'PageSpin/PageSpin.js'
-import {EDIT_CART_GOODS_BY_IDS, FETCH_SUCCESS, BASE_PAGE_DIR, FETCH_COUPONS, PUT_TO_ORDER} from 'macros.js'
-import {fetchAuth, fetchMock} from 'fetch.js'
+import {
+  EDIT_CART_GOODS_BY_IDS,
+  FETCH_SUCCESS,
+  BASE_PAGE_DIR,
+  FETCH_COUPONS,
+  PUT_TO_ORDER,
+
+} from 'macros.js'
+import {notifyAppToCheckout} from 'webviewInterface.js'
+import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update');
 
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
@@ -54,7 +62,7 @@ class UserOrderCreated extends React.Component {
   fetchCouponSource = () => {
     let url = `${FETCH_COUPONS}`
     this.setState({isHiddenPageSpin: false})
-    fetchMock(url)
+    fetchAuth(url)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
@@ -71,7 +79,7 @@ class UserOrderCreated extends React.Component {
         this.setState({isHiddenPageSpin: true})
       })
   };
-  pageOperateHandler = (e) => {
+  thisHandler = (e) => {
     let target
     let nextState
     if (target = getParentByClass(e.target, 'pay-way-wrap')) {
@@ -115,10 +123,16 @@ class UserOrderCreated extends React.Component {
       return item.id;
     })
     data.cart_id = data.cart_id.join(',')
-    fetchMock(url, {method: 'post', body: JSON.stringify(data)})
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then(data => {
-        if (data.rea == FETCH_SUCCESS) {
-          this.refs['prompt'].show()
+        if (data.rea == FETCH_SUCCESS) {//oid
+          //this.refs['prompt'].show()
+          alert('已成功从服务器返回，开始通知app支付')
+          notifyAppToCheckout({oid: data.oid})
+            .then((data)=> {
+                alert(JSON.stringify(data))
+            })
+
         }
       })
       .catch(error => {
@@ -133,7 +147,7 @@ class UserOrderCreated extends React.Component {
     this.setState({
       isHiddenPageSpin: true
     })
-    fetchMock(url)
+    fetchAuth(url)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
@@ -160,7 +174,7 @@ class UserOrderCreated extends React.Component {
   };
   render() {
     return (
-      <div className="order-created-container" onClick={this.pageOperateHandler}>
+      <div className="order-created-container" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont">&#xe609;</i>
         </PageHeader>
@@ -201,8 +215,8 @@ class UserOrderCreated extends React.Component {
              </div>
              {
                this.state.payWay == 'zfb'?
-                (<i className="iconfont">&#xe600;</i>):
-                (<i className="iconfont">&#xe601;</i>)
+                (<i className="iconfont">&#xe611;</i>):
+                (<i className="iconfont">&#xe610;</i>)
              }
 
           </dd>
@@ -212,8 +226,8 @@ class UserOrderCreated extends React.Component {
              </div>
              {
                this.state.payWay == 'wx'?
-                (<i className="iconfont">&#xe600;</i>):
-                (<i className="iconfont">&#xe601;</i>)
+                (<i className="iconfont">&#xe611;</i>):
+                (<i className="iconfont">&#xe610;</i>)
              }
           </dd>
         </dl>
