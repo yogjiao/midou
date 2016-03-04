@@ -157,7 +157,9 @@ class Receivers extends React.Component {
           {
             this.props.params.receiversModel == RECEIVERS_EDIT?
               (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
-              (<Link to={`${BASE_PAGE_DIR}/receiver/${RECEIVERS_EDIT}`}>管理</Link>)
+              (<Link to={`${BASE_PAGE_DIR}/receivers/${RECEIVERS_EDIT}`}>管理</Link>)
+
+
           }
 
         </PageHeader>
