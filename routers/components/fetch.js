@@ -20,9 +20,9 @@ export let fetchable = (...args) => {
             .then(function(response){
               return response.json()
             })
-}
+};
 
-export let fetchAuth = (url, options = {}) => {
+let fetchAuth = (url, options = {}) => {
   return getUserInfoFromApp()
             .then((data) => {
               if (data.loginToken) {
@@ -41,7 +41,7 @@ export let fetchAuth = (url, options = {}) => {
             })
 };
 
-export let fetchMock = (url, options = {}) => {
+let fetchMock = (url, options = {}) => {
   let headers = options.headers? options.headers : options.headers = {}
   headers[MIDOU_TOKEN_NAME] = TEST_TOKEN
   return fetch.call(null, url, options)
@@ -49,10 +49,12 @@ export let fetchMock = (url, options = {}) => {
             .then(function(response){
               return response.json()
             })
-}
+};
 
 if (uaParser.getOS().name != 'IOS') {
   fetchAuth = fetchMock
 }
 
-export default fetchAuth
+export {fetchAuth}
+
+//export default fetchAuth

@@ -10,7 +10,7 @@ import {
   FETCH_COLLECTIONS,
   FETCH_STATUS_NO_MORE_PRODUCT,
 } from 'macros.js'
-import {fetchable} from 'fetch.js'
+import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
 let update = require('react-addons-update')
 
@@ -46,6 +46,10 @@ class Underwears extends React.Component {
 
   }
   fetchData = (isScrollingFetch = false) => {
+     let fetchFn = fetchable
+     if (this.props.route.path == 'collections') {
+       fetchFn = fetchAuth
+     }
      let size = this.state.size
      let tags = this.state.tags
      if (this.state.category == '1') {
@@ -70,7 +74,7 @@ class Underwears extends React.Component {
 
      this.setState(nextState)
 
-     fetchable(url)
+     fetchFn(url)
        .then((data) => {
          if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
            this.state.isHaveGoods = false
@@ -172,7 +176,7 @@ class Underwears extends React.Component {
         <PageHeader headerName={this.state.headerName}>
          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
          {
-           this.props.route.path == "collections"?
+           this.props.route.path == "underwears"?
            (<div className="menu-search" onClick={this.openFilterHanler}>筛选</div>):
            ''
          }
