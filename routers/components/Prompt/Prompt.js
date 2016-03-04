@@ -7,10 +7,12 @@ import './Prompt.less'
 class Prompt extends React.Component {
   show = () => {
     let panel = this.refs['prompt-container']
-    panel.classList.add('on')
+    setTimeout(() => {
+      panel.classList.add('on')
+    },10)
     setTimeout(() => {
       panel.classList.remove('on')
-    }, 3000)
+    }, 2000)
   };
   render() {
     return (

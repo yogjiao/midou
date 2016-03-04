@@ -17,7 +17,7 @@ export let CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL = 'redirectToHome'
 export let CALL_HANDLER_CHECKOUT = 'orderInfoCallback'
 
 // share to social circle
-export let  CALL_HANDLER_SHARE = 'shareInCallback'
+export let  CALL_HANDLER_SHARE = 'shareInfoCallback'
 
 export let CALL_HANDLER_REDIRECT_TO_HOME = 'redirectToHome'
 
@@ -135,6 +135,7 @@ export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
 export let FETCH_COLLECTIONS = FETCH_BASE_URL + '/get_collection_page'
+export let PUT_COLLECTION = FETCH_BASE_URL + '/collect_goods'
 
 //fetch good's detail
 export let FETCH_GOOD = FETCH_BASE_URL + '/get_goods_detail'

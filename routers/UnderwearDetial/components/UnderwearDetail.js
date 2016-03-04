@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
+import Prompt from 'Prompt/Prompt.js'
 import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
 import {countBoxes} from 'commonApp.js'
 import {
@@ -12,9 +13,10 @@ import {
   FETCH_STATUS_NO_MORE_PRODUCT,
   PUT_TO_CART,
   BASE_PAGE_DIR,
-
+  FETCH_SUCCESS,
+  PUT_COLLECTION,
 } from 'macros.js'
-import {fetchable, fetchAuth, fetchMock} from 'fetch.js'
+import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
 
@@ -35,6 +37,7 @@ class Underweardetail extends React.Component {
       isHiddenPageSpin: false,
       isHiddenSelectPanel: true,
       isHiddenSharePanel: true,
+      promptMsg: '',
 
       size: 0,
       braSize: 0, // bra
@@ -92,15 +95,50 @@ class Underweardetail extends React.Component {
    })
    data.goods = data.goods.concat(boxes)
 
-   fetchMock(`${PUT_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
+   fetchAuth(`${PUT_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
-        if (this.state.buyActionModel == 1) {
-          this.props.history.push(`${BASE_PAGE_DIR}/carts/scan`)
-          this.props.history.goForward()
-        }
+        if (data.rea == FETCH_SUCCESS) {
+          if (this.state.buyActionModel == 1) {
+            this.props.history.push(`${BASE_PAGE_DIR}/carts/scan`)
+            this.props.history.goForward()
+          }
+          this.setState({promptMsg: '商品已添加到购物车'})
+          this.refs['prompt'].show();
+        } else if (data.rea == '2003'){
+          this.setState({promptMsg: '你选择的型号没有库存了'})
+          this.refs['prompt'].show();
+        } 
+
+      })
+      .catch((e) => {
+
+      })
+      .then(() => {
 
       })
 
+  };
+  /*
+  */
+  putCollectionData = () => {
+    //promptMsg
+    let url = `${PUT_COLLECTION}/${this.state.goods.id}`
+    fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState({
+            promptMsg: '收藏成功'
+          })
+        }
+      })
+      .catch((e) => {
+        this.setState({
+          promptMsg: '收藏失败'
+        })
+      })
+      .then(() => {
+        this.refs['prompt'].show()
+      })
   };
   processMinus = (count) => {
     let len = this.state.boxes.length;
@@ -187,16 +225,12 @@ class Underweardetail extends React.Component {
     }
     nextState && this.setState(nextState)
   };
-  /**
-   * borwer back own step
-   */
-  backHandler = () => {
-    this.props.history.goBack()
-  };
-  shareHandler = (e) => {
+  thisHandler = (e) => {
     let target
     let nextState = {}
-    if (target = getParentByClass(e.target, 'menu-share')) {
+    if (target = getParentByClass(e.target, 'push-to-collection')) {
+      this.putCollectionData()
+    } else if (target = getParentByClass(e.target, 'menu-share')) {
       nextState.isHiddenSharePanel = false
     } else if (target = getParentByClass(e.target, 'media-item')) {
       // "type": "微博,QQ,朋友圈,微信朋友",
@@ -212,7 +246,6 @@ class Underweardetail extends React.Component {
       data.title = goods.name
       data.description = goods.match_intro
       data.imgUrl = goods.main_img
-
       shareToSocialCircle(data)
         .then( (data) => {
           alert('分享成功了')
@@ -222,6 +255,12 @@ class Underweardetail extends React.Component {
       nextState.isHiddenSharePanel = true
     }
     nextState && this.setState(nextState)
+  };
+  /**
+   * borwer back own step
+   */
+  backHandler = () => {
+    this.props.history.goBack()
   };
   buyHandler = (e) => {
     let target,
@@ -262,15 +301,16 @@ class Underweardetail extends React.Component {
 
     }
   };
+
   componentDidMount = () => {
     this.fetchDetailData()
   };
   render() {
     return (
-      <div className="uw-detail-container" onClick={this.shareHandler}>
+      <div className="uw-detail-container" onClick={this.thisHandler}>
         <PageHeader headerName="产品详情">
           <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-          <div className="menu-share" >分享</div>
+          <div className="menu-share">分享</div>
         </PageHeader>
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>
@@ -285,6 +325,7 @@ class Underweardetail extends React.Component {
         <ShareToSocialMedia
           isHidden={this.state.isHiddenSharePanel}
         />
+        <Prompt msg={this.state.promptMsg} ref='prompt'/>
       </div>
     )
   }

@@ -399,7 +399,7 @@ class Step extends React.Component {
           )
         }
       <PageSpin isHidden={this.state.isHiddenPageSpin}/>
-      <Prompt msg={this.state.promptMsg} ref="prompt"/>
+      <Prompt msg={this.state.promptMsg} ref="prompt" />
       </div>
     )
   }

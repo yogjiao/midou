@@ -11,7 +11,7 @@ class UnderweardetailFooter extends React.Component {
       <div className="footer-wrap" onClick={this.props.buyHandler}>
         <div className="fixed-stack">
           <div className="push-to-cart">
-            <i className="iconfont">&#xe601;</i>
+            <i className="iconfont">&#xe60e;</i>
             <div className="lable">加入购物车</div>
           </div>
           <div className="buy-now" onClick={this.props.buyNowHandler}>
