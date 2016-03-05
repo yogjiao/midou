@@ -21,7 +21,7 @@ class CheckoutWaitingLayer extends React.Component {
         <div className="bg-layer"></div>
         <div className="checkout-container">
           <div className="checkout-tips">支付完成后查看支付结果：</div>
-          <Link to={`${BASE_PAGE_DIR}/order-detail/${this.props.orderId}`} className="btn-scan-order">查看支付详情</Link>
+          <Link to={`${BASE_PAGE_DIR}/order/${this.props.orderId}`} className="btn-scan-order">查看支付详情</Link>
         </div>
       </div>
     )

@@ -16,7 +16,7 @@ class ShoppingCartItemEdit extends React.Component {
     return {box: box || {}, cursor: cursor}
   };
   render = () => {
-    let to = 'http://baidu.com' //`${BASE_PAGE_DIR/underwear/${this.props.id}}`
+    let to = `${BASE_PAGE_DIR}/underwear/${this.props.id}` //
     let lastColumn
     let ids = {}
     switch (this.props.itemType) {
@@ -83,7 +83,7 @@ class ShoppingCartItemEdit extends React.Component {
            }
            </li>
            <li className="column">
-              <Link to={to} className="img-wrap"><img src="/media/test.png" /></Link>
+              <Link to={to} className="img-wrap"><img src={this.props.source.main_img || this.props.img} /></Link>
            </li>
            {lastColumn}
         </ul>

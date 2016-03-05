@@ -123,9 +123,11 @@ class ShoppingCart extends React.Component {
   calculateTotalPrice = (goodList) => {
     let price = 0;
     goodList = goodList || this.state.goodList
+
     goodList.forEach((item, index) => {
+      let isSelected = item.goods[0].isSelected
       item.goods.forEach((item, index) => {
-        if (item.isSelected) {
+        if (isSelected) {
           if (index == 0) {
             price += item.price * item.count
           } else {
@@ -136,7 +138,7 @@ class ShoppingCart extends React.Component {
     })
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
-    return price;
+    return new Number(price).toFixed(2);
   };
   /**
    * unselect all item
@@ -224,7 +226,7 @@ class ShoppingCart extends React.Component {
     let cid = group.id
     let cgid = itemData['cgid']
     let url = `${EDIT_CART_GOODS}/${cid}/${cgid}`
-    let nextState = {isFetching: true}
+    let nextState = {isFetching: true, isHiddenPageSpin: false}
     this.setState(nextState)
 
     let data = {
@@ -242,13 +244,13 @@ class ShoppingCart extends React.Component {
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1, data.goods]]})
-          schema.isFetching = {$set: false};
-          schema.isHiddenPageSpin = {$set: true};
           let nextState = update(this.state, schema)
           this.setState(nextState)
         }
       })
       .catch((error) => {
+      })
+      .then(()=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -303,7 +305,7 @@ class ShoppingCart extends React.Component {
     let ntid = group['goods'][0]['cgid']
     let tid = group['goods'][this.itemId]['cgid']
     let url = `${DELETE_BOX_SERVICE}/${cid}/${ntid}/${tid}`
-    let nextState = {isFetching: true}
+    let nextState = {isFetching: true, isHiddenPageSpin: false}
     this.setState(nextState)
     fetchAuth(url)
       .then((data) => {
@@ -313,6 +315,7 @@ class ShoppingCart extends React.Component {
           schema.isHiddenPageSpin = {$set: true}
           let nextState = update(this.state, schema)
           this.setState(nextState)
+
         }
       })
       .catch((error) => {
@@ -340,7 +343,9 @@ class ShoppingCart extends React.Component {
           let nextState = update(this.state, schema)
           nextState.isFetching = false
           nextState.isHiddenPageSpin = true
+          nextState.promptMsg = '商品已删除'
           this.setState(nextState)
+          this.refs['prompt'].show();
         }
       })
       .catch((error) => {
@@ -506,7 +511,7 @@ class ShoppingCart extends React.Component {
   };
   render() {
     let url = this.state.selectedIds.length > 0?
-                (`${BASE_PAGE_DIR}/order/` + this.state.selectedIds.join()):
+                (`${BASE_PAGE_DIR}/order-created/` + this.state.selectedIds.join()):
                 "javascript:void(0);"
     return (
       <div className="shopping-cart-container" onClick={this.editHandler}>

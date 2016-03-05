@@ -52,7 +52,7 @@ class Home extends React.Component {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
-    if (scrollTop + sHeight > pageHeight - 30) {
+    if (scrollTop + sHeight > pageHeight - 50) {
       if (this.state.isHaveGoods && !this.state.isFetching){
 
         this.setState({isHiddenScrollingSpin: false})

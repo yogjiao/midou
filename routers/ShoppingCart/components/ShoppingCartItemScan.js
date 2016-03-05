@@ -26,12 +26,12 @@ class ShoppingCartItemScan extends React.Component {
               }
            </li>
            <li className="column">
-              <Link to={to} className="img-wrap"><img src="/media/test.png" /></Link>
+              <Link to={to} className="img-wrap"><img src={this.props.source.main_img} /></Link>
            </li>
            <li className="column">
              <div className="name-wrap single-ellipsis">{this.props.source.name}</div>
              <div className="size-wrap">尺码：<span className="arial">{this.props.source.size}</span></div>
-             <div className="price-wrap arial">&yen;{this.props.source.price}</div>
+             <div className="price-wrap arial">&yen;{this.props.itemType == '0'? this.props.source.price : this.props.source.deposit}</div>
            </li>
            <li className="column">
              <div className="ajust-wrap">
@@ -43,7 +43,7 @@ class ShoppingCartItemScan extends React.Component {
              <div className="ajust-wrap">
                 <div className="num-wrap">
                     <span className="iconfont">&#xe602;</span>
-                    <span className="arial">2</span>
+                    <span className="arial">{this.props.source.count}</span>
                 </div>
              </div>
 

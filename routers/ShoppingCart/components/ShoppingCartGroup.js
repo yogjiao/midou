@@ -39,6 +39,7 @@ class ShoppingCartGroup extends React.Component {
         let category = this.props.source[0].category
         let params = {
           key: 0,
+          id: this.props.source[0].gid,
           source: this.props.source[0],
           actionModel: this.props.actionModel,
           groupId: this.props.groupId,
@@ -53,6 +54,8 @@ class ShoppingCartGroup extends React.Component {
         if (category == '1') {
           let params = {
             key: 1,
+            id: this.props.source[0].gid,
+            img: this.props.source[0].main_img,
             source: this.props.source.slice(1),
             actionModel: this.props.actionModel,
             groupId: this.props.groupId,

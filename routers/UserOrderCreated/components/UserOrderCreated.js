@@ -111,10 +111,23 @@ class UserOrderCreated extends React.Component {
   };
   checkoutHandler = () => {
     let url = `${PUT_TO_ORDER}`
-    this.setState({isHiddenPageSpin: false})
+    let nextState = {}
+
     let data = {}
     data.address_id = this.props.params.receiver.id
+    if (!data.address_id) {
+      nextState.promptMsg = '请选择收货人地址'
+      this.setState(nextState)
+      this.refs['prompt'].show()
+      return
+    }
     data.method_of_payment = this.state.payWay
+    if (!data.method_of_payment) {
+      nextState.promptMsg = '请选择支付方式'
+      this.setState(nextState)
+      this.refs['prompt'].show()
+      return
+    }
     try{
       data.coupon_id = this.state.coupon[this.state.couponSelectedIndex].id
     }catch(er) {
@@ -125,6 +138,7 @@ class UserOrderCreated extends React.Component {
       return item.id;
     })
     data.cart_id = data.cart_id.join(',')
+    this.setState({isHiddenPageSpin: false})
     fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
