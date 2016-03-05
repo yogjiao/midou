@@ -12,6 +12,7 @@ import {
   FETCH_GOOD,
   FETCH_STATUS_NO_MORE_PRODUCT,
   PUT_TO_CART,
+
   BASE_PAGE_DIR,
   FETCH_SUCCESS,
   PUT_COLLECTION,
@@ -95,11 +96,12 @@ class Underweardetail extends React.Component {
    })
    data.goods = data.goods.concat(boxes)
 
-   fetchAuth(`${PUT_TO_CART}`, {method: 'post', body: JSON.stringify(data)})
+   let url = `${PUT_TO_CART}/${this.state.buyActionModel}`
+   fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           if (this.state.buyActionModel == 1) {
-            this.props.history.push(`${BASE_PAGE_DIR}/carts/scan`)
+            this.props.history.push(`${BASE_PAGE_DIR}/order-created/${data.cid}`)
             this.props.history.goForward()
           }
           this.setState({promptMsg: '商品已添加到购物车'})

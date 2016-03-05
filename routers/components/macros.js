@@ -153,6 +153,7 @@ export let DELETE_RECEIVERS = FETCH_BASE_URL + '/delete_address'
 
 export let FETCH_CARTS = FETCH_BASE_URL + '/get_cart_page'
 export let PUT_TO_CART = FETCH_BASE_URL + '/add_to_cart'
+export let PUT_TO_BUY = FETCH_BASE_URL + '/add_to_cart'
 export let PUT_BOX_SERVICE = FETCH_BASE_URL + '/add_try_cart'
 export let DELETE_BOX_SERVICE = FETCH_BASE_URL + '/delete_try_cart'
 export let EDIT_CART_GOODS = FETCH_BASE_URL + '/edit_cart'

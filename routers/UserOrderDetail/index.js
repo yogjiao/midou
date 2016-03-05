@@ -1,5 +1,5 @@
 module.exports = {
-  path: 'order-detail/:orderId',
+  path: 'order/:orderId',
   getComponent(location, cb) {
     require.ensure([], (require) => {
       cb(null, require('UserOrderDetail.js'))

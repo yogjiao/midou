@@ -7,7 +7,7 @@ class HomeListItem extends React.Component {
   render() {
     return (
       <li className="list-item" >
-        <div className="img-wrap"><a href={this.props.href}><img src={this.props.match_img} alt="" /></a></div>
+        <div className="img-wrap"><Link to={`${BASE_PAGE_DIR}/underwear/${this.props.id}`}><img src={this.props.match_img} alt="" /></Link></div>
         <Link to={`${BASE_PAGE_DIR}/underwear/${this.props.id}`} className="pro-name">
           <p>{this.props.name}</p>
           <i className="iconfont icon-gt"></i>

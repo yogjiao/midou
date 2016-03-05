@@ -20,6 +20,7 @@ import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update');
 
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
+import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 
 import './UserOrderCreated.less'
 class UserOrderCreated extends React.Component {
@@ -27,6 +28,7 @@ class UserOrderCreated extends React.Component {
     super(props);
     this.state = {
       isHiddenPageSpin: true,
+      isHiddenCheckoutWaitingLayer: true,
       headerName: '我的订单',
       promptMsg: '订单提交成功',
       goodList: [],
@@ -127,10 +129,13 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-          alert('已成功从服务器返回，开始通知app支付')
           notifyAppToCheckout({oid: data.oid})
             .then((data)=> {
-                alert(JSON.stringify(data))
+              this.setState({
+                isHiddenPageSpin: true,
+                isHiddenCheckoutWaitingLayer: false,
+                orderId: data.oid
+              });
             })
 
         }
@@ -261,6 +266,10 @@ class UserOrderCreated extends React.Component {
         />
         <Prompt ref="prompt" msg={this.state.promptMsg} />
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+        <CheckoutWaitingLayer
+          orderId={this.state.orderId}
+          isHidden={this.state.isHiddenCheckoutWaitingLayer}
+        />
       </div>
     )
   }
