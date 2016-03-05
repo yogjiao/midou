@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
-
+import orderState from 'orderState.js'
 import UserOrderItem from 'UserOrderItem/UserOrderItem.js'
 
 import './UserOrderListGroup.less'
@@ -17,19 +17,17 @@ class UserOrderListGroup extends React.Component {
   };
   render() {
     let list = []
-
-
     this.props.source.goods.forEach( (item, index) => {
+
       let noTryList = []
       let tryList = []
-
       item.forEach((item, index) => {
         let temp
         if (index == 0) {
-          temp = <UserOrderItem key={index} source={item} pageType="3" itemType="1"/>
+          temp = <UserOrderItem oid={this.props.oid} key={index} source={item} pageType="3" itemType="1"/>
           noTryList.push(temp)
         } else {
-          temp = <UserOrderItem key={index} source={item} pageType="3" itemType="2"/>
+          temp = <UserOrderItem oid={this.props.oid} key={index} source={item} pageType="3" itemType="2"/>
           tryList.push(temp)
         }
       })
@@ -51,7 +49,7 @@ class UserOrderListGroup extends React.Component {
     return (
       <div className="order-list-group">
         <div className="order-group-header">
-          <div className={`state-wrap order-state-${this.props.source.order_state}`}>已支付</div>
+          <div className={`state-wrap order-state-${this.props.source.order_state}`}>{orderState[this.props.source.order_state]}</div>
           <div className="order-id"><span>订单号:</span><i className="color-purple arial">{this.props.source.id}</i></div>
         </div>
 

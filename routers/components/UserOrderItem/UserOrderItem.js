@@ -28,21 +28,43 @@ class UserOrderItem extends React.Component {
         break;
       case '2':
         if (itemType == 1) {
-          row_1 = (<Link className="btn-draw-back" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</Link>)
+
+          if (this.props.source.order_state >= 12) {
+            row_1 = (<Link className="btn-draw-back" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</Link>)
+          } else {
+            row_1 = (<span></span>)
+          }
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
-          row_2 = (<div className="btn-box-operate btn-pay-lack" data-source={JSON.stringify(this.props.source)}>补差价</div>)
-          row_3 = (<Link className="btn-box-operate return-uw" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</Link>)
+
+          if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
+            if (this.props.source.order_state  == '13') {
+              row_2 = (<div className="btn-box-operate">已补差价</div>)
+            } else {
+              row_2 = (<div className="btn-box-operate btn-pay-lack" data-source={JSON.stringify(this.props.source)}>补差价</div>)
+            }
+          } else {
+            row_2 = (<span></span>)
+          }
+
+
+          if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
+            row_3 = (<Link className="btn-box-operate return-uw" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</Link>)
+          } else {
+            row_3 = (<span></span>)
+          }
+
+
 
         }
         break;
       case '3':
         if (itemType == 1) {
-          row_1 = (<i className="iconfont">&#xe601;</i>)
+          row_1 = (<Link to={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></Link>)
           row_3 = (<div className="create-time">2014-05-06 25:19:20</div>)
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
-          row_2 = (<i className="iconfont">&#xe601;</i>)
+          row_2 = (<i></i>)
           row_3 = (<div className="create-time">2014-05-06 25:19:20</div>)
         }
         break;
@@ -52,7 +74,7 @@ class UserOrderItem extends React.Component {
     return (
       <div className="order-item-container">
         <div className="column">
-          <div className="img-wrap"><img src="/media/test.png" /></div>
+          <div className="img-wrap"><img src={this.props.source.main_img} /></div>
         </div>
         <div className="column">
           <div className="row-wrap">
@@ -63,14 +85,14 @@ class UserOrderItem extends React.Component {
           </div>
           <div className="row-wrap">
             <div className="size-wrap">
-              尺码：<span className="arial pl5">75C</span>
+              尺码：<span className="arial pl5">{this.props.source.size.replace('-', '')}</span>
             </div>
             <div className="order-justify-wrap">
               {row_2}
             </div>
           </div>
           <div className="row-wrap">
-            <div className="price arial">&yen; 99</div>
+            <div className="price arial">&yen; {this.props.source.price}</div>
             <div className="order-justify-wrap">
               {row_3}
             </div>

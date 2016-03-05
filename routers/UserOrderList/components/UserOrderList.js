@@ -11,7 +11,7 @@ import {
     FETCH_ORDERS,
     FETCH_STATUS_NO_MORE_PRODUCT
   } from 'macros.js'
-import {fetchMock} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 
 
@@ -24,7 +24,7 @@ class UserOrderList extends React.Component {
     this.state = {
       headerName: '所有订单',
       lastOrder: 0,
-      pageSize: 2,
+      pageSize: 5,
       isHiddenPageSpin: true,
       orderList: [],
       isHaveGoods: true
@@ -39,7 +39,7 @@ class UserOrderList extends React.Component {
     } else {
       this.setState({isHiddenPageSpin: false})
     }
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveGoods = false
@@ -88,6 +88,7 @@ class UserOrderList extends React.Component {
            this.state.orderList.map((item, index) => {
             return (<UserOrderListGroup
                       key={index}
+                      oid={item.id}
                       source={item}
                     />)
           })

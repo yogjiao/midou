@@ -143,7 +143,7 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-          notifyAppToCheckout({oid: data.oid})
+        return notifyAppToCheckout({oid: data.oid})
             .then((data)=> {
               this.setState({
                 isHiddenPageSpin: true,
@@ -158,7 +158,7 @@ class UserOrderCreated extends React.Component {
         //this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
-        this.setState({isHiddenPageSpin: true})
+        //this.setState({isHiddenPageSpin: true})
       })
   };
   componentDidMount = () => {

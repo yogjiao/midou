@@ -19,7 +19,7 @@ class UserOrderDetailGroup extends React.Component {
     this.props.source.forEach((item, index) => {
         if (index > 0) {
           let temp
-          temp = <UserOrderItem key={index} source={item} pageType="2" itemType="2"/>
+          temp = <UserOrderItem  key={index} source={item} pageType="2" itemType="2"/>
           boxList.push(temp)
         }
     })

@@ -7,17 +7,19 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import Selection from 'Selection/Selection.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
-import {fetchMock} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 import {
   FETCH_ORDER,
   FETCH_SUCCESS,
   PAY_WAY,
-  YUN_DA
+  YUN_DA,
+  PUT_TO_ORDER
 } from 'macros.js'
 import orderState from 'orderState.js'
-import provinces from 'provinces.js'
+import {notifyAppToCheckout} from 'webviewInterface.js'
+import provinces from 'provinces'
 let update = require('react-addons-update');
-
+import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
 import FillPrice from './FillPrice.js'
 
@@ -29,6 +31,7 @@ class UserOrderDetail extends React.Component {
     this.state = {
       isHiddenPageSpin: true,
       isHiddenFillPrice: true,
+      isHiddenCheckoutWaitingLayer: true,
       headerName: '订单详情',
       order: [{goods: []}],
       coupon: [],
@@ -39,7 +42,7 @@ class UserOrderDetail extends React.Component {
   fetchOrderData = () => {
     let url = `${FETCH_ORDER}/${this.props.params.orderId}`
     this.setState({isHiddenPageSpin: false})
-    fetchMock(url)
+    fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
@@ -66,6 +69,18 @@ class UserOrderDetail extends React.Component {
        this.setState({isHiddenFillPrice: true})
     }
   };
+  checkoutHandler = () => {
+    let url = `${PUT_TO_ORDER}`
+    this.setState({isHiddenPageSpin: false})
+    notifyAppToCheckout({oid: this.props.orderId})
+        .then((data)=> {
+          this.setState({
+            isHiddenPageSpin: true,
+            isHiddenCheckoutWaitingLayer: false,
+            orderId: this.props.orderId
+          });
+        })
+  };
   backHandler = () => {
     this.props.history.goBack();
   };
@@ -85,14 +100,36 @@ class UserOrderDetail extends React.Component {
       coupon = {}
       address = {}
     }
+
+    let stack;
+    if (this.state.order[0].order_state == '10') {
+      stack = (
+        <div className="flow-wrap">
+          <div className="justify-wrap btn-check-out" onClick={this.checkoutHandler}>
+            重新支付
+          </div>
+        </div>
+      )
+
+    } else if (this.state.order[0].waybill_number) {
+      stack = (
+        <div className="flow-wrap">
+          <div className="justify-wrap">
+            <Link to={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</Link>
+          </div>
+        </div>
+      )
+    }
     return (
+
+
       <div className="order-detail-container" onClick={this.orderHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
         </PageHeader>
         <div className="status-container">
           <div className="status-wrap">
-            <i>订单状态：</i><span>{orderState[this.state.order[0].order_state]}</span>
+            <i>订单状态：</i><span>{orderState[Math.min(this.state.order[0].order_state, 22)]}</span>
           </div>
           <div className="order-id-wrap">
             <i>订单号：</i><span>{this.state.order[0].id}</span>
@@ -165,12 +202,13 @@ class UserOrderDetail extends React.Component {
             </div>
           </dd>
         </dl>
-        <div className="flow-wrap">
-          <div className="justify-wrap">
-            <Link to={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</Link>
-          </div>
-        </div>
+
+        {stack}
         <FillPrice source={this.state.fillPriceSource} isHidden={this.state.isHiddenFillPrice}/>
+        <CheckoutWaitingLayer
+          orderId={this.state.orderId}
+          isHidden={this.state.isHiddenCheckoutWaitingLayer}
+        />
       </div>
     )
   }
