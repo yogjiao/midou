@@ -13,16 +13,13 @@ import {
   FETCH_SUCCESS,
   PAY_WAY
 } from 'macros.js'
-import orderState from 'orderState.js'
-import provinces from 'provinces.js'
-let update = require('react-addons-update');
-
-import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
 
 import './FillPrice.less'
 class FillPrice extends React.Component {
 
+  fillPrice = () => {
 
+  };
   componentWillMount = () => {
   };
   componentDidMount = () => {
@@ -35,7 +32,7 @@ class FillPrice extends React.Component {
       <div className="fill-price-container" style={{display: this.props.isHidden? 'none' : 'block'}}>
         <div className="fill-price-wrap">
           <div className="img-wrap">
-            <img src="/media/test.png" />
+            <img src={this.props.source.main_img} />
           </div>
           <div className="fill-price-name">{this.props.source.name}</div>
           <div className="fill-price-size arial">{this.props.source.price}</div>
@@ -44,7 +41,7 @@ class FillPrice extends React.Component {
             <dd><span>抵消押金</span><i>{`-${this.props.source.deposit}元`}</i></dd>
             <dd><span>需补差价</span><i className="color-purple">{`${this.props.source.unpaid_balance}元`}</i></dd>
           </dl>
-          <div className="btn-sure">付款</div>
+          <div className="btn-sure fill-price" data-oid={this.props.source.id}>付款</div>
           <div className="iconfont btn-close-fill-price">&#xe602;</div>
         </div>
       </div>

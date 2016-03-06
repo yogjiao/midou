@@ -12,7 +12,7 @@ import {getParentByClass, pick} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import PageSpin from 'PageSpin/PageSpin.js'
-import {fetchMock} from 'fetch.js'
+import {fetchAuth} from 'fetch.js'
 
 let update = require('react-addons-update')
 
@@ -48,7 +48,7 @@ class ExpressOrder extends React.Component {
     let data = pick(this.state, 'waybill_number','phone','remark')
     data.id = this.props.params.orderId
     this.setState({isHiddenPageSpin: false})
-    fetchMock(url, {method: 'post', body: JSON.stringify(data)})
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let nextState = {}
@@ -98,7 +98,7 @@ class ExpressOrder extends React.Component {
         <div className="service-layer" style={{display: this.state.isHiddenServiceLayer? 'none' : 'block'}}>
           <div className="service-wrap">
             进行申请退换货操作时<br />请先联系客服
-            <Link to={`${BASE_PAGE_DIR}/wxservice`} className="btn-sure">确定</Link>
+            <Link to={`${BASE_PAGE_DIR}/customer-service`} className="btn-sure">确定</Link>
           </div>
         </div>
       </div>

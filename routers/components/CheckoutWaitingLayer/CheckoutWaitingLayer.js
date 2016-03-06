@@ -6,6 +6,9 @@ import UserOrderItem from 'UserOrderItem/UserOrderItem.js'
 
 import './CheckoutWaitingLayer.less'
 class CheckoutWaitingLayer extends React.Component {
+  reload = () => {
+    window.location.reload()
+  };
   componentWillMount = () => {
   };
   componentDidMount = () => {
@@ -16,12 +19,18 @@ class CheckoutWaitingLayer extends React.Component {
     //nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   render() {
+    let link
+    if (this.props.isReload) {
+      link = <div onClick={this.reload} className="btn-scan-order">查看支付详情</div>
+    } else {
+      link =  <Link to={`${BASE_PAGE_DIR}/order/${this.props.orderId}`} className="btn-scan-order">查看支付详情</Link>
+    }
     return (
       <div className="checkout-waiting-container" style={{display: this.props.isHidden? 'none' : 'block'}}>
         <div className="bg-layer"></div>
         <div className="checkout-container">
           <div className="checkout-tips">支付完成后查看支付结果：</div>
-          <Link to={`${BASE_PAGE_DIR}/order/${this.props.orderId}`} className="btn-scan-order">查看支付详情</Link>
+          {link}
         </div>
       </div>
     )

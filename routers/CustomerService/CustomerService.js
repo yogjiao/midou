@@ -8,10 +8,10 @@ import {backToUserCenterNativePage} from 'webviewInterface.js'
 import './CustomerService.less'
 class CustomerService extends React.Component {
   backHandler = () => {
-    //this.props.history.goBack();
+    this.props.history.goBack();
     backToUserCenterNativePage()
       .then((data) => {
-        console.log(data.message)
+        //console.log(data. )
       })
   };
   render = () => {

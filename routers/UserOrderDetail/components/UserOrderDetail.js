@@ -32,6 +32,7 @@ class UserOrderDetail extends React.Component {
       isHiddenPageSpin: true,
       isHiddenFillPrice: true,
       isHiddenCheckoutWaitingLayer: true,
+      isReloadCheckoutWaitinglayer: false,
       headerName: '订单详情',
       order: [{goods: []}],
       coupon: [],
@@ -59,7 +60,18 @@ class UserOrderDetail extends React.Component {
         this.setState({isHiddenPageSpin: true})
       })
   };
-  orderHandler = (e) => {
+  checkout = (orderId) => {
+    this.setState({isHiddenPageSpin: false})
+    notifyAppToCheckout({oid: orderId})
+        .then((data)=> {
+          this.setState({
+            isHiddenPageSpin: true,
+            isHiddenCheckoutWaitingLayer: false,
+            isReloadCheckoutWaitinglayer: true
+          });
+        })
+  };
+  thisHandler = (e) => {
     let target;
     if (target = getParentByClass(e.target, 'btn-pay-lack')) {
        //this.state fillPriceSource
@@ -67,20 +79,13 @@ class UserOrderDetail extends React.Component {
        this.setState({fillPriceSource: source, isHiddenFillPrice: false})
     } else if (target = getParentByClass(e.target, 'btn-close-fill-price')) {
        this.setState({isHiddenFillPrice: true})
+    } else if (target = getParentByClass(e.target, 'fill-price')) {//补差价
+      this.checkout(target.getAttribute('data-oid'))
+    } else if (target = getParentByClass(e.target, 'btn-check-out')) {
+      this.checkout(this.props.orderId)
     }
   };
-  checkoutHandler = () => {
-    let url = `${PUT_TO_ORDER}`
-    this.setState({isHiddenPageSpin: false})
-    notifyAppToCheckout({oid: this.props.params.orderId})
-        .then((data)=> {
-          this.setState({
-            isHiddenPageSpin: true,
-            isHiddenCheckoutWaitingLayer: false,
-            orderId: this.props.orderId
-          });
-        })
-  };
+
   backHandler = () => {
     this.props.history.goBack();
   };
@@ -105,7 +110,7 @@ class UserOrderDetail extends React.Component {
     if (this.state.order[0].order_state == '10') {
       stack = (
         <div className="flow-wrap">
-          <div className="justify-wrap btn-check-out" onClick={this.checkoutHandler}>
+          <div className="justify-wrap btn-check-out" >
             重新支付
           </div>
         </div>
@@ -123,7 +128,7 @@ class UserOrderDetail extends React.Component {
     return (
 
 
-      <div className="order-detail-container" onClick={this.orderHandler}>
+      <div className="order-detail-container" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
         </PageHeader>
@@ -202,13 +207,14 @@ class UserOrderDetail extends React.Component {
             </div>
           </dd>
         </dl>
-
         {stack}
         <FillPrice source={this.state.fillPriceSource} isHidden={this.state.isHiddenFillPrice}/>
         <CheckoutWaitingLayer
           orderId={this.state.orderId}
+          isReload={this.state.isReloadCheckoutWaitinglayer}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
         />
+
       </div>
     )
   }
