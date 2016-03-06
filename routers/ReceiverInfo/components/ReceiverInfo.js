@@ -62,7 +62,7 @@ class ReceiverInfo extends React.Component {
     this.setState({detail: event.target.value.substr(0, 100)});
   };
   backHandler = () => {
-    this.props.history.back()
+    this.props.history.goBack()
   };
   addressChangeHandler = (provinceId, cityId) => {
     this.state.province = provinceId
@@ -115,7 +115,7 @@ class ReceiverInfo extends React.Component {
     return (
       <div className="reciever-info-container" onClick={this.editHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
           <div className="btn-save" onClick={this.saveHanler}>保存</div>
         </PageHeader>
         <div className="receiver-item">

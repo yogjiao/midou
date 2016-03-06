@@ -125,6 +125,11 @@ class UserOrderDetail extends React.Component {
         </div>
       )
     }
+
+    let province = provinces.find((item, index) => {
+      return item.id == address.province
+    })
+
     return (
 
 
@@ -162,7 +167,7 @@ class UserOrderDetail extends React.Component {
                        <div className="info-wrap">{address.name}</div>
                        <div className="info-wrap">{address.phone}</div>
                        <div className="info-wrap">
-                        {`${provinces[address.province].name} ${address.city} ${address.detail}`}
+                        {`${province.name} ${address.city} ${address.detail}`}
                        </div>
                      </div>
                   </div>

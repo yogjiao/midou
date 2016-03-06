@@ -87,7 +87,7 @@ class UnderwearDetailSelectPanel extends React.Component {
         if (this.props.boxes.length) {
           boxesEl = (
             <dl className="box-wrap clearfix">
-              <dt><div className="triangle" /><span>请选择盒子服务</span><Link to={`${BASE_PAGE_DIR}`} className="what-is-box">什么是盒子服务？</Link></dt>
+              <dt><div className="triangle" /><span>请选择盒子服务</span><Link to={`${BASE_PAGE_DIR}/box-service`} className="what-is-box">什么是盒子服务？</Link></dt>
               {
                  this.props.boxes.map((item, index) => {
                     return (

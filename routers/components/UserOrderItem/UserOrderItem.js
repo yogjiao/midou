@@ -71,6 +71,14 @@ class UserOrderItem extends React.Component {
 
 
     }
+
+    let price
+    if (itemType == '2') {
+      price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
+    } else {
+      price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
+    }
+
     return (
       <div className="order-item-container">
         <div className="column">
@@ -92,13 +100,7 @@ class UserOrderItem extends React.Component {
             </div>
           </div>
           <div className="row-wrap">
-            <div className="price arial">&yen;
-              {
-                (itemType == '2')?
-                this.props.source.deposit :
-                this.props.source.price
-              }
-            </div>
+            {price}
             <div className="order-justify-wrap">
               {row_3}
             </div>

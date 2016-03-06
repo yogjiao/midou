@@ -154,7 +154,7 @@ class Receivers extends React.Component {
     return (
       <div className="receivers-container" onClick={this.crudHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
           {
             this.props.params.receiversModel == RECEIVERS_EDIT?
               (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):

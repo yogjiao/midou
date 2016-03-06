@@ -467,11 +467,14 @@ class ShoppingCart extends React.Component {
     //let nextState = update(this.state, {itemType: {$set: -1}})
     this.setState({isHiddenConfirm: true})
   };
+  // backHandler = () => {
+  //
+  // }
   menuHanler = () => {
     switch (this.props.params.actionModel) {
 
       case ROUTER_SHOPPING_CART_SCAN:
-        this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_EDIT}`)
+        this.props.history.push()
         break;
       case ROUTER_SHOPPING_CART_EDIT:
       //  this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`)
@@ -480,17 +483,20 @@ class ShoppingCart extends React.Component {
     }
     this.props.history.goForward()
   };
-  componentWillMount = () => {
-    switch (this.props.params.actionModel) {
+  switchHeader = (props) => {
+    switch (props.params.actionModel) {
       case ROUTER_SHOPPING_CART_SCAN:
         this.state.headerName = '购物车'
-        this.state.menuName = '编辑'
+        this.state.menu = <Link to={`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_EDIT}`}>编辑</Link>
         break;
       case ROUTER_SHOPPING_CART_EDIT:
         this.state.headerName = '编辑购物车'
-        this.state.menuName = '完成'
+        this.state.menu = <Link to={`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`}>完成</Link>
         break;
     }
+  };
+  componentWillMount = () => {
+    this.switchHeader(this.props)
   };
   componentWillUnmount = () => {
 
@@ -501,17 +507,8 @@ class ShoppingCart extends React.Component {
     document.addEventListener('scroll', this.handleScroll.bind(this));
 
   };
-  componentWillReceiveProps = (props) => {
-    switch (props.params.actionModel) {
-      case ROUTER_SHOPPING_CART_SCAN:
-        this.state.headerName = '购物车'
-        this.state.menuName = '编辑'
-        break;
-      case ROUTER_SHOPPING_CART_EDIT:
-        this.state.headerName = '编辑购物车'
-        this.state.menuName = '完成'
-        break;
-    }
+  componentWillReceiveProps = (nextProps) => {
+    this.switchHeader(nextProps)
   };
   componentWillUpdate = (nextProps, nextState) => {
     let ids = []
@@ -531,7 +528,7 @@ class ShoppingCart extends React.Component {
           headerName={this.state.headerName}
         >
           <div></div>
-          <div className="menu-search" onClick={this.menuHanler}>{this.state.menuName}</div>
+          {this.state.menu}
         </PageHeader>
         {
           this.state.goodList.map((item, index) => {

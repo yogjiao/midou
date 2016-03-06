@@ -80,10 +80,10 @@ class Underweardetail extends React.Component {
 
     return inventoryInfo;
   };
-  fetchDetailData = () => {
+  fetchDetailData = (productId) => {
     this.state.isFetching = true
     //this.setState({isHiddenPageSpin: false})
-    let url = `${FETCH_GOOD}/${this.props.params.productId}`
+    let url = `${FETCH_GOOD}/${productId}`
     fetchable(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
@@ -290,7 +290,7 @@ class Underweardetail extends React.Component {
       data.imgUrl = goods.main_img
       shareToSocialCircle(data)
         .then( (data) => {
-          alert('分享成功了')
+          alert(JSON.stringify(data))
         })
       nextState.isHiddenSharePanel = true
     } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
@@ -352,9 +352,14 @@ class Underweardetail extends React.Component {
 
     }
   };
-
+  componentWillReceiveProps(nextProps){
+    if (nextProps.params.productId != this.props.params.productId) {
+      this.fetchDetailData(nextProps.params.productId)
+      window.scrollTo(0,0)
+    }
+  }
   componentDidMount = () => {
-    this.fetchDetailData()
+    this.fetchDetailData(this.props.params.productId)
   };
   render() {
     return (

@@ -320,7 +320,7 @@ class Step extends React.Component {
         };
         break;
       case '11':
-        this.state.selectedData['upper_bust'].featureSource = this.makeSizeItem(60, 120, 0.5)
+        this.state.selectedData['upper_bust'].featureSource = this.makeSizeItem(61, 120, 0.5)
         content = (<UpperBust source={this.state.selectedData.upper_bust}/>) //age_group
         this.isSelectedValue = () => {
           let is = !!this.state.selectedData.upper_bust.value

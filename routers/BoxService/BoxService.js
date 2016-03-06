@@ -5,10 +5,11 @@ import {backToUserCenterNativePage} from 'webviewInterface.js'
 import './BoxService.less'
 class BoxService extends React.Component {
   backHandler = () => {
-    //this.props.history.goBack();
+
     backToUserCenterNativePage()
       .then((data) => {
       })
+    this.props.history.goBack();
   };
   render = () => {
     return (

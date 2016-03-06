@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router'
 
-import {BASE_DIR} from 'macros.js'
+import {BASE_PAGE_DIR} from 'macros.js'
 
 import 'UnderweardetailInfo.less'
 class UnderweardetailInfo extends React.Component {
@@ -41,10 +41,11 @@ class UnderweardetailInfo extends React.Component {
             <h6 className="item-title"><div className="triangle"></div>相关产品</h6>
             {
               (this.props.goods_recommend || []).map((item, index) => {
+
                 return (
                   <div className="recommend-wrap" key={index}>
                     <div className="detail-content">
-                      <Link to={`${BASE_DIR}/underwear/${item.id}`}>
+                      <Link to={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                         <div className="img-wrap"><img src={item.thumb_img} /></div>
                         <div className="pro-name">{item.name}</div>
                         <div className="pro-price">&yen; {item.price}</div>

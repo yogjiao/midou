@@ -167,7 +167,10 @@ class Underwears extends React.Component {
       nextState = {}
       let source = target.getAttribute('data-source')
       let index = target.getAttribute('data-index')
-      nextState = update(this.state, {sizeIndex: {$set: index}})
+      nextState = update(this.state, {
+        sizeIndex: {$set: index},
+        pageIndex: {$set: 0}
+      })
     } else if (target = getParentByClass(e.target, 'btn-sure')) {
       this.state.isHaveGoods = true
       this.state.prolist = []
