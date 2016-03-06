@@ -9,6 +9,11 @@ import {
   FETCH_GOODS,
   FETCH_COLLECTIONS,
   FETCH_STATUS_NO_MORE_PRODUCT,
+  UNDERWEAR_BRA_SIZE,
+  UNDERWEAR_BASE_SIZE,
+  UNDERWEAR_TAGS,
+  UNDERWEAR_TYPES,
+  UNDERWEAR_SIZE
 } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
@@ -34,37 +39,50 @@ class Underwears extends React.Component {
       isHiddenScrollingSpin: true,
       isHiddenSearchPanel: true,
 
-      size: 0,
-      braSize: 0, // bra
-      baseSize: 0, // bra
+      sizeIndex: 0,
+      braSizeIndex: 0, // bra
+      baseSizeIndex: 0, // base
       category: 0, //0: all, 1：文胸，2:底裤，3:情趣
-      tags: [], // tags
+      tagsIndex: [true], // tags
       prolist: [
         //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
         ]
     };
 
   }
+  getSearchParams = () => {
+    let size
+    let tags
+    if (this.state.category == 0) {
+      size = 0
+      tags = 0
+    } else if (this.state.category == 1) {
+      size = `${UNDERWEAR_BRA_SIZE[this.state.baseSizeIndex].value}-${UNDERWEAR_BASE_SIZE[this.state.braSizeIndex].value}`
+      tags = []
+      this.state.tagsIndex.forEach((is, index)=>{
+        if (is) {
+          tags.push(UNDERWEAR_TAGS[index].value)
+        }
+      })
+    } else {
+      size = UNDERWEAR_SIZE[this.state.sizeIndex].value
+      tags = 0
+    }
+
+    return {size, tags}
+  };
   fetchData = (isScrollingFetch = false) => {
      let fetchFn = fetchable
-     if (this.props.route.path == 'collections') {
-       fetchFn = fetchAuth
-     }
-     let size = this.state.size
-     let tags = this.state.tags
-     if (this.state.category == '1') {
-       size = `${this.state.baseSize}-${this.state.braSize}`
-     } else if (this.state.category == '0') {
-       size = 0
-     }
-     if (tags.length == 0) {
-       tags = 0
-     }
-     let url=`${FETCH_GOODS}/${size}/${this.state.category}/`
-       + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
+
+     let url
 
      if (this.props.route.path == 'collections') {
        url=`${FETCH_COLLECTIONS}/${this.state.pageIndex}/${this.state.pageSize}`
+       fetchFn = fetchAuth
+     } else {
+       let {size, tags} = this.getSearchParams()
+       url=`${FETCH_GOODS}/${size}/${this.state.category}/`
+         + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
      }
      this.state.isFetching = true
      let nextState = {
@@ -102,30 +120,54 @@ class Underwears extends React.Component {
     let target,
         nextState;
     if (target = getParentByClass(e.target, 'cat')) {
-      nextState = {}
-      let category = target.getAttribute('data-category')
-      nextState = update(this.state, {category: {$set: category}})
+      let source = target.getAttribute('data-source')
+      let index = target.getAttribute('data-index')
+      nextState = update(this.state, {category: {$set: index}, pageIndex: {$set: 0}})
     } else if (target = getParentByClass(e.target, 'base-item')) {
       nextState = {}
-      let baseSize = target.getAttribute('data-val')
-      nextState = update(this.state, {baseSize: {$set: baseSize}})
+      let source = target.getAttribute('data-source')
+      let index = target.getAttribute('data-index')
+      nextState = update(this.state, {baseSizeIndex: {$set: index}})
     } else if (target = getParentByClass(e.target, 'bra-item')) {
       nextState = {}
-      let braSize = target.getAttribute('data-val')
-      nextState = update(this.state, {braSize: {$set: braSize}})
+      let source = target.getAttribute('data-source')
+      let index = target.getAttribute('data-index')
+      nextState = update(this.state, {braSizeIndex: {$set: index}})
     } else if (target = getParentByClass(e.target, 'tag')) {
       nextState = {}
-      let tag = target.getAttribute('data-tag')
-      let index = this.state.tags.indexOf(tag)
+      let source = target.getAttribute('data-source')
+      let index = target.getAttribute('data-index')
       if (target.classList.contains('on')) {
-        nextState = update(this.state, {tags: {$splice: [[index, 1]]}})
+        if (index == 0) {
+
+        } else {
+          let splice = [[index, 1, false]]
+          let isHasOtherSelected = this.state.tagsIndex.some((value, tagIndex) => {
+            return !!tagIndex && index != tagIndex && !!value
+          })
+          if (!isHasOtherSelected) {
+            splice.push([0, 1, true])
+          }
+          nextState = update(this.state, {tagsIndex: {$splice: splice}})
+        }
+
       } else {
-        nextState = update(this.state, {tags: {$splice: [[index, 0, tag]]}})
+        if (index == 0) {
+          nextState.tagsIndex = new Array(UNDERWEAR_TAGS.length)
+          nextState.tagsIndex[0] = true
+        } else {
+          let splice = [[index, 1, true]]
+          if (this.state.tagsIndex[0]) {
+            splice.push([0, 1, false])
+          }
+          nextState = update(this.state, {tagsIndex: {$splice: splice}})
+        }
       }
     } else if (target = getParentByClass(e.target, 'size-item')){
       nextState = {}
-      let size = target.getAttribute('data-val')
-      nextState = update(this.state, {size: {$set: size}})
+      let source = target.getAttribute('data-source')
+      let index = target.getAttribute('data-index')
+      nextState = update(this.state, {sizeIndex: {$set: index}})
     } else if (target = getParentByClass(e.target, 'btn-sure')) {
       this.state.isHaveGoods = true
       this.state.prolist = []

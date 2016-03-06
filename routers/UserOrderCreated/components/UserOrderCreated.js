@@ -150,7 +150,7 @@ class UserOrderCreated extends React.Component {
     try{
       data.coupon_id = this.state.coupon[this.state.couponSelectedIndex].id
     }catch(er) {
-      data.coupon_id = '1'
+      data.coupon_id = 0
     }
 
     data.cart_id = this.state.goodList.map( (item, index) => {

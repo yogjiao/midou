@@ -30,30 +30,54 @@ export let ROUTER_SHOPPING_CART_EDIT = 'edit'
 export let ROUTER_RECIEVER_INFO_ADD = 'add'
 export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
 export let RECEIVERS_EDIT = 'edit'
-export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
-export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
-export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
+
+export let UNDERWEAR_BRA_SIZE = [
+  {value: '0', text: 'ALL'},
+  {value: 'A', text: 'A'},
+  {value: 'B', text: 'B'},
+  {value: 'C', text: 'C'},
+  {value: 'D', text: 'D'}
+]
+
+export let UNDERWEAR_BASE_SIZE = [
+  {value: '0', text: 'ALL'},
+  {value: '70', text: '70'},
+  {value: '75', text: '75'},
+  {value: '80', text: '80'},
+  {value: '85', text: '85'}
+]
+
+export let UNDERWEAR_SIZE = [
+  {value: '0', text: 'ALL'},
+  {value: 'S', text: 'S'},
+  {value: 'M', text: 'M'},
+  {value: 'L', text: 'L'},
+  {value: 'XL', text: 'XL'}
+]
+
 export let PAY_WAY = {
   "zfb": "支付宝",
   "wx": "微信"
 }
 export let UNDERWEAR_TAGS = [
-    {id: "1", name:  "聚拢"},
-    {id: "2", name:  "无痕"},
-    {id: "3", name:  "侧收"},
-    {id: "4", name:  "美背"},
-    {id: "5", name:  "薄杯"},
-    {id: "6", name:  "运动"},
-    {id: "7", name:  "无钢圈"},
-    {id: "8", name:  "情趣"},
-    {id: "9", name:  "底裤"}
+    {value: "0", text:  "全部"},
+    {value: "1", text:  "聚拢"},
+    {value: "2", text:  "无痕"},
+    {value: "3", text:  "侧收"},
+    {value: "4", text:  "美背"},
+    {value: "5", text:  "薄杯"},
+    {value: "6", text:  "运动"},
+    {value: "7", text:  "无钢圈"},
+    {value: "8", text:  "情趣"},
+    {value: "9", text:  "底裤"}
 ]
 
 
 export let UNDERWEAR_TYPES = [
-    {id: "1", name:  "内衣"},
-    {id: "2", name:  "底裤"},
-    {id: "3", name:  "情趣"}
+    {value: "0", text:  "全部"},
+    {value: "1", text:  "内衣"},
+    {value: "2", text:  "底裤"},
+    {value: "3", text:  "情趣"}
 ]
 
 export let ASSISTANT_FEATRUES_AGE = [

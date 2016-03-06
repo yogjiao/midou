@@ -14,21 +14,24 @@ import './UnderwearSearchPanel.less'
 class UnderwearSearchPanel extends React.Component {
   render() {
     let items
-    if (this.props.category == '0' || this.props.category == '1') {
+    if (this.props.category == '0') {
+      items = ''
+    } else if (this.props.category == '1') {
       items = (
         <div>
           <div className="bra-size">
             <div className="circles">
             {(() => {
-              return UNDERWEAR_BASE_SIZE.map((val, index, tags)=>{
+              return UNDERWEAR_BASE_SIZE.map((item, index, tags)=>{
                 return (
                   <div key={index}
-                    className={(this.props.baseSize == val)?
+                    data-index={index}
+                    data-source={JSON.stringify(item)}
+                    className={(this.props.baseSizeIndex == index)?
                       'circle base-item on':
                       'circle base-item'}
-                    data-val={val}
                   >
-                    {val}
+                    {item.text}
                   </div>
                 )
               })
@@ -38,14 +41,16 @@ class UnderwearSearchPanel extends React.Component {
           <div className="bra-size">
             <div className="circles">
             {(() => {
-              return UNDERWEAR_BRA_SIZE.map((val, index, tags)=>{
+              return UNDERWEAR_BRA_SIZE.map((item, index, tags)=>{
                 return (
                   <div key={index}
-                    className={(this.props.braSize == val)?
+                    data-index={index}
+                    data-source={JSON.stringify(item)}
+                    className={(this.props.braSizeIndex == index)?
                       'circle bra-item on':
                       'circle bra-item'}
-                    data-val={val}>
-                    {val}
+                  >
+                    {item.text}
                   </div>
                 )
               })
@@ -59,12 +64,12 @@ class UnderwearSearchPanel extends React.Component {
                   return (
                     <li key={index}
                       data-index={index}
-                      data-tag={item.id}
-                      className={(this.props.tags.some(id => id == item.id))?
+                      data-source={item}
+                      className={(this.props.tagsIndex[index])?
                         'tag on' :
                         'tag'}
                     >
-                      {item.name}
+                      {item.text}
                     </li>)
                 })
               })()}
@@ -77,14 +82,17 @@ class UnderwearSearchPanel extends React.Component {
         <div className="bra-size">
           <div className="circles">
           {(() => {
-            return UNDERWEAR_SIZE.map((val, index, tags)=>{
+            return UNDERWEAR_SIZE.map((item, index)=>{
               return (
-                <div key={index}
-                  className={(this.props.size == val)?
+                <div
+                  key={index}
+                  data-index={index}
+                  data-source={item}
+                  className={(this.props.sizeIndex == index)?
                     'circle size-item on':
                     'circle size-item'}
-                  data-val={val}>
-                  {val}
+                >
+                  {item.text}
                 </div>
               )
             })
@@ -109,10 +117,11 @@ class UnderwearSearchPanel extends React.Component {
                  return (
                    <li
                       key={index}
-                      className={this.props.category == item.id? 'cat on' : 'cat'}
-                      data-category={item.id}
+                      data-index={index}
+                      data-source={JSON.stringify(item)}
+                      className={this.props.category == index? 'cat on' : 'cat'}
                    >
-                    {item.name}
+                    {item.text}
                    </li>
                  )
                })
