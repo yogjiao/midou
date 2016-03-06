@@ -10,6 +10,7 @@ import PageSpin from 'PageSpin/PageSpin.js'
 import {
   EDIT_CART_GOODS_BY_IDS,
   FETCH_SUCCESS,
+  FETCH_STATUS_NO_MORE_PRODUCT,
   BASE_PAGE_DIR,
   FETCH_COUPONS,
   PUT_TO_ORDER,
@@ -80,13 +81,18 @@ class UserOrderCreated extends React.Component {
             coupon: data.coupon,
             isHiddenSelection: false
           })
+        } else if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+          this.setState({
+            promptMsg: '没有符合条件的优惠信息'
+          })
+          this.refs['prompt'].show()
         }
       })
       .catch(error => {
         //this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
-        this.setState({isHiddenPageSpin: true})
+        this.setState({isHiddenPageSpin: true, isLoadedCouponSource:true})
       })
   };
   thisHandler = (e) => {
@@ -98,8 +104,13 @@ class UserOrderCreated extends React.Component {
     } else if (target = getParentByClass(e.target, 'coupon-wrap')) {
       if (!this.state.isLoadedCouponSource) {
         this.fetchCouponSource()
-      } else {
+      } else if (this.state.coupon.length != 0) {
         this.setState({isHiddenSelection: false})
+      } else {
+        this.setState({
+          promptMsg: '没有符合条件的优惠信息'
+        })
+        this.refs['prompt'].show()
       }
     } else if (target = getParentByClass(e.target, 'select-item-wrap')) {
        let index = target.getAttribute('data-index')
