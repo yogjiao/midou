@@ -2,7 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 
-import {UNDERWEAR_BRA_SIZE, UNDERWEAR_BASE_SIZE,BASE_PAGE_DIR ,UNDERWEAR_SIZE} from 'macros.js'
+import {
+  UNDERWEAR_BRA_SIZE,
+  UNDERWEAR_BASE_SIZE,
+  BASE_PAGE_DIR,
+  UNDERWEAR_SIZE
+} from 'macros.js'
 
 
 let update = require('react-addons-update')
@@ -38,33 +43,18 @@ class UnderwearDetailSelectPanel extends React.Component {
   componentDidMount = () => {
   };
   render() {
-
     let boxesEl,
         braEl,
         baseEl,
         sizeEl;
-
     switch (this.props.category) {
       case '1':
-        braEl = (
-          <dl className="cup-wrap">
-            <dt><div className="triangle" />请选择罩杯</dt>
-            <dd>
-              {
-                UNDERWEAR_BRA_SIZE.map((val, index) => {
-                  return (<div key={index} data-value={val} className={val == this.props.braSize? 'char-circle bra-size  on' : 'char-circle bra-size'}>{val}</div>)
-                })
-              }
-            </dd>
-          </dl>
-        )
-
         baseEl = (
           <dl className="perimeter-wrap">
             <dt><div className="triangle" />请选择底围</dt>
             <dd>
               {
-                UNDERWEAR_BASE_SIZE.map((val, index) => {
+                this.props.allBase.map((val, index) => {
                   return (
                     <div
                       key={index}
@@ -80,6 +70,19 @@ class UnderwearDetailSelectPanel extends React.Component {
             </dd>
           </dl>
         )
+
+          braEl = (
+            <dl className="cup-wrap">
+              <dt><div className="triangle" />请选择罩杯</dt>
+              <dd>
+                {
+                  this.props.goods.inventoryInfo.allBase[this.props.baseSize].map((val, index) => {
+                    return (<div key={index} data-value={val} className={val == this.props.braSize? 'char-circle bra-size  on' : 'char-circle bra-size'}>{val}</div>)
+                  })
+                }
+              </dd>
+            </dl>
+          )
 
         if (this.props.boxes.length) {
           boxesEl = (
@@ -110,7 +113,7 @@ class UnderwearDetailSelectPanel extends React.Component {
             <dt><div className="triangle" />请选择尺码</dt>
             <dd>
               {
-                UNDERWEAR_SIZE.map((val, index) => {
+                this.props.allSize.map((val, index) => {
                   return (<div key={index} data-value={val} className={val == this.props.size? 'char-circle no-bra-size  on' : 'char-circle no-bra-size'}>{val}</div>)
                 })
               }
@@ -118,8 +121,6 @@ class UnderwearDetailSelectPanel extends React.Component {
           </dl>
         )
         break;
-      default:
-
     }
     return (
 
@@ -131,8 +132,9 @@ class UnderwearDetailSelectPanel extends React.Component {
       >
         <div className="bg-blur"></div>
         <div className="select-panel">
-          {braEl}
-          {baseEl}
+          <div>{baseEl}</div>
+          <div>{braEl}</div>
+
           {sizeEl}
           <dl className="num-wrap">
             <dt><div className="triangle" />请选择数量</dt>

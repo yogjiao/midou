@@ -32,6 +32,7 @@ class Underweardetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasLoadedData: false,
       buyActionModel: 0, //[加入购物车，立即购买]
       isFetching: false,
       isHaveGoods: true,
@@ -41,16 +42,44 @@ class Underweardetail extends React.Component {
       promptMsg: '',
 
       size: 0,
+      allBase: [],
       braSize: 0, // bra
       baseSize: 0, // bra
       category: 1, // 1：文胸，2:底裤，3:情趣
       boxes: [], // tags
       count: 0,
 
-      goods: {},
+      goods: {inventoryInfo:{allBase:[], allSize: [], inventory:{}}},
     };
 
   }
+  rebuildInventory = (goodsInventory, category) => {
+    let inventoryInfo = {}
+    let allBase = inventoryInfo.allBase = {}
+    let allSize = inventoryInfo.allSize = {}
+    let inventory = inventoryInfo.inventory = {}
+    if (category == '1') {
+      goodsInventory.forEach((item, index)=>{
+        let size = item.size.split('-');
+        if (allBase[size[0]]) {
+          allBase[size[0]].push(size[1])
+        } else {
+          allBase[size[0]] = []
+          allBase[size[0]].push(size[1])
+        }
+
+        inventory[item.size] = item
+      })
+    } else {
+      goodsInventory.forEach((item, index)=>{
+        let size = item.size
+        inventory[size] = item
+      })
+    }
+
+
+    return inventoryInfo;
+  };
   fetchDetailData = () => {
     this.state.isFetching = true
     //this.setState({isHiddenPageSpin: false})
@@ -60,12 +89,28 @@ class Underweardetail extends React.Component {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveGoods = false
         }
-        let nextState = update(this.state, {
+
+        data.goods.inventoryInfo = this.rebuildInventory(data.goods.inventory, data.goods.category)
+        delete data.goods.inventory
+
+        let schema = {
           category: {$set: data.goods.category},
           goods: {$set: data.goods},
           isFetching:{$set: false},
-          isHiddenPageSpin: {$set: true}
-        })
+          isHiddenPageSpin: {$set: true},
+          hasLoadedData: {$set: true}
+        }
+
+        if (data.goods.category == '1') {
+          let keys = Object.keys(data.goods.inventoryInfo.allBase)
+          schema.allBase = {$set: keys}
+          schema.baseSize = {$set: keys[0]}
+        } else {
+          let keys = Object.keys(data.goods.inventoryInfo.inventory)
+          schema.allSize = {$set: keys}
+          schema.size = {$set: keys[0]}
+        }
+        let nextState = update(this.state, schema)
         this.setState(nextState)
       })
       .catch((error) => {
@@ -157,11 +202,7 @@ class Underweardetail extends React.Component {
     }
   };
   getInventoryBySize = (size) => {
-    let target =
-      this.state.goods.inventory.find( (item, index) => {
-        return item['size'] == size;
-      })
-    return target && target.count || 0
+    return this.state.goods.inventoryInfo.inventory[size].count || 0;
   };
   selectHandler = (e) => {
     let target,
@@ -193,7 +234,6 @@ class Underweardetail extends React.Component {
       }
     } else if (target = getParentByClass(e.target, 'btn-add')) {
       //nextState = update(this.state, {num: {$apply: (num) => ++num}})
-
       let index = target.getAttribute('data-index')
       if (index) {
         let anotherIndex = this.state.boxes.length - 1 - index;
@@ -211,7 +251,7 @@ class Underweardetail extends React.Component {
       } else {
         let inventory =
           this.getInventoryBySize(this.state.size ||
-            (this.state.baseSize + '-' + this.state.braSize))
+            (this.state.baseSize + '-' +this.state.braSize))
         nextState = update(this.state, {count:
           {$apply: (num) => Math.min(++num, inventory)}})
       }
@@ -288,6 +328,15 @@ class Underweardetail extends React.Component {
           (this.state.braSize != nextState.braSize ||
           this.state.baseSize != nextState.baseSize)) {
         nextState.boxes = countBoxes(nextState.braSize, nextState.baseSize)
+        nextState.boxes = nextState.boxes.filter((item, index)=>{
+          let count
+          try {
+            count = nextState.goods.inventoryInfo.inventory[item.baseSize + '-' + item.braSize].count
+          } catch (e) {
+            count = -1
+          }
+          return  count > 0
+        })
         nextState.boxes.map((item, index) => {
           let temp = pick(this.state.goods, 'id', 'category')
           temp.size = item.baseSize + '-' + item.braSize
@@ -321,6 +370,7 @@ class Underweardetail extends React.Component {
         />
         <UnderwearDetailSelectPanel
           isHidden={this.state.isHiddenSelectPanel}
+          allBase={this.state.allBase}
           {...this.state}
           selectHandler={this.selectHandler}
         />
@@ -328,6 +378,7 @@ class Underweardetail extends React.Component {
           isHidden={this.state.isHiddenSharePanel}
         />
         <Prompt msg={this.state.promptMsg} ref='prompt'/>
+        <isHiddenPageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }

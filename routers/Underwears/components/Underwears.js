@@ -57,7 +57,7 @@ class Underwears extends React.Component {
       size = 0
       tags = 0
     } else if (this.state.category == 1) {
-      size = `${UNDERWEAR_BRA_SIZE[this.state.baseSizeIndex].value}-${UNDERWEAR_BASE_SIZE[this.state.braSizeIndex].value}`
+      size = `${UNDERWEAR_BASE_SIZE[this.state.baseSizeIndex].value}-${UNDERWEAR_BRA_SIZE[this.state.braSizeIndex].value}`
       tags = []
       this.state.tagsIndex.forEach((is, index)=>{
         if (is) {
@@ -190,7 +190,7 @@ class Underwears extends React.Component {
       if (this.state.isFetching || !this.state.isHaveGoods) return
 
       this.setState({isHiddenScrollingSpin: false})
-      this.state.pageIndex++
+      this.state.pageIndex ++
       this.fetchData(true)
     }
   };
