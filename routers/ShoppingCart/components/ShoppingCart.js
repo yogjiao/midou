@@ -39,7 +39,7 @@ class ShoppingCart extends React.Component {
       promptMsg: '',
       confirmMsg: '你确定要删除该产品吗？',
       lastGoodsId: 0,
-      pageSize: 2,
+      pageSize: 5,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isHiddenConfirm: true,
@@ -475,6 +475,7 @@ class ShoppingCart extends React.Component {
         break;
       case ROUTER_SHOPPING_CART_EDIT:
       //  this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`)
+      this.props.history.goBack()
         break;
     }
     this.props.history.goForward()
@@ -498,8 +499,19 @@ class ShoppingCart extends React.Component {
   componentDidMount = () => {
     this.fetchCartData()
     document.addEventListener('scroll', this.handleScroll.bind(this));
+
   };
   componentWillReceiveProps = (props) => {
+    switch (props.params.actionModel) {
+      case ROUTER_SHOPPING_CART_SCAN:
+        this.state.headerName = '购物车'
+        this.state.menuName = '编辑'
+        break;
+      case ROUTER_SHOPPING_CART_EDIT:
+        this.state.headerName = '编辑购物车'
+        this.state.menuName = '完成'
+        break;
+    }
   };
   componentWillUpdate = (nextProps, nextState) => {
     let ids = []

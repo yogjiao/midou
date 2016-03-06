@@ -92,7 +92,13 @@ class UserOrderItem extends React.Component {
             </div>
           </div>
           <div className="row-wrap">
-            <div className="price arial">&yen; {this.props.source.price}</div>
+            <div className="price arial">&yen;
+              {
+                (itemType == '2')?
+                this.props.source.deposit :
+                this.props.source.price
+              }
+            </div>
             <div className="order-justify-wrap">
               {row_3}
             </div>

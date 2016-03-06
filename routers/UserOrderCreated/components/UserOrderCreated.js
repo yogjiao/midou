@@ -59,13 +59,13 @@ class UserOrderCreated extends React.Component {
       })
     })
 
-    price =  new Number(price).toFixed(2)
+
     try {
       price -= nextState.coupon[nextState.couponSelectedIndex].price || 0
     } catch (e) {
 
     }
-
+    price =  new Number(price).toFixed(2)
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
     return {price: price, count: count};

@@ -55,6 +55,11 @@ class ExpressOrder extends React.Component {
           nextState = {promptMsg: '运单添加成功'}
           this.setState(nextState)
           this.refs['prompt'].show();
+        } else {
+          let nextState = {}
+          nextState = {promptMsg: '请填写完整信息'}
+          this.setState(nextState)
+          this.refs['prompt'].show();
         }
       })
       .catch(() => {

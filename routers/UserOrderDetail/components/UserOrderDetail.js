@@ -82,7 +82,7 @@ class UserOrderDetail extends React.Component {
     } else if (target = getParentByClass(e.target, 'fill-price')) {//补差价
       this.checkout(target.getAttribute('data-oid'))
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
-      this.checkout(this.props.orderId)
+      this.checkout(this.props.params.orderId)
     }
   };
 
@@ -202,7 +202,13 @@ class UserOrderDetail extends React.Component {
                   实际支付
                </div>
                <div className="info-wrap font-gray">
-                 <div className="arial">{coupon.id? (this.state.order[0].total_price - coupon.price) : this.state.order[0].total_price}</div>
+                 <div className="arial">
+                   {
+                      this.state.order[0].total_price && coupon.id ?
+                      this.state.order[0].total_price - coupon.price :
+                      this.state.order[0].total_price
+                   }
+                 </div>
                </div>
             </div>
           </dd>
