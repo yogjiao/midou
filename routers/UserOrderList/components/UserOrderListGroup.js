@@ -24,10 +24,22 @@ class UserOrderListGroup extends React.Component {
       item.forEach((item, index) => {
         let temp
         if (index == 0) {
-          temp = <UserOrderItem oid={this.props.oid} key={index} source={item} pageType="3" itemType="1"/>
+          temp = <UserOrderItem
+            oid={this.props.oid}
+            ts={this.props.source.ts}
+            key={index}
+            source={item}
+            pageType="3"
+            itemType="1"/>
           noTryList.push(temp)
         } else {
-          temp = <UserOrderItem oid={this.props.oid} key={index} source={item} pageType="3" itemType="2"/>
+          temp = <UserOrderItem
+            oid={this.props.oid}
+            ts={this.props.source.ts}
+            key={index}
+            source={item}
+            pageType="3"
+            itemType="2"/>
           tryList.push(temp)
         }
       })

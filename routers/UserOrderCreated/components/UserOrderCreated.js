@@ -29,14 +29,14 @@ class UserOrderCreated extends React.Component {
     this.state = {
       isHiddenPageSpin: true,
       isHiddenCheckoutWaitingLayer: true,
-      headerName: '我的订单',
+      headerName: '创建订单',
       promptMsg: '订单提交成功',
       goodList: [],
       payWay: 'wx', //wx  zfb
 
       coupon: [],
-      couponItemName: '首单优惠',
-      couponSelectedIndex: 0,
+      couponItemName: '选择优惠方式',
+      couponSelectedIndex: -1,
       isHiddenSelection: true,
       isLoadedCouponSource: false,
       totalPrice: 0,
@@ -44,9 +44,9 @@ class UserOrderCreated extends React.Component {
     }
 
   }
-  calculateTotal = (goodList) => {
+  calculateTotal = (nextState) => {
     let price = 0, count = 0
-    goodList = goodList || this.state.goodList
+    let goodList = this.state.goodList
     goodList.forEach((item, index) => {
       item.goods.forEach((item, index) => {
           if (index == 0) {
@@ -57,6 +57,14 @@ class UserOrderCreated extends React.Component {
           count += 1 * item.count
       })
     })
+
+    price =  new Number(price).toFixed(2)
+    try {
+      price -= nextState.coupon[nextState.couponSelectedIndex].price || 0
+    } catch (e) {
+
+    }
+
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
     return {price: price, count: count};
@@ -68,7 +76,7 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
-            couponItemName: data.coupon[0].name,
+          //  couponItemName: data.coupon[0].name,
             coupon: data.coupon,
             isHiddenSelection: false
           })
@@ -144,7 +152,7 @@ class UserOrderCreated extends React.Component {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
         return notifyAppToCheckout({oid: data.oid})
-            .then((data)=> {
+            .then((dataFromApp)=> {
               this.setState({
                 isHiddenPageSpin: true,
                 isHiddenCheckoutWaitingLayer: false,
@@ -160,6 +168,9 @@ class UserOrderCreated extends React.Component {
       .then(() => {
         //this.setState({isHiddenPageSpin: true})
       })
+  };
+  backHandler = () => {
+    this.props.history.goBack()
   };
   componentDidMount = () => {
     let url = `${EDIT_CART_GOODS_BY_IDS}/${this.props.params.goodsIds}`
@@ -187,7 +198,7 @@ class UserOrderCreated extends React.Component {
 
   };
   componentWillUpdate = (nextProps, nextState) => {
-    let total = this.calculateTotal()
+    let total = this.calculateTotal(nextState)
     nextState.totalPrice = total.price;
     nextState.totalCount = total.count;
   };
@@ -195,7 +206,7 @@ class UserOrderCreated extends React.Component {
     return (
       <div className="order-created-container" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont">&#xe609;</i>
+          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         </PageHeader>
         {
            this.state.goodList.map((item, index) => {

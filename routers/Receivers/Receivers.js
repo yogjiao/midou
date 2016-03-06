@@ -84,16 +84,17 @@ class Receivers extends React.Component {
           this.state.isHaveaddress = false
           return
         }
-        this.cities = data.city;
-        let nextState = update(this.state, {
-          receivers: {$push: data.address},
-          lastReceiver: {$set: data.address[data.address.length - 1].id}
-        })
-
-        this.setState(nextState)
+        if (data.rea == FETCH_SUCCESS) {
+          this.cities = data.city;
+          let nextState = update(this.state, {
+            receivers: {$push: data.address},
+            lastReceiver: {$set: data.address[data.address.length - 1].id}
+          })
+         this.setState(nextState)
+        }
       })
       .catch((error) => {
-
+        alert(error.message)
       })
       .then(() => {
         this.setState({

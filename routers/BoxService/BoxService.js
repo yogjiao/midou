@@ -8,7 +8,6 @@ class BoxService extends React.Component {
     //this.props.history.goBack();
     backToUserCenterNativePage()
       .then((data) => {
-        console.log(data.message)
       })
   };
   render = () => {

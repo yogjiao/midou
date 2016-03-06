@@ -72,7 +72,7 @@ class UserOrderDetail extends React.Component {
   checkoutHandler = () => {
     let url = `${PUT_TO_ORDER}`
     this.setState({isHiddenPageSpin: false})
-    notifyAppToCheckout({oid: this.props.orderId})
+    notifyAppToCheckout({oid: this.props.params.orderId})
         .then((data)=> {
           this.setState({
             isHiddenPageSpin: true,

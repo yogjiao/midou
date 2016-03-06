@@ -7,6 +7,7 @@ import {BASE_PAGE_DIR} from 'macros.js'
 //import ocBridge from './components/WebViewJavascriptBridge.js'
 
 //pollyfill
+import 'polyfill.js'
 import 'es6-promise'
 import 'whatwg-fetch'
 

@@ -14,7 +14,7 @@ import {
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 
-
+import {backToUserCenterNativePage} from 'webviewInterface.js'
 import UserOrderListGroup from 'UserOrderListGroup.js'
 
 import './UserOrderList.less'
@@ -70,6 +70,12 @@ class UserOrderList extends React.Component {
       }
     }
   };
+  backHandler = () => {
+    //this.props.history.goBack();
+    backToUserCenterNativePage()
+      .then((data) => {
+      })
+  };
   componentDidMount = () => {
     this.fetchOrders()
     document.addEventListener('scroll', this.handleScroll);
@@ -82,7 +88,7 @@ class UserOrderList extends React.Component {
     return (
       <div className="order-detail-container">
         <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont">&#xe609;</i>
+          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         </PageHeader>
         {
            this.state.orderList.map((item, index) => {

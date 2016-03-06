@@ -61,11 +61,11 @@ class UserOrderItem extends React.Component {
       case '3':
         if (itemType == 1) {
           row_1 = (<Link to={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></Link>)
-          row_3 = (<div className="create-time">2014-05-06 25:19:20</div>)
+          row_3 = (<div className="create-time">{this.props.ts}</div>)
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
           row_2 = (<i></i>)
-          row_3 = (<div className="create-time">2014-05-06 25:19:20</div>)
+          row_3 = (<div className="create-time">{this.props.ts}</div>)
         }
         break;
 

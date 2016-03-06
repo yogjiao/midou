@@ -16,7 +16,7 @@ let update = require('react-addons-update')
 
 import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import UnderwearSearchPanel from 'UnderwearSearchPanel.js'
-
+import {backToUserCenterNativePage} from 'webviewInterface.js'
 // import fetch from '../../components/fetch.js'
 
 
@@ -156,7 +156,15 @@ class Underwears extends React.Component {
     this.setState({isHiddenSearchPanel: false})
   };
   backHandler = () => {
-    this.props.history.goBack();
+    if (this.props.route.path == 'collections') {
+      backToUserCenterNativePage()
+        .then((data)=>{
+
+        })
+    } else {
+      this.props.history.goBack();
+    }
+
   };
   componentWillMount = () => {
     if (this.props.route.path == "collections") {
