@@ -23,24 +23,29 @@ class Home extends React.Component {
     };
 
   }
-  fetchListData = () => {
+  fetchListData = (isScrollLoading) => {
     this.state.isFetching = true
     let url = `${FETCH_INDEX_DATA}/${this.props.params.sceneId}/${this.state.pageIndex}/${this.state.pageSize}`
-    this.setState({isHiddenPageSpin: false})
+    let nextState = {}
+    if (isScrollLoading) {
+      nextState.isHiddenScrollingSpin = false
+    } else {
+      nextState.isHiddenPageSpin = false
+    }
+    this.setState(nextState)
     fetchable(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveGoods = false
         }
         let nextState = update(this.state, {
-          goodsList: {$push: data.goods},
-          isFetching:{$set: false},
-          isHiddenPageSpin: {$set: true},
-          isHiddenScrollingSpin: {$set: true}
+          goodsList: {$push: data.goods}
         })
         this.setState(nextState)
       })
       .catch((error) => {
+      })
+      .then(()=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -57,7 +62,7 @@ class Home extends React.Component {
 
         this.setState({isHiddenScrollingSpin: false})
         this.state.pageIndex++
-        this.fetchListData()
+        this.fetchListData(true)
       }
     }
   };

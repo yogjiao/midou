@@ -150,10 +150,8 @@ class Underweardetail extends React.Component {
             this.props.history.goForward()
           }
           this.setState({promptMsg: '商品已添加到购物车'})
-          this.refs['prompt'].show();
         } else if (data.rea == '2003'){
           this.setState({promptMsg: '你选择的型号没有库存了'})
-          this.refs['prompt'].show();
         }
 
       })
@@ -161,7 +159,7 @@ class Underweardetail extends React.Component {
 
       })
       .then(() => {
-
+        this.refs['prompt'].show();
       })
 
   };
@@ -192,9 +190,9 @@ class Underweardetail extends React.Component {
     let rest = count
     for (let i = len - 1; i >= 0; i--) {
       let box = this.state.boxes[i]
-      rest = count - box.count
-      if (rest <= 0 ) {
-          box.count = box.count - count
+      rest = box.count - count
+      if (rest >= 0 ) {
+          box.count -= count
           break
       } else {
         box.count = 0;
@@ -236,13 +234,19 @@ class Underweardetail extends React.Component {
       //nextState = update(this.state, {num: {$apply: (num) => ++num}})
       let index = target.getAttribute('data-index')
       if (index) {
-        let anotherIndex = this.state.boxes.length - 1 - index;
+        let anotherIndex
+        let anotherCount
+        if (this.state.boxes.length == 1) {
+          anotherCount = 0
+        } else {
+          anotherIndex = this.state.boxes.length - 1 - index;
+          anotherCount = this.state.boxes[anotherIndex].count
+        }
         let inventory =
           this.getInventoryBySize(this.state.boxes[index].size)
         let schema = {}
         schema[index] = {count: {
           $apply: (num) => {
-            let anotherCount = this.state.boxes[anotherIndex].count
             return Math.min(++num, (this.state.count - anotherCount))
           }
          }
@@ -290,7 +294,14 @@ class Underweardetail extends React.Component {
       data.imgUrl = goods.main_img
       shareToSocialCircle(data)
         .then( (data) => {
-          alert(JSON.stringify(data))
+          if (data.result == '1') {
+            this.setState({promptMsg: '分享成功'})
+          } else {
+            this.setState({promptMsg: '分享失败'})
+          }
+        })
+        .then(()=>{
+          this.refs['prompt'].show()
         })
       nextState.isHiddenSharePanel = true
     } else if (target = getParentByClass(e.target, 'cancel-shrare')) {

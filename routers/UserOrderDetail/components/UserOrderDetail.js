@@ -120,7 +120,7 @@ class UserOrderDetail extends React.Component {
       stack = (
         <div className="flow-wrap">
           <div className="justify-wrap">
-            <Link to={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</Link>
+            <a href={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</a>
           </div>
         </div>
       )

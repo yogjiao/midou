@@ -61,7 +61,7 @@ class UserOrderListGroup extends React.Component {
     return (
       <div className="order-list-group">
         <div className="order-group-header">
-          <div className={`state-wrap order-state-${this.props.source.order_state}`}>{orderState[this.props.source.order_state]}</div>
+          <div className={`order-state-${this.props.source.order_state} state-wrap`}>{orderState[this.props.source.order_state]}</div>
           <div className="order-id"><span>订单号:</span><i className="color-purple arial">{this.props.source.id}</i></div>
         </div>
 

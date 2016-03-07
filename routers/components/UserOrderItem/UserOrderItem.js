@@ -82,11 +82,22 @@ class UserOrderItem extends React.Component {
     return (
       <div className="order-item-container">
         <div className="column">
-          <div className="img-wrap"><img src={this.props.source.main_img} /></div>
+          <div className="img-wrap">
+            {
+              pageType=="2"?
+              (<Link to={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}><img src={this.props.source.main_img} /></Link>):
+              (<img src={this.props.source.main_img} />)
+            }
+          </div>
         </div>
         <div className="column">
           <div className="row-wrap">
-            <div className="pro-name">{this.props.source.name}</div>
+            {
+              pageType=="2"?
+              (<Link to={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`} className="pro-name">{this.props.source.name}</Link>):
+              (<div className="pro-name">{this.props.source.name}</div>)
+            }
+
             <div className="order-justify-wrap">
             {row_1}
             </div>
