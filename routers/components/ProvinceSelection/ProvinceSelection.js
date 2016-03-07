@@ -33,6 +33,7 @@ class ProvinceSelection extends React.Component {
     list.forEach((item, index) => {
       if (item.id == id) {
         target = item
+        target.index = index
         return
       }
     })
@@ -63,27 +64,30 @@ class ProvinceSelection extends React.Component {
     let nextState
 
     if (target = getParentByClass(e.target, 'select-item-wrap')) {
-      nextState = {}
+
       params = JSON.parse(target.getAttribute('data-source'))
 
       switch ('' + this.state.selectionType) {
         case '1':
-          nextState.provinceId = params.value
-          nextState.provinceName = params.text
-          nextState.provinceIndex = target.getAttribute('data-index')
+          if (params.value != this.state.provinceId) {
+            this.fetchCities(params.value)
+          }
           break;
         case '2':
+          nextState = {}
           nextState.cityId = params.value
           nextState.cityName = params.text
           nextState.cityIndex = target.getAttribute('data-index')
+          nextState.isHiddenSelection = true
+          this.setState(nextState)
+          this.props.onAddressChange(this.state.provinceId, nextState.cityId)
           break;
       }
-      nextState.isHiddenSelection = true
+      this.setState(nextState)
     } else if (target = getParentByClass(e.target, 'select-bg-layout')) {
-      nextState = {isHiddenSelection: true}
+      this.setState({isHiddenSelection: true})
     }
 
-    nextState && this.setState(nextState)
   };
   // /**
   //  * fresh component when the provinceId changed
@@ -94,46 +98,58 @@ class ProvinceSelection extends React.Component {
   //   this.setState({isHiddenPageSpin: false, isHiddenSelection: true})
   //
   // };
-  fetchCities = (provinceId = this.state.provinceId) => {
+  fetchCities = (provinceId = this.state.provinceId, cityId) => {
     this.setState({isHiddenPageSpin: false})
     fetchable(`${FETCH_CITIES}/${provinceId}`)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
-          let cityId = data.city[0].id
-          let pItem = this.getItemById(this.props.source, provinceId)
-          let cItem = this.getItemById(data.city, cityId)
+          let pItem
+          let cItem
+
+          if (cityId) {
+            cItem =this.getItemById(data.city, cityId)
+          }
+          if (!cItem) {
+            cityId = data.city[0].id
+            cItem = this.getItemById(data.city, cityId)
+          }
+           pItem = this.getItemById(this.props.source, provinceId)
           let nextState = {
               provinceId: pItem.id,
               provinceName: pItem.name,
+              provinceIndex: pItem.index,
               cityId: cItem.id,
               cityName: cItem.name,
               citySource: data.city,
-              cityIndex: 0
+              cityIndex: cItem.index
             }
+           nextState.isHiddenSelection = true
+           nextState.isHiddenPageSpin = true
 
-           this.setState(nextState);
+           this.setState(nextState)
+           this.props.onAddressChange(nextState.provinceId, nextState.cityId)
+
          }
       })
       .catch(error => {
 
       })
       .then( () => {
-        this.setState({isHiddenPageSpin: true})
+        //this.setState({isHiddenPageSpin: true})
       })
   };
   componentDidMount = () => {
-    //this.refs['selection'].show();
     if (this.props.provinceId) {
-      this.setState({provinceId: this.props.provinceId})
+      this.fetchCities(this.props.provinceId, this.props.cityId)
     }
-  };
-  componentWillUpdate = (nextProps, nextState) => {
-    if (nextState.provinceId != this.state.provinceId) {
-      this.fetchCities(nextState.provinceId)
-    }
-    this.props.onAddressChange(nextState.provinceId, nextState.cityId);
   };
   componentWillReceiveProps = (nextProps, nextState) => {
+
+  };
+  shouldComponentUpdate = (nextProps, nextState) => {
+    if ( nextProps.provinceId == nextState.provinceId &&
+      nextProps.cityId == nextState.cityId)
+    return false
   };
   render() {
     let source, selectedIndex
