@@ -64,7 +64,7 @@ class UnderwearSearchPanel extends React.Component {
                   return (
                     <li key={index}
                       data-index={index}
-                      data-source={item}
+                      data-source={JSON.stringify(item)}
                       className={(this.props.tagsIndex[index])?
                         'tag on' :
                         'tag'}
@@ -87,7 +87,7 @@ class UnderwearSearchPanel extends React.Component {
                 <div
                   key={index}
                   data-index={index}
-                  data-source={item}
+                  data-source={JSON.stringify(item)}
                   className={(this.props.sizeIndex == index)?
                     'circle size-item on':
                     'circle size-item'}

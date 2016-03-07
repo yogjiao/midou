@@ -1,5 +1,4 @@
 
-
 .uw-search-panel{
   position: fixed;
   width: 100%;
@@ -14,28 +13,22 @@
     width: 100%;
     height: 100%;
   }
-  .iconfont{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  }
   .panel-Wrap{
     position: absolute;
-    width: 80%;
+    width: 90%;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
     box-shadow: 0 0 8px 2px rgba(0,0,0,0.2);
     border-radius: 8px;
-    padding: 50px 0;
+    padding: 30px 0;
   }
 
   .tags-wrap{
     display: flex;
     justify-content:space-around;
-    font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     li{
       &.on{
         color: @purple;
@@ -50,9 +43,9 @@
       justify-content:space-between;
       margin: 0 20px 30px;
       .circle{
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
         text-align: center;
         font-family: arial;
         border-radius: 50%;
@@ -66,10 +59,10 @@
 
   .tags{
     ul{
-      margin: 0 20px 30px;
+      margin: 0 20px 10px;
     }
     li{
-      padding: 8px 10px;
+      padding: 5px 8px;
       border: 1px solid @border-color;
       float: left;
       margin-right: 15px;
@@ -86,5 +79,11 @@
   }
   .btn-sure{
     display: inline-block;
+  }
+  .btn-close{
+    font-size: 20px;
+    position: absolute;
+    top: 5px;
+    right: 0px;
   }
 }

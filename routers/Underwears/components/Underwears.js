@@ -43,11 +43,12 @@ class Underwears extends React.Component {
       braSizeIndex: 0, // bra
       baseSizeIndex: 0, // base
       category: 0, //0: all, 1：文胸，2:底裤，3:情趣
-      tagsIndex: [true], // tags
+      tagsIndex: new Array(UNDERWEAR_TAGS.length), // tags
       prolist: [
         //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
         ]
-    };
+    }
+    this.state.tagsIndex[0] = true
 
   }
   getSearchParams = () => {
@@ -116,27 +117,26 @@ class Underwears extends React.Component {
        })
 
   };
+  getDataAttributes = (target) => {
+    return {
+      source: target.getAttribute('data-source'),
+      index: target.getAttribute('data-index')
+    }
+  };
   searchHandler = (e) => {
     let target,
         nextState;
     if (target = getParentByClass(e.target, 'cat')) {
-      let source = target.getAttribute('data-source')
-      let index = target.getAttribute('data-index')
+      let {source, index} = this.getDataAttributes(target)
       nextState = update(this.state, {category: {$set: index}, pageIndex: {$set: 0}})
     } else if (target = getParentByClass(e.target, 'base-item')) {
-      nextState = {}
-      let source = target.getAttribute('data-source')
-      let index = target.getAttribute('data-index')
+      let {source, index} = this.getDataAttributes(target)
       nextState = update(this.state, {baseSizeIndex: {$set: index}})
     } else if (target = getParentByClass(e.target, 'bra-item')) {
-      nextState = {}
-      let source = target.getAttribute('data-source')
-      let index = target.getAttribute('data-index')
+      let {source, index} = this.getDataAttributes(target)
       nextState = update(this.state, {braSizeIndex: {$set: index}})
     } else if (target = getParentByClass(e.target, 'tag')) {
-      nextState = {}
-      let source = target.getAttribute('data-source')
-      let index = target.getAttribute('data-index')
+      let {source, index} = this.getDataAttributes(target)
       if (target.classList.contains('on')) {
         if (index == 0) {
 
@@ -153,6 +153,7 @@ class Underwears extends React.Component {
 
       } else {
         if (index == 0) {
+          nextState = {}
           nextState.tagsIndex = new Array(UNDERWEAR_TAGS.length)
           nextState.tagsIndex[0] = true
         } else {
@@ -164,9 +165,7 @@ class Underwears extends React.Component {
         }
       }
     } else if (target = getParentByClass(e.target, 'size-item')){
-      nextState = {}
-      let source = target.getAttribute('data-source')
-      let index = target.getAttribute('data-index')
+      let {source, index} = this.getDataAttributes(target)
       nextState = update(this.state, {
         sizeIndex: {$set: index},
         pageIndex: {$set: 0}
