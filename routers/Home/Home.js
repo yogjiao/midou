@@ -2,7 +2,7 @@ import React from 'react'
 import PageSpin from 'PageSpin/PageSpin.js'
 import HomeListItem from 'HomeListItem.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_INDEX_DATA, FETCH_STATUS_NO_MORE_PRODUCT} from 'macros.js'
+import {FETCH_INDEX_DATA, FETCH_STATUS_NO_MORE_PRODUCT, BASE_STATIC_DIR} from 'macros.js'
 import {fetchable} from 'fetch.js'
 let update = require('react-addons-update')
 
@@ -19,7 +19,8 @@ class Home extends React.Component {
       isHiddenScrollingSpin: true,
       isFetching: false,
       isHaveGoods: true,
-      goodsList: []
+      goodsList: [],
+      isExpect: false
     };
 
   }
@@ -36,7 +37,11 @@ class Home extends React.Component {
     fetchable(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+
           this.state.isHaveGoods = false
+          if (this.state.pageIndex == 0) {
+            this.setState({isExpect: true})
+          }
         }
         let nextState = update(this.state, {
           goodsList: {$push: data.goods}
@@ -85,17 +90,22 @@ class Home extends React.Component {
         <div className="home-container">
           <div className="bg-wrap">
           </div>
-
-          <div className="list-wrap">
-            <ul className="pro-list">
-              {
-                this.state.goodsList.map(function(pro) {
-                  return <HomeListItem key={pro.id} {...pro}/>;
-                })
-              }
-            </ul>
-            <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-          </div>
+          {
+            this.state.isExpect?
+            (<div className="expext-wrap"><img src={`${BASE_STATIC_DIR}/img/expect.png`}/></div>):
+            (
+              <div className="list-wrap">
+                <ul className="pro-list">
+                  {
+                    this.state.goodsList.map(function(pro) {
+                      return <HomeListItem key={pro.id} {...pro}/>;
+                    })
+                  }
+                </ul>
+                <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+              </div>
+            )
+          }
           <PageSpin isHidden={this.state.isHiddenPageSpin}/>
         </div>
     )
