@@ -14,3 +14,6 @@ basePath: /app-page
 /collections 收藏
 
 /receiver/add 添加收货人
+/receiver/:recieverId/edit 编辑收货人
+/receivers 收货人列表
+/receivers/edit 收货人管理

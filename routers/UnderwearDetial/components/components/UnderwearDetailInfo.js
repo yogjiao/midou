@@ -19,7 +19,7 @@ class UnderweardetailInfo extends React.Component {
           <div className="detail-item-wrap">
             <h6 className="item-title"><div className="triangle"></div>盒子服务</h6>
             <div className="detail-content box-service-info">
-                <div className="img-wrap"><img src="/app-static/img/box-detail.png" /></div>
+                <Link className="img-wrap" to={`${BASE_PAGE_DIR}/box-service`}><img src="/app-static/img/box-detail.png" /></Link>
                 {/*
                   <h5>担心内衣不合身？</h5>
                   <h6>打开盒子，把试衣间带回家</h6>

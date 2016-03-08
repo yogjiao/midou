@@ -30,11 +30,14 @@ class ReceiverInfo extends React.Component {
       id: 0,
       name: '',
       phone:'',
-      province: '1',
+      province: '',
       city: '',
       detail: ''
     }
 
+    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+      this.state.province = 1
+    }
   }
   fetchReceiverInfo = () => {
     let url = `${FETCH_RECEIVER_INFO}/${this.props.params.receiverInfoId}`
@@ -78,9 +81,12 @@ class ReceiverInfo extends React.Component {
           if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
             nextState = {promptMsg: '收货人信息添加成功', isHiddenPrompt: false}
           } else {
-            tnextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
+            nextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
           }
           this.setState(nextState)
+          this.refs['prompt'].show();
+        } else {
+          this.setState({promptMsg: '请填写完整信息'})
           this.refs['prompt'].show();
         }
       })
@@ -88,6 +94,9 @@ class ReceiverInfo extends React.Component {
 
       })
       .then(() => {
+        setTimeout(()=>{
+          this.props.history.goBack()
+        }, 1500)
 
       })
   };

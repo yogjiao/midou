@@ -83,7 +83,6 @@ class ProvinceSelection extends React.Component {
           this.props.onAddressChange(this.state.provinceId, nextState.cityId)
           break;
       }
-      this.setState(nextState)
     } else if (target = getParentByClass(e.target, 'select-bg-layout')) {
       this.setState({isHiddenSelection: true})
     }
@@ -144,12 +143,20 @@ class ProvinceSelection extends React.Component {
     }
   };
   componentWillReceiveProps = (nextProps, nextState) => {
-
+    if (this.props.provinceId) {
+      this.fetchCities(nextProps.provinceId, nextProps.cityId)
+    }
   };
+
   shouldComponentUpdate = (nextProps, nextState) => {
-    if ( nextProps.provinceId == nextState.provinceId &&
-      nextProps.cityId == nextState.cityId)
-    return false
+    if ( nextProps.provinceId == this.state.provinceId &&
+      nextProps.cityId == this.state.cityId &&
+      nextState.isHiddenSelection == this.state.isHiddenSelection){
+      return false
+    } else {
+      return true
+    }
+
   };
   render() {
     let source, selectedIndex

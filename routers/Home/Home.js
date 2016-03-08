@@ -59,7 +59,6 @@ class Home extends React.Component {
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 50) {
       if (this.state.isHaveGoods && !this.state.isFetching){
-
         this.setState({isHiddenScrollingSpin: false})
         this.state.pageIndex++
         this.fetchListData(true)

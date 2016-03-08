@@ -29,7 +29,7 @@ const rootRoute = {
     path: `${BASE_PAGE_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
-    //indexRoute: { component: Home },//require('./Home/Home.js')
+    //indexRoute: { component: Home },//require('./Home/Home.js') 
     childRoutes: [
       require('./Home'),
       require('./Underwears'),
@@ -44,6 +44,7 @@ const rootRoute = {
       require('./Receivers').edit,
       require('./ExpressOrder'),
       require('./UnderwearAssistant'),
+
       require('./BoxService'),
       require('./CustomerService'),
       require('./Collections'),
