@@ -24,10 +24,4 @@ let errors =
     "4004": "账户违规，不能购买",
     "9000": "其他原因"
 }
-export errors
-export default new Promise((resolve, reject) => {
- callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-     //loginInfo = response
-     resolve({loginToken: response.token, userName: response.userName})
-   })
-});
+export default errors

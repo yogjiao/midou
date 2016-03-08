@@ -84,7 +84,12 @@ class ReceiverInfo extends React.Component {
             nextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
           }
           this.setState(nextState)
-          this.refs['prompt'].show();
+          this.refs['prompt'].show()
+
+          setTimeout(()=>{
+            this.props.history.goBack()
+          }, 1500)
+          
         } else {
           this.setState({promptMsg: '请填写完整信息'})
           this.refs['prompt'].show();
@@ -94,9 +99,7 @@ class ReceiverInfo extends React.Component {
 
       })
       .then(() => {
-        setTimeout(()=>{
-          this.props.history.goBack()
-        }, 1500)
+
 
       })
   };

@@ -10,7 +10,7 @@ class ReceiversItem extends React.Component {
         <div className="column">
            <div>{this.props.name}</div>
            <div className="arial">{this.props.phone}</div>
-           <div>{this.props.address}{this.props.address}</div>
+           <div>{this.props.address}</div>
         </div>
         {
           this.props.receiversModel == RECEIVERS_EDIT?

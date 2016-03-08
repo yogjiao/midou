@@ -25,11 +25,11 @@ class Receivers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      headerName: '我的收貨地址',
+      headerName: '我的收货地址',
       isHiddenConfirm: true,
-      confirmMsg: '你確定要刪除改收貨人信息嗎？',
+      confirmMsg: '你確定要刪除改收货人信息吗？',
       isHiddenPrompt: true,
-      promptMsg: '收貨人刪除成功',
+      promptMsg: '收货人刪除成功',
       pageSize: 10,
       lastReceiver: 0,
       isHiddenPageSpin: false,
@@ -159,14 +159,12 @@ class Receivers extends React.Component {
             this.props.params.receiversModel == RECEIVERS_EDIT?
               (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
               (<Link to={`${BASE_PAGE_DIR}/receivers/${RECEIVERS_EDIT}`}>管理</Link>)
-
-
           }
-
         </PageHeader>
         <div className="list-wrap">
           <ul className="pro-list">
             {
+              this.state.receivers.length?
               this.state.receivers.map((item, index) => {
 
                 let province = provinces.find((province, index) => {
@@ -177,7 +175,9 @@ class Receivers extends React.Component {
                 })
                 item.address = province.name + ' ' + city.name + ' ' + item.detail
                 return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
-              })
+              }):
+              this.props.params.receiversModel != RECEIVERS_EDIT?
+              <div className="add-receiver-wrap"><Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link></div>: ''
             }
           </ul>
           <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>

@@ -142,8 +142,8 @@ class ProvinceSelection extends React.Component {
       this.fetchCities(this.props.provinceId, this.props.cityId)
     }
   };
-  componentWillReceiveProps = (nextProps, nextState) => {
-    if (this.props.provinceId) {
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.provinceId && nextProps.provinceId != this.state.provinceId) {
       this.fetchCities(nextProps.provinceId, nextProps.cityId)
     }
   };
