@@ -226,7 +226,12 @@ class Underwears extends React.Component {
     return (
       <div className="uw-list-container">
         <PageHeader headerName={this.state.headerName}>
-         <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
+        {
+          this.props.route.path == 'collections'?
+          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>:
+          <div></div>
+        }
+
          {
            this.props.route.path == "underwears"?
            (<div className="menu-search" onClick={this.openFilterHanler}>筛选</div>):
