@@ -133,7 +133,7 @@ class UserOrderDetail extends React.Component {
     return (
 
 
-      <div className="order-detail-container" onClick={this.thisHandler}>
+      <div className="order-detail-container min-screen-height" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
         </PageHeader>
@@ -210,7 +210,7 @@ class UserOrderDetail extends React.Component {
                  <div className="arial">
                    {
                       this.state.order[0].total_price && coupon.id ?
-                      this.state.order[0].total_price - coupon.price :
+                      new Number(this.state.order[0].total_price - coupon.price).toFixed(2) :
                       this.state.order[0].total_price
                    }
                  </div>

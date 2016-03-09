@@ -16,15 +16,19 @@ class UserOrderItem extends React.Component {
   render = () => {
     let row_1, row_2, row_3,
         pageType = this.props.pageType,
-        itemType = this.props.itemType;
+        itemType = this.props.itemType,
+        price;
     switch (pageType) {
       case '1':
         if (itemType == 1) {
           row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
+          price = <div className="price arial">&yen;{`${this.props.source.price}`}</div>
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
           row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
+          price = <div className="price arial">&yen;{`${this.props.source.deposit}`}</div>
         }
+
         break;
       case '2':
         if (itemType == 1) {
@@ -34,6 +38,7 @@ class UserOrderItem extends React.Component {
           } else {
             row_1 = (<span></span>)
           }
+          price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
 
@@ -53,31 +58,27 @@ class UserOrderItem extends React.Component {
           } else {
             row_3 = (<span></span>)
           }
-
-
-
+          price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         }
+
         break;
       case '3':
         if (itemType == 1) {
           row_1 = (<Link to={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></Link>)
           row_3 = (<div className="create-time">{this.props.ts}</div>)
+          price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">押</div>)
           row_2 = (<i></i>)
           row_3 = (<div className="create-time">{this.props.ts}</div>)
+          price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         }
         break;
 
 
     }
 
-    let price
-    if (itemType == '2') {
-      price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
-    } else {
-      price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
-    }
+
 
     return (
       <div className="order-item-container">
@@ -111,7 +112,7 @@ class UserOrderItem extends React.Component {
             </div>
           </div>
           <div className="row-wrap">
-            {price}
+              {price}
             <div className="order-justify-wrap">
               {row_3}
             </div>

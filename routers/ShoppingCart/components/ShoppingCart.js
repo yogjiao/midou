@@ -23,8 +23,8 @@ import {getParentByClass} from 'util.js'
 import {countBoxes} from 'commonApp.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
+import errors from 'errors.js'
 let update = require('react-addons-update');
-
 
 import './ShoppingCart.less'
 class ShoppingCart extends React.Component {
@@ -246,11 +246,14 @@ class ShoppingCart extends React.Component {
           let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1, data.goods]]})
           let nextState = update(this.state, schema)
           this.setState(nextState)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+          this.refs['prompt'].show()
         }
       })
       .catch((error) => {
       })
-      .then(()=>{
+      .then((data)=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -263,7 +266,7 @@ class ShoppingCart extends React.Component {
     let cid = group.id
     let cgid = group['goods'][0]['cgid'] //ntid
     let url = `${PUT_BOX_SERVICE}/${cid}/${cgid}`
-    let nextState = {isFetching: true}
+    let nextState = {isFetching: true, isHiddenPageSpin: false}
     this.setState(nextState)
 
     let data = {
@@ -280,13 +283,16 @@ class ShoppingCart extends React.Component {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId,
             {$splice: [[group.goods.length, 0, data.goods]]})
-          schema.isFetching = {$set: false}
-          schema.isHiddenPageSpin = {$set: true}
           let nextState = update(this.state, schema)
           this.setState(nextState)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+          this.refs['prompt'].show()
         }
       })
       .catch((error) => {
+      })
+      .then((data)=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -311,14 +317,17 @@ class ShoppingCart extends React.Component {
       .then((data) => {
         if (data.rea ==  FETCH_SUCCESS) {
           let schema = this.getUpdateSchema(this.groupId, {$splice: [[this.itemId, 1]]})
-          schema.isFetching = {$set: false},
-          schema.isHiddenPageSpin = {$set: true}
           let nextState = update(this.state, schema)
           this.setState(nextState)
 
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+          this.refs['prompt'].show()
         }
       })
       .catch((error) => {
+      })
+      .then((data)=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
@@ -341,14 +350,17 @@ class ShoppingCart extends React.Component {
         if (data.rea == FETCH_SUCCESS) {
           let schema = this.getUpdateSchema({$splice: [[groupId, 1]]})
           let nextState = update(this.state, schema)
-          nextState.isFetching = false
-          nextState.isHiddenPageSpin = true
           nextState.promptMsg = '商品已删除'
           this.setState(nextState)
           this.refs['prompt'].show();
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+          this.refs['prompt'].show()
         }
       })
       .catch((error) => {
+      })
+      .then((data)=>{
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
