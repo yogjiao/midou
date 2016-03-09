@@ -37,26 +37,31 @@ class UnderweardetailInfo extends React.Component {
               ></div>
             </div>
           </div>
-          <div className="detail-item-wrap">
-            <h6 className="item-title"><div className="triangle"></div>相关产品</h6>
-            {
-              (this.props.goods_recommend || []).map((item, index) => {
+          {
+            (this.props.goods_recommend || []).length?
+            (
+              <div className="detail-item-wrap">
+                <h6 className="item-title"><div className="triangle"></div>相关产品</h6>
+                {
+                  this.props.goods_recommend.map((item, index) => {
 
-                return (
-                  <div className="recommend-wrap" key={index}>
-                    <div className="detail-content">
-                      <Link to={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
-                        <div className="img-wrap"><img src={item.thumb_img} /></div>
-                        <div className="pro-name">{item.name}</div>
-                        <div className="pro-price">&yen; {item.price}</div>
-                      </Link>
-                    </div>
-                  </div>
-                )
-              })
-            }
-
-          </div>
+                    return (
+                      <div className="recommend-wrap" key={index}>
+                        <div className="detail-content">
+                          <Link to={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
+                            <div className="img-wrap"><img src={item.thumb_img} /></div>
+                            <div className="pro-name">{item.name}</div>
+                            <div className="pro-price">&yen; {item.price}</div>
+                          </Link>
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            ):
+            ''
+          }
         </div>
       </div>
     )
