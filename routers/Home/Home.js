@@ -1,9 +1,11 @@
 import React from 'react'
 import PageSpin from 'PageSpin/PageSpin.js'
 import HomeListItem from 'HomeListItem.js'
+import Prompt from 'Prompt/Prompt.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {FETCH_INDEX_DATA, FETCH_STATUS_NO_MORE_PRODUCT, BASE_STATIC_DIR} from 'macros.js'
+import {FETCH_INDEX_DATA, FETCH_STATUS_NO_MORE_PRODUCT, FETCH_SUCCESS, BASE_STATIC_DIR} from 'macros.js'
 import {fetchable} from 'fetch.js'
+import errors from  'errors.js'
 let update = require('react-addons-update')
 
 import {getUserInfoFromApp} from 'webviewInterface.js'
@@ -42,11 +44,16 @@ class Home extends React.Component {
           if (this.state.pageIndex == 0) {
             this.setState({isExpect: true})
           }
+        } else if (data.rea == FETCH_SUCCESS) {
+          let nextState = update(this.state, {
+            goodsList: {$push: data.goods}
+          })
+          this.setState(nextState)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+          this.refs['prompt'].show()
         }
-        let nextState = update(this.state, {
-          goodsList: {$push: data.goods}
-        })
-        this.setState(nextState)
+
       })
       .catch((error) => {
       })
@@ -107,6 +114,7 @@ class Home extends React.Component {
             )
           }
           <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+          <Prompt msg={this.state.promptMsg} refs="prompt"/>
         </div>
     )
   }

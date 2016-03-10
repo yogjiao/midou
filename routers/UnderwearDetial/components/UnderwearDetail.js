@@ -81,6 +81,26 @@ class Underweardetail extends React.Component {
 
     return inventoryInfo;
   };
+  rebuildBoxes = (braSize, baseSize, inventory) => {
+    let boxes = countBoxes(braSize, baseSize)
+    boxes = boxes.filter((item, index)=>{
+      let count
+      try {
+        count = inventory[item.baseSize + '-' + item.braSize].count
+      } catch (e) {
+        count = -1
+      }
+      return  count > 0
+    })
+    boxes.map((item, index) => {
+      let temp = pick(this.state.goods, 'id', 'category')
+      temp.size = item.baseSize + '-' + item.braSize
+      // Object.assign({count: 1, try: 1, color: 0} , item)
+       return Object.assign(item , temp, {count: 0, try: 1, color: 0});
+    })
+
+    return boxes
+  };
   fetchDetailData = (productId) => {
     this.state.isFetching = true
     //this.setState({isHiddenPageSpin: false})
@@ -106,6 +126,8 @@ class Underweardetail extends React.Component {
           let keys = Object.keys(data.goods.inventoryInfo.allBase)
           schema.allBase = {$set: keys}
           schema.baseSize = {$set: keys[0]}
+          schema.braSize = {$set: data.goods.inventoryInfo.allBase[keys[0]][0]}
+          //nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
         } else {
           let keys = Object.keys(data.goods.inventoryInfo.inventory)
           schema.allSize = {$set: keys}
@@ -215,7 +237,8 @@ class Underweardetail extends React.Component {
       })
     } else if (target = getParentByClass(e.target, 'base-size')) {
       nextState = update(this.state, {
-        baseSize: {$set: target.getAttribute('data-value')}
+        baseSize: {$set: target.getAttribute('data-value')},
+        braSize: {$set: this.state.goods.inventoryInfo.allBase[target.getAttribute('data-value')][0]}
       })
     } else if (target = getParentByClass(e.target, 'no-bra-size')) {
       nextState = update(this.state, {
@@ -231,7 +254,7 @@ class Underweardetail extends React.Component {
         }
         nextState = update(this.state, {boxes: schema})
       } else {
-        nextState = update(this.state, {count: {$apply: (num) => Math.max(--num, 0)}})
+        nextState = update(this.state, {count: {$apply: (num) => Math.max(--num, 1)}})
       }
     } else if (target = getParentByClass(e.target, 'btn-add')) {
       //nextState = update(this.state, {num: {$apply: (num) => ++num}})
@@ -336,27 +359,12 @@ class Underweardetail extends React.Component {
     nextState && this.setState(nextState)
   };
   componentWillUpdate = (nextProps, nextState) => {
-    switch (this.state.category) {
+    switch (nextState.category) {
       case '1':
       if ((nextState.braSize && nextState.baseSize) &&
           (this.state.braSize != nextState.braSize ||
           this.state.baseSize != nextState.baseSize)) {
-        nextState.boxes = countBoxes(nextState.braSize, nextState.baseSize)
-        nextState.boxes = nextState.boxes.filter((item, index)=>{
-          let count
-          try {
-            count = nextState.goods.inventoryInfo.inventory[item.baseSize + '-' + item.braSize].count
-          } catch (e) {
-            count = -1
-          }
-          return  count > 0
-        })
-        nextState.boxes.map((item, index) => {
-          let temp = pick(this.state.goods, 'id', 'category')
-          temp.size = item.baseSize + '-' + item.braSize
-          // Object.assign({count: 1, try: 1, color: 0} , item)
-           return Object.assign(item , temp, {count: 0, try: 1, color: 0});
-        })
+        nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
       }
 
       if (this.state.count > nextState.count) {

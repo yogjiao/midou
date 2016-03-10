@@ -128,7 +128,7 @@ class Underwears extends React.Component {
         nextState;
     if (target = getParentByClass(e.target, 'cat')) {
       let {source, index} = this.getDataAttributes(target)
-      nextState = update(this.state, {category: {$set: index}, pageIndex: {$set: 0}})
+      nextState = update(this.state, {category: {$set: index}})
     } else if (target = getParentByClass(e.target, 'base-item')) {
       let {source, index} = this.getDataAttributes(target)
       nextState = update(this.state, {baseSizeIndex: {$set: index}})
@@ -171,6 +171,7 @@ class Underwears extends React.Component {
         pageIndex: {$set: 0}
       })
     } else if (target = getParentByClass(e.target, 'btn-sure')) {
+      this.state.pageIndex = 0
       this.state.isHaveGoods = true
       this.state.prolist = []
       this.fetchData()
