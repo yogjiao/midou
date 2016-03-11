@@ -81,7 +81,8 @@ class Underweardetail extends React.Component {
 
     return inventoryInfo;
   };
-  rebuildBoxes = (braSize, baseSize, inventory) => {
+  rebuildBoxes = (braSize, baseSize, goods) => {
+    let inventory = goods.inventoryInfo.inventory
     let boxes = countBoxes(braSize, baseSize)
     boxes = boxes.filter((item, index)=>{
       let count
@@ -93,7 +94,7 @@ class Underweardetail extends React.Component {
       return  count > 0
     })
     boxes.map((item, index) => {
-      let temp = pick(this.state.goods, 'id', 'category')
+      let temp = pick(goods, 'id', 'category')
       temp.size = item.baseSize + '-' + item.braSize
       // Object.assign({count: 1, try: 1, color: 0} , item)
        return Object.assign(item , temp, {count: 0, try: 1, color: 0});
@@ -154,16 +155,18 @@ class Underweardetail extends React.Component {
     data.goods[0] =
       Object.assign(temp, {
         count: this.state.count,
-        size: this.state.size ||
-          (this.state.baseSize + '-' + this.state.braSize),
+        size: this.state.goods.category == '1'?
+          (this.state.baseSize + '-' + this.state.braSize) :
+          this.state.size,
         try: 0,
         color: 0
       })
-   let boxes = this.state.boxes.filter( item => {
-     return item.count > 0
-   })
-   data.goods = data.goods.concat(boxes)
-
+   if (this.state.category == '1') {
+     let boxes = this.state.boxes.filter( item => {
+       return item.count > 0
+     })
+     data.goods = data.goods.concat(boxes)
+   }
    let url = `${PUT_TO_CART}/${this.state.buyActionModel}`
    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
       .then((data) => {
@@ -273,15 +276,24 @@ class Underweardetail extends React.Component {
         let schema = {}
         schema[index] = {count: {
           $apply: (num) => {
-            return Math.min(++num, (this.state.count - anotherCount))
+            let rest = this.state.count - anotherCount
+            if ( num == rest) {
+              setTimeout(()=>{
+                this.setState({promptMsg: errors['2008']})
+                this.refs['prompt'].show()
+              }, 10)
+            }
+            return Math.min(++num, rest)
           }
          }
         }
+
         nextState = update(this.state, {boxes: schema})
       } else {
-        let inventory =
-          this.getInventoryBySize(this.state.size ||
-            (this.state.baseSize + '-' +this.state.braSize))
+        let size = this.state.category == '1'?
+          (this.state.baseSize + '-' +this.state.braSize) :
+          this.state.size
+        let inventory =  this.getInventoryBySize(size)
         nextState = update(this.state, {count:
           {$apply: (num) => Math.min(++num, inventory)}})
       }
@@ -364,7 +376,7 @@ class Underweardetail extends React.Component {
       if ((nextState.braSize && nextState.baseSize) &&
           (this.state.braSize != nextState.braSize ||
           this.state.baseSize != nextState.baseSize)) {
-        nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
+        nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods)
       }
 
       if (this.state.count > nextState.count) {

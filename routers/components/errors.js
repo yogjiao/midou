@@ -1,6 +1,5 @@
 /************************fetch status code**************************/
-let errors =
- {
+export default {
   "0": "正常",
   "1000": "参数错误",
   "1001": "token过期",
@@ -25,4 +24,3 @@ let errors =
   "4004": "账户违规，不能购买",
   "9000": "服务器异常"
 }
-export default errors

@@ -6,7 +6,7 @@ import 'HomeListItem.less'
 class HomeListItem extends React.Component {
   render() {
     let img = `url(${this.props.match_img})`
-    let height = window.innerHeight / 2 + 'px'
+    let height = window.innerWidth - 30  + 'px'
     return (
       <li className="list-item">
         <Link to={`${BASE_PAGE_DIR}/underwear/${this.props.id}`} className="img-wrap" style={{backgroundImage: img, height: height}}></Link>

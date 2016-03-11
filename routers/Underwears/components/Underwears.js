@@ -191,7 +191,6 @@ class Underwears extends React.Component {
     var pageHeight = document.documentElement.scrollHeight;
     if (scrollTop + sHeight > pageHeight - 30) {
       if (this.state.isFetching || !this.state.isHaveGoods) return
-
       this.setState({isHiddenScrollingSpin: false})
       this.state.pageIndex ++
       this.fetchData(true)
