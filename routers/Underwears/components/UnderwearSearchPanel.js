@@ -65,7 +65,7 @@ class UnderwearSearchPanel extends React.Component {
                     <li key={index}
                       data-index={index}
                       data-source={JSON.stringify(item)}
-                      className={(this.props.tagsIndex[index])?
+                      className={(this.props.tagsIndex.some(value => {return value == index}))?
                         'tag on' :
                         'tag'}
                     >
@@ -129,9 +129,7 @@ class UnderwearSearchPanel extends React.Component {
           </ul>
           {items}
           <div className="btn-wrap">
-            <div className="btn-sure"
-              onClick={this.props.panelSearch}
-            >
+            <div className="btn-sure">
               确定
             </div>
           </div>

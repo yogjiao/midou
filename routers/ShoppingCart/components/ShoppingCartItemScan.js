@@ -38,7 +38,7 @@ class ShoppingCartItemScan extends React.Component {
                {holder}
              </div>
              <div className="ajust-wrap">
-                {this.props.itemType == '1'? (<div className="prepay-icon">押</div>) : holder}
+                {this.props.itemType == '1'? (<div className="prepay-icon">试</div>) : holder}
              </div>
              <div className="ajust-wrap">
                 <div className="num-wrap">

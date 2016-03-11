@@ -24,7 +24,7 @@ class UserOrderItem extends React.Component {
           row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.price}`}</div>
         } else if (itemType == 2) {
-          row_1 = (<div className="prepay-icon">押</div>)
+          row_1 = (<div className="prepay-icon">试</div>)
           row_3 = (<div className="arial"><i className="iconfont">&#xe602;</i>{this.props.source.count}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.deposit}`}</div>
         }
@@ -40,7 +40,7 @@ class UserOrderItem extends React.Component {
           }
           price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
-          row_1 = (<div className="prepay-icon">押</div>)
+          row_1 = (<div className="prepay-icon">试</div>)
 
           if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
             if (this.props.source.order_state  == '13') {
@@ -68,7 +68,7 @@ class UserOrderItem extends React.Component {
           row_3 = (<div className="create-time">{this.props.ts}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
-          row_1 = (<div className="prepay-icon">押</div>)
+          row_1 = (<div className="prepay-icon">试</div>)
           row_2 = (<i></i>)
           row_3 = (<div className="create-time">{this.props.ts}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>

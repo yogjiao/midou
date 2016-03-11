@@ -29,12 +29,12 @@ class BoxService extends React.Component {
 行“返还内衣”完成交易。</p>
         </div>
         <div className="box-item-wrap">
-           <h5>押六十返七十</h5>
+           <h5>试六十返七十</h5>
            <div className="img-wrap">
              <img src={`${BASE_STATIC_DIR}/img/box-describe-3.png`} />
            </div>
            <p>内新提供您试衣所需的往返邮费，交易完成
-后，您购买时抵押的60元试穿诚信金，将增
+后，您购买时抵试的60元试穿诚信金，将增
 加至70元原路返回到支付账户。</p>
         </div>
         <div className="box-item-wrap">

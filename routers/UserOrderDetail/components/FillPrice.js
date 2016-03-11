@@ -38,7 +38,7 @@ class FillPrice extends React.Component {
           <div className="fill-price-size arial">{this.props.source.price}</div>
           <dl>
             <dt>支付信息</dt>
-            <dd><span>抵消押金</span><i>{`-${this.props.source.deposit}元`}</i></dd>
+            <dd><span>抵消试金</span><i>{`-${this.props.source.deposit}元`}</i></dd>
             <dd><span>需补差价</span><i className="color-purple">{`${this.props.source.unpaid_balance}元`}</i></dd>
           </dl>
           <div className="btn-sure fill-price" data-oid={this.props.source.id}>付款</div>

@@ -13,7 +13,8 @@ import {
   UNDERWEAR_BASE_SIZE,
   UNDERWEAR_TAGS,
   UNDERWEAR_TYPES,
-  UNDERWEAR_SIZE
+  UNDERWEAR_SIZE,
+  BASE_PAGE_DIR
 } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
@@ -43,14 +44,37 @@ class Underwears extends React.Component {
       braSizeIndex: 0, // bra
       baseSizeIndex: 0, // base
       category: 0, //0: all, 1：文胸，2:底裤，3:情趣
-      tagsIndex: new Array(UNDERWEAR_TAGS.length), // tags
+      tagsIndex: [0],//new Array(UNDERWEAR_TAGS.length), // tags
       prolist: [
         //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
         ]
     }
-    this.state.tagsIndex[0] = true
+    //this.state.tagsIndex[0] = 0
+
+    this.state.isUnderwears = props.route.path.indexOf("underwears") == 0
+    this.state.isCollections = props.route.path.indexOf("collections") == 0
+    this.initSearchParams(props)
 
   }
+  initSearchParams = (nextProps) => {
+    if (nextProps.routeParams.category == 1) {
+      let size = nextProps.routeParams.size.split('-')
+      this.state.baseSizeIndex = size[0]
+      this.state.braSizeIndex = size[1]
+      this.state.tagsIndex = nextProps.routeParams.tags.split(',')
+      this.state.category = nextProps.routeParams.category
+
+    } else if (nextProps.routeParams.category == 0){
+
+    } else if (nextProps.routeParams.category == 2 || nextProps.routeParams.category == 3){
+      this.state.sizeIndex = nextProps.routeParams.size
+      this.state.category = nextProps.routeParams.category
+    } else {
+      this.state.category = 0
+    }
+    this.state.pageIndex = 0
+    this.state.prolist = []
+  };
   getSearchParams = () => {
     let size
     let tags
@@ -60,10 +84,8 @@ class Underwears extends React.Component {
     } else if (this.state.category == 1) {
       size = `${UNDERWEAR_BASE_SIZE[this.state.baseSizeIndex].value}-${UNDERWEAR_BRA_SIZE[this.state.braSizeIndex].value}`
       tags = []
-      this.state.tagsIndex.forEach((is, index)=>{
-        if (is) {
-          tags.push(UNDERWEAR_TAGS[index].value)
-        }
+      this.state.tagsIndex.forEach((value)=>{
+        tags.push(UNDERWEAR_TAGS[value].value)
       })
     } else {
       size = UNDERWEAR_SIZE[this.state.sizeIndex].value
@@ -77,7 +99,7 @@ class Underwears extends React.Component {
 
      let url
 
-     if (this.props.route.path == 'collections') {
+     if (this.state.isCollections) {
        url=`${FETCH_COLLECTIONS}/${this.state.pageIndex}/${this.state.pageSize}`
        fetchFn = fetchAuth
      } else {
@@ -141,27 +163,47 @@ class Underwears extends React.Component {
         if (index == 0) {
 
         } else {
-          let splice = [[index, 1, false]]
+          // let splice = [[index, 1, false]]
+          // let isHasOtherSelected = this.state.tagsIndex.some((value, tagIndex) => {
+          //   return !!tagIndex && index != tagIndex && !!value
+          // })
+          // if (!isHasOtherSelected) {
+          //   splice.push([0, 1, true])
+          // }
+          // nextState = update(this.state, {tagsIndex: {$splice: splice}})
+          let tempIndex = this.state.tagsIndex.findIndex( tagIndex => {return tagIndex == index})
+          let splice = [[tempIndex, 1]]
           let isHasOtherSelected = this.state.tagsIndex.some((value, tagIndex) => {
-            return !!tagIndex && index != tagIndex && !!value
+            return !!value && index != value
           })
           if (!isHasOtherSelected) {
-            splice.push([0, 1, true])
+            nextState = {}
+            nextState.tagsIndex = [0]
+          } else {
+            nextState = update(this.state, {tagsIndex: {$splice: splice}})
           }
-          nextState = update(this.state, {tagsIndex: {$splice: splice}})
         }
 
       } else {
         if (index == 0) {
           nextState = {}
-          nextState.tagsIndex = new Array(UNDERWEAR_TAGS.length)
-          nextState.tagsIndex[0] = true
+          nextState.tagsIndex = [0]
         } else {
-          let splice = [[index, 1, true]]
-          if (this.state.tagsIndex[0]) {
-            splice.push([0, 1, false])
+          // let splice = [[index, 1, true]]
+          // if (this.state.tagsIndex[0]) {
+          //   splice.push([0, 1, false])
+          // }
+          // nextState = update(this.state, {tagsIndex: {$splice: splice}})
+              nextState = this.state
+          let allIndex = this.state.tagsIndex.findIndex((value)=>{
+            return value == 0
+          })
+          if (allIndex > -1) {
+            nextState = update(nextState, {tagsIndex: {$splice: [[allIndex, 1]]}})
           }
-          nextState = update(this.state, {tagsIndex: {$splice: splice}})
+
+          nextState = update(nextState, {tagsIndex: {$push: [index]}})
+
         }
       }
     } else if (target = getParentByClass(e.target, 'size-item')){
@@ -175,6 +217,21 @@ class Underwears extends React.Component {
       this.state.isHaveGoods = true
       this.state.prolist = []
       this.fetchData()
+
+      let size, tags
+      if (this.state.category == 1) {
+        size = this.state.baseSizeIndex + '-' + this.state.braSizeIndex
+        tags = this.state.tagsIndex.join()
+      } else if (this.state.category == 2) {
+        size = this.state.sizeIndex
+        tags = 0
+      } else {
+        size = 0
+        tags = 0
+      }
+
+      let url  = `${BASE_PAGE_DIR}/underwears/${size}/${this.state.category}/${tags}`
+      this.props.history.push(url)
     }
     else if (target = getParentByClass(e.target, 'btn-close')) {
       nextState = {}
@@ -211,7 +268,7 @@ class Underwears extends React.Component {
 
   };
   componentWillMount = () => {
-    if (this.props.route.path == "collections") {
+    if (this.state.isCollections) {
       this.state.headerName = '我的收藏'
     }
   };
@@ -222,18 +279,22 @@ class Underwears extends React.Component {
     this.fetchData();
     document.addEventListener('scroll', this.scrollingHandler);
   };
+  componentWillReceiveProps = (nextProps) => {
+    this.initSearchParams(nextProps)
+    this.fetchData()
+  };
   render() {
     return (
       <div className="uw-list-container">
         <PageHeader headerName={this.state.headerName}>
         {
-          this.props.route.path == 'collections'?
+          this.state.isCollections?
           <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>:
           <div></div>
         }
 
          {
-           this.props.route.path == "underwears"?
+           this.state.isUnderwears?
            (<div className="menu-search" onClick={this.openFilterHanler}>筛选</div>):
            ''
          }
