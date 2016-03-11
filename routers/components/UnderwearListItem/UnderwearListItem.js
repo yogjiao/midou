@@ -11,12 +11,12 @@ class UnderwearListItem extends React.Component {
     let height = (Math.min(window.innerWidth, 640) - 30)  * 0.48 + 'px'
     return (
       <div className="uw-list-item" >
-        <Link
-          className="img-wrap"
-          to={`${BASE_PAGE_DIR}/underwear/${this.props.source.id}`}
-          style={{backgroundImage: img, height: height}}
-        >
-        </Link>
+        <div className="img-wrap" style={{height: height}}>
+          <Link
+            to={`${BASE_PAGE_DIR}/underwear/${this.props.source.id}`}
+            style={{backgroundImage: img}}
+          ></Link>
+        </div>
         <div className="info-wrap">
           <Link
             to={`${BASE_PAGE_DIR}/underwear/${this.props.source.id}`}
