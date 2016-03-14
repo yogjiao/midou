@@ -20,7 +20,6 @@ fastclick(document.body);
 
 import '../app-page/index.less'
 import App from './App/App.js'
-import Home from './Home/Home.js'
 
 
 const rootRoute = {
@@ -29,7 +28,7 @@ const rootRoute = {
     path: `${BASE_PAGE_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
-    //indexRoute: { component: Home },//require('./Home/Home.js') 
+    //indexRoute: { component: Home },//require('./Home/Home.js')
     childRoutes: [
       require('./Home'),
       require('./Underwears'),
@@ -48,6 +47,7 @@ const rootRoute = {
       require('./BoxService'),
       require('./CustomerService'),
       require('./Collections'),
+      require('./404')
       ]
   } ]
 }

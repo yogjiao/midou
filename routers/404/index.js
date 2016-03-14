@@ -2,7 +2,7 @@ module.exports = {
   path: '*',
   getComponent(location, cb) {
     require.ensure([], (require) => {
-      cb(null, require('./Home.js'))
+      cb(null, require('./NotFound.js'))
     })
   }
 }
