@@ -84,6 +84,9 @@ var config = {
       //    Promise: 'imports?this=>global!es6-promise',
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
+      new webpack.DefinePlugin({
+        DEBUG: true
+      }),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)

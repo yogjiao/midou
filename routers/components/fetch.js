@@ -50,10 +50,12 @@ let fetchMock = (url, options = {}) => {
               return response.json()
             })
 };
-
-if (uaParser.getOS().name != 'iOS') {
-  fetchAuth = fetchMock
+if (DEBUG) {
+ fetchAuth = fetchMock
 }
+// if (uaParser.getOS().name != 'iOS') {
+//   fetchAuth = fetchMock
+// }
 
 export {fetchAuth}
 
