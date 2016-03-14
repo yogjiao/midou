@@ -6,7 +6,8 @@ import {
   CALL_HANDLER_CHECKOUT,
   CALL_HANDLER_SHARE,
   CALL_HANDLER_BACK_TO_NATIVE_PAGE,
-  CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL
+  CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL,
+  CALL_HANDLER_REDIRECT_TO_NEXT
 } from 'macros.js'
 
 
@@ -88,6 +89,14 @@ export let backToUserCenterNativePage = function() {
 export let backToHomeNativePage = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL, {}, function(response) {
+        resolve(response)
+      })
+  });
+}
+
+export let notifyAppUrlChanged = function(data) {
+  return new Promise((resolve, reject) => {
+    callHandler(CALL_HANDLER_REDIRECT_TO_NEXT, data, function(response) {
         resolve(response)
       })
   });

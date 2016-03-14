@@ -12,6 +12,7 @@ export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'calloutLogin'
 
 export let CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL = 'redirectToHome'
+export let CALL_HANDLER_REDIRECT_TO_NEXT = 'redirectToNext'
 
 //notify app to checkout
 export let CALL_HANDLER_CHECKOUT = 'checkoutCallback'
