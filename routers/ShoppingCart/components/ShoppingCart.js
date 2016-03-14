@@ -24,6 +24,7 @@ import {countBoxes} from 'commonApp.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import errors from 'errors.js'
+import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
 let update = require('react-addons-update');
 
 import './ShoppingCart.less'
@@ -45,6 +46,7 @@ class ShoppingCart extends React.Component {
       isHiddenConfirm: true,
       isFetching: false,
       isHaveGoods: true,
+      isNull: false
     }
 
   }
@@ -199,19 +201,23 @@ class ShoppingCart extends React.Component {
        .then((data) => {
          if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
            this.state.isHaveGoods = false
+           if (this.state.lastGoodsId == 0) {
+             this.setState({isNull: true})
+           }
+         } else if (data.rea == FETCH_SUCCESS) {
+           let splice = [this.state.goodList.length, 0].concat(data.cart)
+           let nextState = update(this.state, {
+             goodList: {$splice: [splice]}
+           })
+           nextState.lastGoodsId = data.cart.slice(-1)[0].id
+           this.setState(nextState)
          }
 
-         let splice = [this.state.goodList.length, 0].concat(data.cart)
-         let nextState = update(this.state, {
-           goodList: {$splice: [splice]},
-           isFetching:{$set: false},
-           isHiddenPageSpin: {$set: true},
-           isHiddenScrollingSpin: {$set: true}
-         })
-         nextState.lastGoodsId = data.cart.slice(-1)[0].id
-         this.setState(nextState)
        })
        .catch((error) => {
+
+       })
+       .then(() => {
          this.setState({
            isFetching: false,
            isHiddenPageSpin: true,
@@ -543,35 +549,43 @@ class ShoppingCart extends React.Component {
           {this.state.menu}
         </PageHeader>
         {
-          this.state.goodList.map((item, index) => {
-            return (<ShoppingCartGroup
-                      groupId={index}
-                      key={index}
-                      source={item.goods}
-                      cid={item.id}
-                      actionModel={this.props.params.actionModel}
-                      isSelectedAll={this.state.isSelectedAll}
-                     />
-                    )
-          })
+          this.state.isNull?
+          (<ShoppingCartNoResult />):
+          (
+            <div>
+                {
+                  this.state.goodList.map((item, index) => {
+                    return (<ShoppingCartGroup
+                              groupId={index}
+                              key={index}
+                              source={item.goods}
+                              cid={item.id}
+                              actionModel={this.props.params.actionModel}
+                              isSelectedAll={this.state.isSelectedAll}
+                             />
+                            )
+                  })
+                }
+                <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+                <div className="check-out-wrap">
+                  <div className="check-out-justify-wrap">
+                    <div className="select-all">
+                      {
+                        this.state.isSelectedAll?
+                         (<i className="iconfont icon-radio-on"></i>):
+                         (<i className="iconfont icon-radio"></i>)
+                      }
+                      <span>全选</span>
+                    </div>
+                    <div className="total-price">
+                      <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
+                    </div>
+                    <Link to={url} className="btn-check-out">结算</Link>
+                  </div>
+                </div>
+            </div>
+          )
         }
-        <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-        <div className="check-out-wrap">
-          <div className="check-out-justify-wrap">
-            <div className="select-all">
-              {
-                this.state.isSelectedAll?
-                 (<i className="iconfont icon-radio-on"></i>):
-                 (<i className="iconfont icon-radio"></i>)
-              }
-              <span>全选</span>
-            </div>
-            <div className="total-price">
-              <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
-            </div>
-            <Link to={url} className="btn-check-out">结算</Link>
-          </div>
-        </div>
         <Confirm
           confirmHandler={this.deleteProductHandler}
           isHidden={this.state.isHiddenConfirm}

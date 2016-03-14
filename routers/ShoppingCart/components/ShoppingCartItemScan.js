@@ -6,7 +6,7 @@ import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT, BASE_PAGE_DIR} fro
 import 'ShoppingCartItemScan.less'
 class ShoppingCartItemScan extends React.Component {
   render = () => {
-    let to = 'http://baidu.com' //`${BASE_PAGE_DIR/underwear/${this.props.id}}`
+    let to = `${BASE_PAGE_DIR}/underwear/${this.props.source.gid}` //`${BASE_PAGE_DIR/underwear/${this.props.id}}`
     let holder = (<span>&nbsp;</span>)
     let line = this.props.isHaveLine? (<div className="line"></div>) : ''
     let ids = {};
