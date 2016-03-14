@@ -45,7 +45,7 @@ class UserOrderListGroup extends React.Component {
       })
 
       if (tryList.length > 0) {
-        tryList = (<div className="box-list"><div className="sep-line"/>{tryList}</div>)
+        tryList = (<div className="box-list"  key="1"><div className="sep-line"/>{tryList}</div>)
       }
       noTryList = noTryList.concat(tryList)
       noTryList = (<div className="order-group-item" key={index}>{noTryList}</div>)
@@ -53,9 +53,6 @@ class UserOrderListGroup extends React.Component {
       list.push(noTryList)
 
     })
-
-
-
 
 
     return (

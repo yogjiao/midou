@@ -9,14 +9,15 @@ import PageSpin from 'PageSpin/PageSpin.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import {
     FETCH_ORDERS,
-    FETCH_STATUS_NO_MORE_PRODUCT
+    FETCH_STATUS_NO_MORE_PRODUCT,
+    FETCH_SUCCESS
   } from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 
 import {backToUserCenterNativePage} from 'webviewInterface.js'
 import UserOrderListGroup from 'UserOrderListGroup.js'
-
+import OrdersNoResult from 'OrdersNoResult.js'
 import './UserOrderList.less'
 class UserOrderList extends React.Component {
   constructor(props) {// actionModel: scal edit
@@ -27,7 +28,8 @@ class UserOrderList extends React.Component {
       pageSize: 5,
       isHiddenPageSpin: true,
       orderList: [],
-      isHaveGoods: true
+      isHaveGoods: true,
+      isNull: false
     }
 
   }
@@ -43,12 +45,16 @@ class UserOrderList extends React.Component {
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHaveGoods = false
+          if (this.state.lastOrder == 0){
+            this.setState({isNull: true})
+          }
+        } else if (data.rea == FETCH_SUCCESS) {
+          let nextState = update(this.state, {
+            orderList: {$push: data.order},
+            lastOrder: {$set: data.order.slice(-1)[0].id}
+          })
+          this.setState(nextState)
         }
-        let nextState = update(this.state, {
-          orderList: {$push: data.order},
-          lastOrder: {$set: data.order.slice(-1)[0].id}
-        })
-        this.setState(nextState)
       })
       .catch((error) => {
       })
@@ -91,15 +97,22 @@ class UserOrderList extends React.Component {
           <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         </PageHeader>
         {
-           this.state.orderList.map((item, index) => {
-            return (<UserOrderListGroup
-                      key={index}
-                      oid={item.id}
-                      source={item}
-                    />)
-          })
+          this.state.isNull?
+          (<OrdersNoResult />):
+          (
+            <div>
+              {
+                 this.state.orderList.map((item, index) => {
+                  return (<UserOrderListGroup
+                            key={index}
+                            oid={item.id}
+                            source={item}
+                          />)
+                })
+              }
+            </div>
+          )
         }
-
       </div>
     )
   }
