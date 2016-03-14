@@ -39,6 +39,7 @@ class Underwears extends React.Component {
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isHiddenSearchPanel: true,
+      isNull: false,
 
       sizeIndex: 0,
       braSizeIndex: 0, // bra
