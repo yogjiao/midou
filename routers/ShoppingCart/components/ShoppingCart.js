@@ -580,7 +580,7 @@ class ShoppingCart extends React.Component {
                     <div className="total-price">
                       <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
                     </div>
-                    <Link to={url} className="btn-check-out">结算</Link>
+                    <a href={url} className="btn-check-out">结算</a>
                   </div>
                 </div>
             </div>

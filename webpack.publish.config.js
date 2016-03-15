@@ -1,4 +1,6 @@
 var path = require('path');
+var fs = require('fs');
+
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
@@ -16,6 +18,19 @@ var pathToUAParser = path.resolve(node_modules, 'ua-parser-js/src/ua-parser.js')
 var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
+
+const exec = require('child_process').exec;
+const child = exec('rm dist/js -rf',
+  (error, stdout, stderr) => {
+    if (error !== null) {
+      console.log(`exec error: ${error}`);
+    } else {
+      console.log(`dist/js clear success`);
+    }
+});
+
+
+
 var config = {
     //devtool: 'inline-source-map',
     context: cwd,
@@ -37,7 +52,7 @@ var config = {
       "vendors": ['react', 'react-dom', 'react-router', 'es6-promise', 'whatwg-fetch', 'fastclick', 'UAParser']
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/js'),
         filename: '[name].js',
         chunkFilename: '[chunkhash].chunk.js',
         publicPath: "/app-static/js/"
