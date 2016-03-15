@@ -83,7 +83,7 @@ class ShoppingCartItemEdit extends React.Component {
            }
            </li>
            <li className="column">
-              <Link to={to} className="img-wrap"><img src={this.props.source.main_img || this.props.img} /></Link>
+              <a href={to} className="img-wrap"><img src={this.props.source.main_img || this.props.img} /></a>
            </li>
            {lastColumn}
         </ul>

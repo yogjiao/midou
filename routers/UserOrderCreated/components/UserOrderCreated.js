@@ -163,7 +163,7 @@ class UserOrderCreated extends React.Component {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
         return notifyAppToCheckout({oid: data.oid})
-            .then((dataFromApp)=> {
+            .then((dataFromApp) => {
               this.setState({
                 isHiddenPageSpin: true,
                 isHiddenCheckoutWaitingLayer: false,
@@ -171,10 +171,12 @@ class UserOrderCreated extends React.Component {
               });
             })
 
+        } else if (data.rea == '2004') {
+          this.props.history.goBack()
         }
       })
       .catch(error => {
-        //this.setState({isHiddenPageSpin: true})
+        this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
         //this.setState({isHiddenPageSpin: true})

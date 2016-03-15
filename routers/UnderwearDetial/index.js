@@ -7,10 +7,10 @@ module.exports = {
     })
   },
   onEnter: (nextState, replace) => {
-    let data = {url: nextState.location.pathname}
-    notifyAppUrlChanged(data)
-      .then((data)=>{
-
-      })
+    // let data = {url: nextState.location.pathname}
+    // notifyAppUrlChanged(data)
+    //   .then((data)=>{
+    //
+    //   })
   },
 }

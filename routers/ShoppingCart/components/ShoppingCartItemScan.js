@@ -26,7 +26,7 @@ class ShoppingCartItemScan extends React.Component {
               }
            </li>
            <li className="column">
-              <Link to={to} className="img-wrap"><img src={this.props.source.main_img} /></Link>
+              <a href={to} className="img-wrap"><img src={this.props.source.main_img} /></a>
            </li>
            <li className="column">
              <div className="name-wrap single-ellipsis">{this.props.source.name}</div>

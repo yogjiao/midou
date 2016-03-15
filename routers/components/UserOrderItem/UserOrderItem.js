@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Link} from 'react-router'
+import {a} from 'react-router'
 import {
   BASE_PAGE_DIR
 } from 'macros.js'
@@ -11,7 +11,7 @@ class UserOrderItem extends React.Component {
    * pageType 1 create order; 2 order detail; 3 order list
    */
   componentWillMount = () => {
-    //this.setState({boxes: countBoxes(this.props.source.cup, this.props.source.bottom_bust)})
+    //this.setState({boxes: countBoxes(this.props.source.cup, this.props.source.bothrefm_bust)})
   };
   render = () => {
     let row_1, row_2, row_3,
@@ -34,7 +34,7 @@ class UserOrderItem extends React.Component {
         if (itemType == 1) {
 
           if (this.props.source.order_state >= 12) {
-            row_1 = (<Link className="btn-draw-back" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</Link>)
+            row_1 = (<a className="btn-draw-back" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</a>)
           } else {
             row_1 = (<span></span>)
           }
@@ -54,7 +54,7 @@ class UserOrderItem extends React.Component {
 
 
           if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
-            row_3 = (<Link className="btn-box-operate return-uw" to={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</Link>)
+            row_3 = (<a className="btn-box-operate return-uw" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</a>)
           } else {
             row_3 = (<span></span>)
           }
@@ -64,7 +64,7 @@ class UserOrderItem extends React.Component {
         break;
       case '3':
         if (itemType == 1) {
-          row_1 = (<Link to={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></Link>)
+          row_1 = (<a href={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></a>)
           row_3 = (<div className="create-time">{this.props.ts}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
@@ -86,7 +86,7 @@ class UserOrderItem extends React.Component {
           <div className="img-wrap">
             {
               pageType=="2"?
-              (<Link to={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}><img src={this.props.source.main_img} /></Link>):
+              (<a href={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}><img src={this.props.source.main_img} /></a>):
               (<img src={this.props.source.main_img} />)
             }
           </div>
@@ -95,7 +95,7 @@ class UserOrderItem extends React.Component {
           <div className="row-wrap">
             {
               pageType=="2"?
-              (<Link to={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`} className="pro-name">{this.props.source.name}</Link>):
+              (<a href={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`} className="pro-name">{this.props.source.name}</a>):
               (<div className="pro-name">{this.props.source.name}</div>)
             }
 
