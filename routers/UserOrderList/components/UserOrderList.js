@@ -15,7 +15,7 @@ import {
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 
-import {backToUserCenterNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 import UserOrderListGroup from 'UserOrderListGroup.js'
 import OrdersNoResult from 'OrdersNoResult.js'
 import './UserOrderList.less'
@@ -78,7 +78,7 @@ class UserOrderList extends React.Component {
   };
   backHandler = () => {
     //this.props.history.goBack();
-    backToUserCenterNativePage()
+    backToNativePage()
       .then((data) => {
       })
   };

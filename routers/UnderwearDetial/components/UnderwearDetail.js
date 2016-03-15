@@ -21,12 +21,11 @@ import errors from 'errors.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
 let update = require('react-addons-update')
-
 import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {shareToSocialCircle} from 'webviewInterface.js'
+import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
 
 import './UnderwearDetail.less'
 class Underweardetail extends React.Component {
@@ -351,6 +350,11 @@ class Underweardetail extends React.Component {
    * borwer back own step
    */
   backHandler = () => {
+    backToNativePage()
+      .then(() => {
+
+      })
+      
     this.props.history.goBack()
   };
   buyHandler = (e) => {

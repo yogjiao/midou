@@ -23,7 +23,7 @@ let update = require('react-addons-update')
 
 import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import CollectionsNoResult from 'CollectionsNoResult.js'
-import {backToUserCenterNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 // import fetch from '../../components/fetch.js'
 
 
@@ -112,7 +112,7 @@ class Collections extends React.Component {
     this.setState({isHiddenSearchPanel: false})
   };
   backHandler = () => {
-    backToUserCenterNativePage()
+    backToNativePage()
       .then((data)=>{
 
       })

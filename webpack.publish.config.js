@@ -39,7 +39,7 @@ var config = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
-        chunkFilename: '[id].chunk.js',
+        chunkFilename: '[chunkhash].chunk.js',
         publicPath: "/app-static/js/"
     },
     module: {

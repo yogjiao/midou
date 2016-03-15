@@ -22,7 +22,7 @@ let update = require('react-addons-update')
 
 import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import UnderwearSearchPanel from 'UnderwearSearchPanel.js'
-import {backToUserCenterNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 // import fetch from '../../components/fetch.js'
 
 
@@ -259,7 +259,7 @@ class Underwears extends React.Component {
   };
   backHandler = () => {
     if (this.props.route.path == 'collections') {
-      backToUserCenterNativePage()
+      backToNativePage()
         .then((data)=>{
 
         })

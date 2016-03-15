@@ -78,7 +78,7 @@ export let shareToSocialCircle = function(data) {
   });
 }
 
-export let backToUserCenterNativePage = function() {
+export let backToNativePage = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_BACK_TO_NATIVE_PAGE, {}, function(response) {
         resolve(response)

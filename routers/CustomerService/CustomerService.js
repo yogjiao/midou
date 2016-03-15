@@ -3,13 +3,13 @@ import {
   BASE_STATIC_DIR
 } from 'macros.js'
 
-import {backToUserCenterNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 
 import './CustomerService.less'
 class CustomerService extends React.Component {
   backHandler = () => {
     this.props.history.goBack();
-    backToUserCenterNativePage()
+    backToNativePage()
       .then((data) => {
         //console.log(data. )
       })
