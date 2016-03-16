@@ -80,11 +80,10 @@ class Home extends React.Component {
   };
   componentDidMount = () => {
     this.fetchListData()
-    document.addEventListener('scroll', this.handleScroll.bind(this));
+    document.addEventListener('scroll', this.handleScroll);
   };
   componentWillUnmount = () => {
-
-    document.removeEventListener('scroll', this.handleScroll.bind(this));
+    document.removeEventListener('scroll', this.handleScroll);
   };
   // componentWillReceiveProps = (nextProps) => {
   //   debugger;
