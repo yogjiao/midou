@@ -20,13 +20,15 @@ class ShoppingCartItemScan extends React.Component {
               {
                 this.props.itemType == '0'?
                   this.props.source.isSelected?
-                  (<div className="raido select-radio iconfont icon-radio-on" {...ids}></div>) :
-                  (<div className="raido select-radio iconfont icon-radio" {...ids}></div>):
+                  (<div className="raido select-radio" {...ids}><i className="iconfont icon-radio-on"/></div>) :
+                  (<div className="raido select-radio" {...ids}><i className="iconfont icon-radio"/></div>):
                 ''
               }
            </li>
            <li className="column">
-              <a href={to} className="img-wrap"><img src={this.props.source.main_img} /></a>
+             <div className="img-wrap">
+               <a href={to}  style={{backgroundImage: `url(${this.props.source.main_img})`}}></a>
+             </div>
            </li>
            <li className="column">
              <div className="name-wrap single-ellipsis">{this.props.source.name}</div>

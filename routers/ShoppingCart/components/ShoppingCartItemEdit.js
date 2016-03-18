@@ -28,10 +28,14 @@ class ShoppingCartItemEdit extends React.Component {
         lastColumn = (
           <li className="column">
             <div className="ajust-wrap">
-              <div className="select-num">
-                 <div className="btn-minus" {...ids}>-</div>
+               <div className="select-num">
+                 <div className="btn-minus" {...ids}>
+                   <i className="iconfont icon-minus" />
+                 </div>
                  <div className="nums">{this.props.source.count}</div>
-                 <div className="btn-add" {...ids}>+</div>
+                 <div className="btn-add" {...ids}>
+                   <i className="iconfont icon-add" />
+                 </div>
                </div>
              </div>
              <div className="ajust-wrap">
@@ -54,9 +58,13 @@ class ShoppingCartItemEdit extends React.Component {
             <div className="ajust-wrap" key={index}>
                <div className="box-service-item">{`${item.baseSize}${item.braSize}`}</div>
                <div className="select-num">
-                 <div className="btn-minus" {...ids}>-</div>
+                 <div className="btn-minus" {...ids}>
+                   <i className="iconfont icon-minus" />
+                 </div>
                  <div className="nums">{boxData.box.count || 0}</div>
-                 <div className="btn-add" {...ids}>+</div>
+                 <div className="btn-add" {...ids}>
+                   <i className="iconfont icon-add" />
+                 </div>
                </div>
 
             </div>
@@ -69,6 +77,7 @@ class ShoppingCartItemEdit extends React.Component {
 
     let holder = (<span>&nbsp;</span>)
     let line = this.props.isHaveLine? (<div className="line"></div>) : ''
+    let img = this.props.source.main_img || this.props.img
 
     return (
       <div className="item-wrap clearfix">
@@ -77,13 +86,15 @@ class ShoppingCartItemEdit extends React.Component {
            {
              this.props.itemType == '0'?
                this.props.source.isSelected?
-               (<div className="raido select-radio iconfont icon-radio-on" {...ids}></div>) :
-               (<div className="raido select-radio iconfont icon-radio" {...ids}></div>):
+               (<div className="raido select-radio" {...ids}><i className="iconfont icon-radio-on"/></div>) :
+               (<div className="raido select-radio" {...ids}><i className="iconfont icon-radio"/></div>):
              ''
            }
            </li>
            <li className="column">
-              <a href={to} className="img-wrap"><img src={this.props.source.main_img || this.props.img} /></a>
+             <div className="img-wrap">
+               <a href={to}  style={{backgroundImage: `url(${img})`}}></a>
+             </div>
            </li>
            {lastColumn}
         </ul>
