@@ -67,7 +67,8 @@ class Underwears extends React.Component {
 
     } else if (nextProps.routeParams.category == 0){
 
-    } else if (nextProps.routeParams.category == 2 || nextProps.routeParams.category == 3){
+    } else if (nextProps.routeParams.category == 2 ||
+        nextProps.routeParams.category == 3){
       this.state.sizeIndex = nextProps.routeParams.size
       this.state.category = nextProps.routeParams.category
     } else {
@@ -83,7 +84,8 @@ class Underwears extends React.Component {
       size = 0
       tags = 0
     } else if (this.state.category == 1) {
-      size = `${UNDERWEAR_BASE_SIZE[this.state.baseSizeIndex].value}-${UNDERWEAR_BRA_SIZE[this.state.braSizeIndex].value}`
+      size = `${UNDERWEAR_BASE_SIZE[this.state.baseSizeIndex].value}-
+        ${UNDERWEAR_BRA_SIZE[this.state.braSizeIndex].value}`
       tags = []
       this.state.tagsIndex.forEach((value)=>{
         tags.push(UNDERWEAR_TAGS[value].value)
@@ -172,10 +174,12 @@ class Underwears extends React.Component {
           //   splice.push([0, 1, true])
           // }
           // nextState = update(this.state, {tagsIndex: {$splice: splice}})
-          let tempIndex = this.state.tagsIndex.findIndex( tagIndex => {return tagIndex == index})
+          let tempIndex = this.state.tagsIndex
+            .findIndex(tagIndex => {return tagIndex == index})
           let splice = [[tempIndex, 1]]
-          let isHasOtherSelected = this.state.tagsIndex.some((value, tagIndex) => {
-            return !!value && index != value
+          let isHasOtherSelected = this.state.tagsIndex
+            .some((value, tagIndex) => {
+              return !!value && index != value
           })
           if (!isHasOtherSelected) {
             nextState = {}

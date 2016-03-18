@@ -15,23 +15,28 @@
   }
   .panel-Wrap{
     position: absolute;
-    width: 90%;
+    width: 6.5rem;
+    box-sizing: border-box;
+    min-height: 10rem;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    box-shadow: 0 0 8px 2px rgba(0,0,0,0.2);
-    border-radius: 8px;
-    padding: 30px 0;
+    box-shadow: 0 0px 10px 1px rgba(121,126,153,0.2);
+    border-radius: 6px;
+    padding: .8rem .2rem;
+    color: @font-color-lighter;
+    transition: all .5s;
   }
 
   .tags-wrap{
     display: flex;
     justify-content:space-around;
-    margin-bottom: 20px;
+    font-size: .32rem;
+    margin-bottom: 1rem;
     li{
       &.on{
-        color: @purple;
+        color: @orange-red;
       }
     }
   }
@@ -41,15 +46,15 @@
       display: flex;
       flex-wrap: nowrap;
       justify-content:space-between;
-      margin: 0 20px 30px;
+      margin: 0 .4rem .5rem;
       .circle{
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
+        width: .64rem;
+        height: .64rem;
+        line-height: .64rem;
         text-align: center;
         font-family: arial;
         border-radius: 50%;
-        box-shadow: 1px 1px 3px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 6px 0 rgba(121, 126, 153, 0.15);
         &.on{
           color: @purple;
         }
@@ -62,10 +67,10 @@
       margin: 0 20px 10px;
     }
     li{
-      padding: 5px 8px;
+      padding: .1rem .2rem;
       border: 1px solid @border-color;
       float: left;
-      margin-right: 15px;
+      margin-right: .45rem;
       margin-bottom: 15px;
       &.on{
         color: @purple;
@@ -76,12 +81,19 @@
 
   .btn-wrap{
     text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: .8rem;
+    font-size: .36rem;
   }
   .btn-sure{
     display: inline-block;
+    width: 3.4rem;
+    line-height: .66rem;
+    border-radius: .33rem;
   }
   .btn-close{
-    font-size: 20px;
+    font-size: .5rem;
     position: absolute;
     top: 5px;
     right: 0px;

@@ -8,10 +8,9 @@ class UnderwearListItem extends React.Component {
 
   render() {
     let img = `url(${this.props.source.main_img})`
-    let height = (Math.min(window.innerWidth, 640) - 30)  * 0.48 + 'px'
     return (
       <div className="uw-list-item" >
-        <div className="img-wrap" style={{height: height}}>
+        <div className="img-wrap">
           <a
             href={`${BASE_PAGE_DIR}/underwear/${this.props.source.id}`}
             style={{backgroundImage: img}}

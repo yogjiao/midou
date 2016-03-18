@@ -37,7 +37,7 @@ export let RECEIVERS_EDIT = 'edit'
 
 
 export let UNDERWEAR_BRA_SIZE = [
-  {value: '0', text: 'ALL'},
+  {value: '0', text: 'All'},
   {value: 'A', text: 'A'},
   {value: 'B', text: 'B'},
   {value: 'C', text: 'C'},
@@ -45,7 +45,7 @@ export let UNDERWEAR_BRA_SIZE = [
 ]
 
 export let UNDERWEAR_BASE_SIZE = [
-  {value: '0', text: 'ALL'},
+  {value: '0', text: 'All'},
   {value: '70', text: '70'},
   {value: '75', text: '75'},
   {value: '80', text: '80'},
