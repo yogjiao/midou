@@ -301,10 +301,11 @@ class Underweardetail extends React.Component {
         isHiddenSelectPanel: {$set: true}
       })
       this.postDataToCartHandler()
-    } else if (target = getParentByClass(e.target, 'close-select-panel')) {
-      nextState = update(this.state, {
-        isHiddenSelectPanel: {$set: true}
-      })
+    } else if (target = (getParentByClass(e.target, 'close-select-panel') ||
+      getParentByClass(e.target, 'bg-blur'))) {
+        nextState = update(this.state, {
+          isHiddenSelectPanel: {$set: true}
+        })
     }
     nextState && this.setState(nextState)
   };

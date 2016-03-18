@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "build": "set NODE_ENV=production && webpack --config webpack.publish.config.js -p && node build.index.page.js",
-    "dev": "webpack-dev-server  --devtool eval --progress --colors --hot --port 80 --inline --content-base"
+    "dev": "webpack-dev-server  --devtool eval --progress --colors --hot --port 80 --inline  --content-base"
   },
   "keywords": [
     "midou"

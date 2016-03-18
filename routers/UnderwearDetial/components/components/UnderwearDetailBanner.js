@@ -5,9 +5,10 @@ import 'UnderweardetailBanner.less'
 
 class UnderweardetailBanner extends React.Component {
   render() {
+    let img = `url(${this.props.img})`
     return (
       <div className="banner-wraper">
-        <img src={this.props.img}/>
+        <div style={{backgroundImage: img}} />
       </div>
     )
   }

@@ -24,6 +24,9 @@
       left: 0;
       transition: all 1s;
     }
+    .select-panel-adjust{
+      padding: 0 1.2rem;
+    }
     .select-panel{
       position: absolute;
       bottom: -100%;
@@ -31,25 +34,26 @@
       background-color: #fff;
       box-shadow: -2px 0 10px 2px rgba(0,0,0,0.15);
       transition: all 1s;
-      .iconfont{
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 20px;
-      }
       dl{
-        width: 90%;
-        margin: 0 auto;
       }
       dt{
-        position: relative;
-        padding: 0 0 0 15px;
-        margin-top: 15px;
-        color: #b4b4cb;
+        font-size: 0.26rem;
+        margin-top: .62rem;
+
+        .iconfont{
+          position: relative;
+          color: @orange-red;
+          font-size: .25rem;
+          top: -0.06rem;
+        }
+        .label-name{
+          color: @font-color-lighter;
+        }
+
       }
       dd{
         display: block;
-        padding-top: 15px;
+        padding-top: .52rem;
       }
       .cup-wrap, .perimeter-wrap{
         font-family: arial;
@@ -64,37 +68,36 @@
         }
       }
       .char-circle{
-        width: 35px;
-        height: 35px;
-        line-height: 35px;
+        width: .64rem;
+        height: .64rem;
+        line-height: .64rem;
         border-radius: 50%;
         text-align: center;
-        box-shadow: 0px 2px 6px 0px rgba(121, 126, 153, 0.118);
-        margin-right: 20px;
+        box-shadow: 0 2px 6px 0px rgba(121, 126, 153, 0.3);
+        margin:0 .36rem;
+        color: @font-color-lighter;
         &.on{
-          color: @purple;
+          color: @orange-red;
         }
       }
       .size{
       }
-      .num-wrap{
-        dd{
-          border-bottom: 1px solid @border-color;
-          transform: translateY(1px);
-        }
-      }
       .select-num-wrap{
-        padding: 0 0 10px 0;
-        margin-right: 15px;
+        padding: 0 .12rem .5rem 0;
+        border-bottom: 1px solid @border-color-light;
       }
       .select-num{
         float: right;
       }
       .box-service-wrap{
-        padding-right: 15px;
         display: flex;
+        padding-right: .12rem;
         align-items: center;
         justify-content: flex-end;
+        overflow: hidden;
+        .box-service-item{
+          margin-right: 0.6rem;
+        }
       }
       .btn-turn-box{
         float: right;
@@ -118,21 +121,28 @@
 
         .box-service-item{
           float: left;
-          margin-right: 20px;
         }
       }
       .btn-post{
-        margin-top: 20px;
-        line-height: 50px;
-        color: #fff;
-        background-color: #9ba4d1;
-        font-size: 20px;
+        margin-top: 1rem;
+        line-height: .86rem;
+        color: white;
+        background-color: @light-slate-blue;
+        font-size: .36rem;
         text-align: center;
       }
       .what-is-box{
         float: right;
-        color: @blue;
+        font-size: 0.2rem;
+        color: @light-slate-blue;
       }
+    }
+    .close-select-panel{
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: .4rem;
+      color: @font-color-light;
     }
   }
 }

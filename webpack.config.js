@@ -16,6 +16,9 @@ var pathToUAParser = path.resolve(node_modules, 'ua-parser-js/src/ua-parser.js')
 var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
+
+console.log(__dirname)
+console.log(node_modules)
 var config = {
     //devtool: 'inline-source-map',
     context: cwd,
@@ -42,12 +45,19 @@ var config = {
         chunkFilename: '[chunkhash].chunk.js',
         publicPath: "/dist/"
     },
+    // stats: {
+    //     colors: true,
+    //     modules: true,
+    //     reasons: true,
+    //     errorDetails: true
+    // },
+
     module: {
         loaders: [
           // LESS
           {
             test: /\.less$/,
-            loader: 'style!css!postcss!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +', includePath: "less"}' //
+            loader: 'style!css!postcss!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +', paths: ["'+ path.resolve(__dirname, 'less') +'/"]}'
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,

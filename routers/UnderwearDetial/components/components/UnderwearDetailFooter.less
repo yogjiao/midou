@@ -6,7 +6,7 @@
   .fixed-stack{
     position: fixed;
     bottom: 0;
-    height: 60px;
+    height: 1rem;
     width: 100%;
     max-width: @max-width;
     box-sizing: border-box;
@@ -17,19 +17,21 @@
       float: left;
       text-align: center;
       .lable{
-        color: #797e99;
-        font-size: 12px;
-        padding-top: 5px;
+        color: @font-color-lighter;
+        font-size: .2rem;
+
+        text-size-adjust:none;
+        font-size-adjust:0.5;
       }
     }
     > :nth-child(1),  > :nth-child(3){
-      padding-top: 8px;
+      padding-top: .08rem;
       width: 25%;
     }
     .buy-now{
       width: 50%;
       height: 100%;
-      font-size: 24px;
+      font-size: .36rem;
       background-color: @purple;
       color: #fff;
       > *{
@@ -39,7 +41,7 @@
       }
     }
     .iconfont{
-      font-size: 20px;
+      font-size: .5rem;
     }
   }
 }

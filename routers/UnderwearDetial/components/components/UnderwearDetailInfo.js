@@ -13,11 +13,11 @@ class UnderweardetailInfo extends React.Component {
         <div className="pro-price">&yen; {this.props.price}</div>
         <div className="detail-item-list">
           <div className="detail-item-wrap">
-            <h6 className="item-title"><div className="triangle"></div>商品介绍</h6>
+            <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />商品介绍</h6>
             <div className="detail-content" dangerouslySetInnerHTML={{__html: this.props.match_intro}}></div>
           </div>
           <div className="detail-item-wrap">
-            <h6 className="item-title"><div className="triangle"></div>盒子服务</h6>
+            <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />盒子服务</h6>
             <div className="detail-content box-service-info">
                 <Link className="img-wrap" to={`${BASE_PAGE_DIR}/box-service`}><img src="/app-static/img/box-detail.png" /></Link>
                 {/*
@@ -29,7 +29,7 @@ class UnderweardetailInfo extends React.Component {
             </div>
           </div>
           <div className="detail-item-wrap">
-            <h6 className="item-title"><div className="triangle"></div>商品详情</h6>
+            <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />商品详情</h6>
             <div className="detail-content">
               <div
                 className="goods-details"
@@ -41,7 +41,7 @@ class UnderweardetailInfo extends React.Component {
             (this.props.goods_recommend || []).length?
             (
               <div className="detail-item-wrap">
-                <h6 className="item-title"><div className="triangle"></div>相关产品</h6>
+                <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />相关产品</h6>
                 {
                   this.props.goods_recommend.map((item, index) => {
 

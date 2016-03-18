@@ -17,7 +17,7 @@ import fastclick  from 'fastclick'
 //init
 fastclick(document.body);
 
-import '../app-page/index.less'
+import '../less/index.less'
 import App from './App/App.js'
 
 
