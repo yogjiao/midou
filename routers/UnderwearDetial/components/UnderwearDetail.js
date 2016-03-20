@@ -405,9 +405,7 @@ class Underweardetail extends React.Component {
       <div className="uw-detail-container" onClick={this.thisHandler}>
         <PageHeader headerName="产品详情">
           <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-          {
-            //<div className="menu-share">分享</div>
-          }
+          <div className="menu-share">分享</div>
         </PageHeader>
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>

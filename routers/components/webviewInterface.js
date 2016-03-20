@@ -7,7 +7,8 @@ import {
   CALL_HANDLER_SHARE,
   CALL_HANDLER_BACK_TO_NATIVE_PAGE,
   CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL,
-  CALL_HANDLER_REDIRECT_TO_NEXT
+  CALL_HANDLER_REDIRECT_TO_NEXT,
+  CALL_HANDLER_GET_APP_VERSION
 } from 'macros.js'
 
 
@@ -19,7 +20,8 @@ function setupWebViewJavascriptBridge(callback) {
     WVJBIframe.style.display = 'none';
     WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
     document.documentElement.appendChild(WVJBIframe);
-    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+    setTimeout(function() {
+      document.documentElement.removeChild(WVJBIframe) }, 0)
 }
 
 function handler(handlerName) {
@@ -97,6 +99,19 @@ export let backToHomeNativePage = function() {
 export let notifyAppUrlChanged = function(data) {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_REDIRECT_TO_NEXT, data, function(response) {
+        resolve(response)
+      })
+  });
+}
+
+export let getAppVerison = function(data) {
+  return new Promise((resolve, reject) => {
+    let timer = setTimeout( () => {
+      reject(new Error('time out'))
+    }, 1000)
+
+    callHandler(CALL_HANDLER_GET_APP_VERSION, data, function(response) {
+        clearTimeout(timer)
         resolve(response)
       })
   });

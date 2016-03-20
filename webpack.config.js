@@ -17,8 +17,6 @@ var process = require('process');
 var cwd = process.cwd();
 // console.log(path.resolve(__dirname, "index.js"))
 
-console.log(__dirname)
-console.log(node_modules)
 var config = {
     //devtool: 'inline-source-map',
     context: cwd,

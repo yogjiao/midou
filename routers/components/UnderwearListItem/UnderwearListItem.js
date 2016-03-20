@@ -19,7 +19,7 @@ class UnderwearListItem extends React.Component {
         <div className="info-wrap">
           <a
             href={`${BASE_PAGE_DIR}/underwear/${this.props.source.id}`}
-            className="pro-name"
+            className="pro-name single-ellipsis"
           >
             {this.props.source.name}
           </a>

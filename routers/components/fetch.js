@@ -1,5 +1,15 @@
-import {getUserInfoFromApp, callOutLoginPanel} from 'webviewInterface.js'
-import {NOT_LOGIN_ERROR, MIDOU_TOKEN_NAME, TEST_TOKEN} from 'macros.js'
+import {
+  getUserInfoFromApp,
+  callOutLoginPanel,
+  getAppVerison
+} from 'webviewInterface.js'
+import {
+  NOT_LOGIN_ERROR,
+  MIDOU_TOKEN_NAME,
+  TEST_TOKEN,
+  IOS_APP_STORE_URL,
+  DOWNLOAD_APP_URL
+} from 'macros.js'
 
 import uaParser from 'uaParser.js'
 
@@ -23,7 +33,19 @@ export let fetchable = (...args) => {
 };
 
 let fetchAuth = (url, options = {}) => {
-  return getUserInfoFromApp()
+  return getAppVerison()
+            .then((version)=>{
+              return version
+            }, (e)=>{
+              if (uaParser.getOS().name = 'iOS' && uaParser.isWeixin) {
+                window.location.href = DOWNLOAD_APP_URL
+              } else {
+                window.location.href = IOS_APP_STORE_URL
+              }
+            })
+            .then(()=>{
+              return  getUserInfoFromApp()
+            })
             .then((data) => {
               if (data.loginToken) {
                 let headers = options.headers? options.headers : options.headers = {}

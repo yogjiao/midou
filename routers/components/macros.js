@@ -25,6 +25,10 @@ export let CALL_HANDLER_REDIRECT_TO_HOME = 'redirectToHome'
 
 export let CALL_HANDLER_BACK_TO_NATIVE_PAGE = 'backLast'
 
+export let CALL_HANDLER_GET_APP_VERSION = 'getAppVersionCallback'
+
+export let IOS_APP_STORE_URL = 'https://itunes.apple.com/cn/app/nei-xin/id1091167426?mt=8'
+
 // for router
 export let ROUTER_SHOPPING_CART_SCAN = 'scan'
 export let ROUTER_SHOPPING_CART_EDIT = 'edit'
@@ -156,6 +160,9 @@ export let YUN_DA = 'http://m.kuaidi100.com/index_all.html?type=yunda&'
 export let BASE_PAGE_DIR = '/app-page'
 
 export let BASE_STATIC_DIR = '/app-static'
+
+export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
+
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
 
