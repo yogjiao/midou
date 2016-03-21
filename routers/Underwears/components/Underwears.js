@@ -221,13 +221,13 @@ class Underwears extends React.Component {
       this.state.pageIndex = 0
       this.state.isHaveGoods = true
       this.state.prolist = []
-      this.fetchData()
+      //this.fetchData()
 
       let size, tags
       if (this.state.category == 1) {
         size = this.state.baseSizeIndex + '-' + this.state.braSizeIndex
         tags = this.state.tagsIndex.join()
-      } else if (this.state.category == 2) {
+      } else if (this.state.category == 2 || this.state.category == 3) {
         size = this.state.sizeIndex
         tags = 0
       } else {

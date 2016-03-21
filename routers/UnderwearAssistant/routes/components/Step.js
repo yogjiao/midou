@@ -410,7 +410,7 @@ class Step extends React.Component {
           (
             <div className="step-container" onClick={this.thisHandler}>
               {
-                ua.isWeixin?
+                this.props.params.stepId == 1 || ua.isWeixin?
                 '':
                 (
                   <div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>
