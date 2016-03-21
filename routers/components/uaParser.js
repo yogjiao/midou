@@ -7,4 +7,8 @@ parser.isWeixin = (() => {
   return /MicroMessenger/.test(window.navigator.userAgent || '')
 })()
 
+parser.isApp = (() => {
+  return /neixin\/\d+\.\d+(\.\d+)?/.test(window.navigator.userAgent || '') || parser.isWeixin
+})()
+
 export default parser

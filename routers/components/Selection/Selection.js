@@ -18,7 +18,7 @@ class Selection extends React.Component {
                   className={isSelected? 'select-item-wrap on' : 'select-item-wrap'}
                   data-source={source}
                 >
-                  <div><i className="iconfont">&#xe601;</i></div>
+                  <div><i className="iconfont icon-right"></i></div>
                   <div
                     data-value={item.value}
                   >

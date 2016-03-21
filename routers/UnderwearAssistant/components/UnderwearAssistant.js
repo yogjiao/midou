@@ -15,9 +15,6 @@ class UnderwearAssistant extends React.Component {
     };
 
   }
-  backHandler = () => {
-    this.props.history.goBack();
-  };
   componentDidMount = () => {
 
   };
@@ -33,7 +30,7 @@ class UnderwearAssistant extends React.Component {
     }
     return (
       <div className="assistant-container">
-         
+
          {content}
       </div>
     )

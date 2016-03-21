@@ -4,8 +4,17 @@
   flex-wrap: wrap;
   h2{
      text-align: center;
-     padding-top: 50px;
+     padding-top: 1.5rem;
      font-weight: normal;
+     font-size: .36rem;
+  }
+  .switch-wrap{
+    position: fixed;
+    left: 0;
+    width: 100%;
+    text-align: center;
+
+    bottom: 1.5rem;
   }
   .liear-circle{
     height: 200px;
@@ -15,14 +24,18 @@
     align-items: center;
   }
   .size-info-wrap{
-
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
     border: 1px solid #9ba4d1;
-    width: 100px;
-    height: 100px;
+    width: 2rem;
+    height: 2rem;
+    box-sizing: border-box;
     border-radius: 50%;
     box-shadow: 0 0 300px 50px rgba(155, 164, 209,0.7);
     .size-info{
@@ -31,26 +44,37 @@
       font-size: 20px;
     }
     .iconfont{
-      color: @purple;
+      color: @orange-red;
     }
   }
   .tips-wrap{
-    padding: 0 50px;
     width: 100%;
     text-align: center;
     line-height: 40px;
     h6{
-      border-bottom: 1px solid #9ba4d1;
+      display: inline-block;
+      border-bottom: 1px solid @border-color;
+      width: 5.2rem;
+      font-size: .3rem;
+      font-weight: normal;
     }
     p{
-
+      color: @font-color-lighter;
     }
   }
   .btn-deal{
-    margin-top: 50px;
+    display: inline-block;
     background-color: #9ba4d1;
-    padding: 8px 50px;
-    border-radius: 15px;
+    width: 3.4rem;
+    margin-top: 1rem;
+    line-height: .66rem;
+    border-radius: 1rem;
     color: #fff;
+
+  }
+}
+.assistant-result-container-weixin{
+  .switch-wrap{
+    display: none;
   }
 }

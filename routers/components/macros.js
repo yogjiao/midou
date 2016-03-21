@@ -1,4 +1,10 @@
 
+// test Cookie token
+export let TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNDUzODg1MjM3LCJleHAiOjE3NjkyNDUyMzd9.chIaWYg_3_Y9wuMMuYGluDtjDxDz7kDxdXGebpP1cX4'
+export let MIDOU_TOKEN_NAME = 'x-midou-token'
+
+export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'
+export let FETCH_SUCCESS = '0'
 /******** callHandler - js call bc *******/
 
 
@@ -210,18 +216,4 @@ export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
 
 export let PUT_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant'
 
-
-
-
-// test Cookie token
-export let TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNDUzODg1MjM3LCJleHAiOjE3NjkyNDUyMzd9.chIaWYg_3_Y9wuMMuYGluDtjDxDz7kDxdXGebpP1cX4'
-export let MIDOU_TOKEN_NAME = 'x-midou-token'
-export let NOT_LOGIN_ERROR = 'use is not login'
-
-
-
-
-
-
-export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'
-export let FETCH_SUCCESS = '0'
+export let PUT_WEIXIN_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant_weixin'

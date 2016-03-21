@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import {BASE_PAGE_DIR} from 'macros.js'
 import {backToHomeNativePage} from 'webviewInterface.js'
 
+import ua from 'uaParser.js'
 
 import './Result.less'
 class Result extends React.Component {
@@ -10,8 +11,11 @@ class Result extends React.Component {
     backToHomeNativePage();
   };
   render() {
+    let className = ua.isWeixin?
+      'assistant-result-container assistant-result-container-weixin' :
+      'assistant-result-container'
     return (
-      <div className="assistant-result-container">
+      <div className={className}>
          <h2>推荐尺寸</h2>
          <div className="liear-circle">
             <div className="size-info-wrap">
@@ -19,11 +23,13 @@ class Result extends React.Component {
               <i className="iconfont">&#xe60b;</i>
             </div>
          </div>
-         <div className="tips-wrap">
-            <h6>个人身材数据添加成功！</h6>
-            <p>你可以在个人中心里修改你的身材数据</p>
+         <div className="switch-wrap">
+           <div className="tips-wrap">
+              <h6>个人身材数据添加成功！</h6>
+              <p>你可以在个人中心里修改你的身材数据</p>
+           </div>
+           <div className="btn-deal" onClick={this.backToHome}>确认</div>
          </div>
-         <div className="btn-deal" onClick={this.backToHome}>确认</div>
       </div>
     )
   }

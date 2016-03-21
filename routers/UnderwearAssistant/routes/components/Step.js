@@ -7,10 +7,12 @@ import Selection from  'Selection/Selection.js'
 import Prompt from 'Prompt/Prompt.js'
 import {getParentByClass} from 'util.js'
 import AssistantSlideSelection from 'AssistantSlideSelection.js'
+import {backToNativePage} from 'webviewInterface.js'
 import {
   BASE_PAGE_DIR,
   BASE_STATIC_DIR,
   PUT_ASSISTANT_INFO,
+  PUT_WEIXIN_ASSISTANT_INFO,
   FETCH_SUCCESS,
 
   ASSISTANT_FEATRUES_AGE,
@@ -25,9 +27,10 @@ import {
   CHEST_FEATRUES_6,
   CHEST_FEATRUES_7
 } from 'macros.js'
-import {fetchAuth} from 'fetch.js'
+import {fetchAuth, fetchable} from 'fetch.js'
 let update = require('react-addons-update')
-
+import errors from 'errors.js'
+import ua from 'uaParser.js'
 import Age from 'Age.js'
 import Bra from 'Bra.js'
 import Nighty from 'Nighty.js'
@@ -40,7 +43,7 @@ class Step extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      stepNum: 12,
+
       isHiddenSelection: true,
       isHiddenSlideSelection: true,
       isHiddenPageSpin: true,
@@ -115,6 +118,9 @@ class Step extends React.Component {
       }
     }
 
+    this.state.stepNum = Object.keys(this.state.selectedData).length - 1
+
+
   }
   makeSizeItem = (floor, upper, delta) => {
     let list = []
@@ -167,13 +173,17 @@ class Step extends React.Component {
     schema.isHiddenSelection = {$set: true}
     return update(this.state, schema)
   };
+
   postAssistentData =  () => {
+    let fetchMethod = ua.isWeixin? fetchable : fetchAuth
+    let url = ua.isWeixin? PUT_WEIXIN_ASSISTANT_INFO : PUT_ASSISTANT_INFO
+
     this.setState({isHiddenPageSpin: false})
     let data = {}
     Object.keys(this.state.selectedData).forEach( (item, index) => {
       data[item] = this.state.selectedData[item].value
     });
-    fetchAuth(`${PUT_ASSISTANT_INFO}`, {method: 'post', body: JSON.stringify(data)})
+    fetchMethod(`${url}`, {method: 'post', body: JSON.stringify(data)})
       .then( (data) => {//{"id":3002,"r":1,"rea":0,"recommend_bottom_bust":75,"recommend_cup":"A"}
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
@@ -181,9 +191,18 @@ class Step extends React.Component {
             recommend_cup: data.recommend_cup,
             isHiddenPageSpin: true
           })
+        } else {
+          this.setState({promptMsg: errors[data.rea], isHiddenPageSpin: true})
+          this.refs['prompt'].show()
         }
       })
+      .catch((e)=>{
+        this.setState({
+          isHiddenPageSpin: true
+        })
+      })
   };
+
   selectionHandler = (e) => {
     let target
     let nextState
@@ -194,10 +213,16 @@ class Step extends React.Component {
     nextState && this.setState(nextState)
   };
   backHandler = () => {
+    if (this.props.params.stepId == '1' && ua.isApp) {
+      backToNativePage()
+        .then((data) => {
+      })
+    } else {
+
+    }
     this.props.history.goBack();
   };
   componentDidMount = () => {
-
   };
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.params.stepId > this.state.stepNum) {
@@ -210,7 +235,6 @@ class Step extends React.Component {
   componentWillUnmount = () => {
   };
   render() {
-
     let {stepId} = this.props.params
     let nextStep = 1 * stepId + 1
     let selectedIndex, featureSource, selection
@@ -350,7 +374,7 @@ class Step extends React.Component {
         break;
 
     }
-    if (stepId > 3 && stepId < 11) {
+    if (stepId > 3 && stepId <= this.state.stepNum - 2) {
       let props = this.state.selectedData[this.state.featureName]
       content = (
         <Chest {...props}/>
@@ -385,7 +409,13 @@ class Step extends React.Component {
           ) :
           (
             <div className="step-container" onClick={this.thisHandler}>
-              <div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>
+              {
+                ua.isWeixin?
+                '':
+                (
+                  <div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>
+                )
+              }
               <div className="step-index arial">{`${stepId}/${this.state.stepNum}`}</div>
               <div className="step-wrap">
                 {content}

@@ -5,10 +5,11 @@ import {BASE_STATIC_DIR} from 'macros.js'
 import './Age.less'
 class UnderBust extends React.Component {
   render() {
+    let img = `url(${BASE_STATIC_DIR}/img/under-bust.png)`
     return (
       <div className="age-container">
          <h2>你的下胸围</h2>
-         <div className="img-wrap"><img src={`${BASE_STATIC_DIR}/img/under-bust.png`} /></div>
+         <div className="img-wrap" style={{backgroundImage: img}} />
          <div className="select-wrap" data-feature-name="under_bust">
            <span>{this.props.source.text}</span>
            <i className="iconfont">&#xe60a;</i>

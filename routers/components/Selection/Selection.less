@@ -37,11 +37,18 @@
   }
   &.item-type-1{
     .iconfont{
-      background-color: @purple;
+      display:block;
+      background-color: @orange-red;
       color: #fff;
-      padding: 5px 0;
+      width: .4rem;
+      height: .4rem;
+      line-height: .4rem;
       border-radius: 50%;
       opacity: 0;
+      overflow: hidden;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .select-item-wrap{
       display: flex;
@@ -52,8 +59,8 @@
       }
       > :nth-child(2){
         flex: 1 1 70%;
-        border-bottom: 1px solid #d2d2df;
-        padding: 8px 0;
+        border-bottom: 1px solid @border-color;
+        padding: .1rem 0;
         text-align: center;
       }
 

@@ -32,7 +32,7 @@ class AssistantSlideSelection extends React.Component {
                       "as-item"}
                    >
                     <p>{item.text}</p>
-                    <i className="iconfont">&#xe60b;</i>
+                    <i className="iconfont icon-triangle-top"></i>
                   </li>
                 )
               })
