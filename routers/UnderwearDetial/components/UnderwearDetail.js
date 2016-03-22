@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
-
+let update = require('react-addons-update')
 
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
@@ -20,14 +20,14 @@ import {
 import errors from 'errors.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass, pick} from 'util.js'
-let update = require('react-addons-update')
+
 import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
 import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
 
-import './UnderwearDetail.less'
+
 class Underweardetail extends React.Component {
   constructor(props) {
     super(props);
@@ -111,7 +111,8 @@ class Underweardetail extends React.Component {
           this.state.isHaveGoods = false
         }
 
-        data.goods.inventoryInfo = this.rebuildInventory(data.goods.inventory, data.goods.category)
+        data.goods.inventoryInfo =
+          this.rebuildInventory(data.goods.inventory, data.goods.category)
         delete data.goods.inventory
 
         let schema = {
@@ -381,7 +382,8 @@ class Underweardetail extends React.Component {
       if ((nextState.braSize && nextState.baseSize) &&
           (this.state.braSize != nextState.braSize ||
           this.state.baseSize != nextState.baseSize)) {
-        nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods)
+        nextState.boxes = this.rebuildBoxes(
+          nextState.braSize, nextState.baseSize, nextState.goods)
       }
 
       if (this.state.count > nextState.count) {

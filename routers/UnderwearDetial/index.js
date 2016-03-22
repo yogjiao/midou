@@ -1,4 +1,4 @@
-import {notifyAppUrlChanged} from 'webviewInterface.js'
+
 module.exports = {
   path: 'underwear/:productId',
   getComponent(location, cb) {
@@ -12,5 +12,5 @@ module.exports = {
     //   .then((data)=>{
     //
     //   })
-  },
+  }
 }
