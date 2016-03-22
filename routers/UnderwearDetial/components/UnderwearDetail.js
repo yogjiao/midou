@@ -315,7 +315,7 @@ class Underweardetail extends React.Component {
     let nextState = {}
     if (target = getParentByClass(e.target, 'push-to-collection')) {
       this.putCollectionData()
-    } else if (target = getParentByClass(e.target, 'menu-share')) {
+    } else if (target = getParentByClass(e.target, 'icon-share')) {
       nextState.isHiddenSharePanel = false
     } else if (target = getParentByClass(e.target, 'media-item')) {
       // "type": "微博,QQ,朋友圈,微信朋友",
@@ -406,8 +406,8 @@ class Underweardetail extends React.Component {
     return (
       <div className="uw-detail-container" onClick={this.thisHandler}>
         <PageHeader headerName="产品详情">
-          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-          <div className="menu-share">分享</div>
+          <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+          <div className="iconfont icon-share"></div>
         </PageHeader>
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>

@@ -20,6 +20,7 @@ function checkStatus(response) {
   } else {
     var error = new Error(response.statusText)
     error.response = response
+    alert('服务器开发失职啊！')
     throw error
   }
 }
