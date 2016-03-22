@@ -10,8 +10,14 @@ class UnderBust extends React.Component {
       <div className="age-container">
          <h2>你的下胸围</h2>
          <div className="img-wrap" style={{backgroundImage: img}} />
-         <div className="select-wrap" data-feature-name="under_bust">
-           <span>{this.props.source.text}</span>
+         <div
+           className={this.props.source.text?
+              "select-wrap on":
+              "select-wrap"
+           }
+           data-feature-name="under_bust"
+         >
+           <span>{this.props.source.text || this.props.source.defaultText}</span>
            <i className="iconfont">&#xe60a;</i>
          </div>
       </div>

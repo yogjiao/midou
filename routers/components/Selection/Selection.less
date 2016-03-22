@@ -22,7 +22,8 @@
   }
   .select-header{
     background-color: #9ba4d1;
-    line-height: 40px;
+    padding: .3rem 0;
+    font-size: .36rem;
     color: #fff;
     text-align: center;
   }
@@ -33,16 +34,18 @@
     -webkit-overflow-scrolling: touch;
   }
   .select-body{
-
+    display: table;
+    width: 100%;
   }
   &.item-type-1{
     .iconfont{
       display:block;
       background-color: @orange-red;
       color: #fff;
-      width: .4rem;
-      height: .4rem;
-      line-height: .4rem;
+      width: .3rem;
+      padding: .1rem;
+      line-height: .3rem;
+      font-size: .3rem;
       border-radius: 50%;
       opacity: 0;
       overflow: hidden;
@@ -51,14 +54,19 @@
       transform: translateX(-50%);
     }
     .select-item-wrap{
-      display: flex;
+      display: table-row;
+      width: 100%;
       align-items: center;
+
+      >*{
+        display: table-cell;
+        padding: .3rem 0;
+      }
       > :nth-child(1){
-        flex: 1 1 30%;
-        text-align: center;
+        width: 20%;
       }
       > :nth-child(2){
-        flex: 1 1 70%;
+        width: 80%;
         border-bottom: 1px solid @border-color;
         padding: .1rem 0;
         text-align: center;

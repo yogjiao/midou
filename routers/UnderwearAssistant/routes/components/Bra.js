@@ -8,12 +8,24 @@ class Base extends React.Component {
     return (
       <div className="age-container">
          <h2>你常穿文胸尺码是</h2>
-         <div className="select-wrap" data-feature-name="bottom_bust">
-           <span>{this.props.source.text}</span>
+         <div
+           className={this.props.source.text?
+              "select-wrap on":
+              "select-wrap"
+           }
+           data-feature-name="bottom_bust"
+         >
+           <span>{this.props.source.text || this.props.source.defaultText}</span>
            <i className="iconfont">&#xe60a;</i>
          </div>
-         <div className="select-wrap" data-feature-name="cup">
-           <span>{this.props.source_1.text}</span>
+         <div
+           className={this.props.source_1.text?
+              "select-wrap on":
+              "select-wrap"
+           }
+           data-feature-name="cup"
+         >
+           <span>{this.props.source_1.text || this.props.source_1.defaultText}</span>
            <i className="iconfont">&#xe60a;</i>
          </div>
       </div>
