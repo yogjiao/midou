@@ -424,7 +424,7 @@ class Underweardetail extends React.Component {
           isHidden={this.state.isHiddenSharePanel}
         />
         <Prompt msg={this.state.promptMsg} ref='prompt'/>
-        <isHiddenPageSpin isHidden={this.state.isHiddenPageSpin}/>
+        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }
