@@ -16,28 +16,30 @@
     bottom: 1.5rem;
   }
   .liear-circle{
-    height: 200px;
+    position: fixed;
+    height: 6rem;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
   .size-info-wrap{
-    position: fixed;
+    position: absolute;
     left: 50%;
-    top: 40%;
+    top: 50%;
     transform: translate(-50%, -50%);
     border: 1px solid #9ba4d1;
     width: 2rem;
     height: 2rem;
     box-sizing: border-box;
     border-radius: 50%;
-    box-shadow: 0 0 300px 50px rgba(155, 164, 209,0.7);
-    text-align: center;
+    background-color: #fff;
     .size-info{
       margin-top: .55rem;
       text-align: center;
       font-size: .4rem;
+      color: @light-slate-blue-light;
     }
     .iconfont{
       color: @orange-red;

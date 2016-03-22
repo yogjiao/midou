@@ -51,8 +51,8 @@ class Step extends React.Component {
       featureName: '',
       // featureSource: [],
       // selectedIndex: -1,
-      recommend_bottom_bust: '',
-      recommend_cup: '',
+      recommend_bottom_bust: '-',
+      recommend_cup: '-',
       selectedData: {
           "age_group": {
             selectedIndex: -1,

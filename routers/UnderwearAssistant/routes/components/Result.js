@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import {BASE_PAGE_DIR} from 'macros.js'
+import {BASE_PAGE_DIR, BASE_STATIC_DIR} from 'macros.js'
 import {backToHomeNativePage} from 'webviewInterface.js'
 
 import ua from 'uaParser.js'
@@ -14,10 +14,11 @@ class Result extends React.Component {
     let className = ua.isWeixin?
       'assistant-result-container assistant-result-container-weixin' :
       'assistant-result-container'
+    let img = `url(${BASE_STATIC_DIR}/img/as-radius.png)`
     return (
       <div className={className}>
          <h2>推荐尺寸</h2>
-         <div className="liear-circle">
+         <div className="liear-circle" style={{backgroundImage: img}}>
             <div className="size-info-wrap">
               <div className="size-info arial">{`${this.props.recommend_bottom_bust}${this.props.recommend_cup}`}</div>
               <i className="iconfont">&#xe60b;</i>
