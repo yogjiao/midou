@@ -30,11 +30,14 @@
   }
 
   .tags-wrap{
-    display: flex;
-    justify-content:space-around;
     font-size: .32rem;
     margin-bottom: 1rem;
+    overflow: hidden;
     li{
+      line-height: .5rem;
+      float: left;
+      width: 25%;
+      text-align: center;
       &.on{
         color: @orange-red;
       }

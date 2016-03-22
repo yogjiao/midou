@@ -61,10 +61,11 @@
 .select-num{
   display: flex;
   flex-wrap: nowrap;
+  @height: .6rem;
   [class|=btn]{
-    width: .4rem;
-    height: .4rem;
-    line-height: .4rem;
+    width: @height;
+    height: @height;
+    line-height: @height;
     text-align: center;
     border-radius: 50%;
     background-color: @orange-red;
@@ -78,9 +79,10 @@
     }
   }
   .nums{
-    width: 1.3rem;
+    width: 1rem;
     text-align: center;
     font-family: arial;
+    line-height: @height;
     font-size: .36rem;
     color: @font-color-light;
   }
