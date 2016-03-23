@@ -278,9 +278,12 @@ class Underwears extends React.Component {
     }
   };
   componentWillUnmount = () => {
+    alert('componentWillUnmount')
+
     document.removeEventListener('scroll', this.scrollingHandler);
   };
   componentDidMount = () => {
+  alert('componentDidMount')
     this.fetchData();
     document.addEventListener('scroll', this.scrollingHandler);
   };

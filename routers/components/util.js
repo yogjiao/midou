@@ -16,3 +16,15 @@ export function pick(source, ...args) {
   })
   return copy
 }
+
+export function getCookie(name) {
+  let text = `${name}=\s*(\w+)\s*;`
+  let pattern = new RegExp(text, 'i')
+  let value
+  try {
+    value = pattern.match(document.cookie)[1]
+  } catch (e) {
+    value = ''
+  }
+  return value
+}

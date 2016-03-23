@@ -8,7 +8,8 @@ parser.isWeixin = (() => {
 })()
 
 parser.isApp = (() => {
-  return /neixin\/\d+\.\d+(\.\d+)?/.test(window.navigator.userAgent || '') || parser.isWeixin
+  return /neixin\/\d+\.\d+(\.\d+)?/.test(window.navigator.userAgent || '') || !parser.isWeixin
 })()
+
 
 export default parser

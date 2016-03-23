@@ -26,7 +26,7 @@ import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
 import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
-
+import CartEntry from 'CartEntry.js'
 
 class Underweardetail extends React.Component {
   constructor(props) {
@@ -414,6 +414,7 @@ class Underweardetail extends React.Component {
         <UnderweardetailFooter
           buyHandler={this.buyHandler}
         />
+        <CartEntry />
         <UnderwearDetailSelectPanel
           isHidden={this.state.isHiddenSelectPanel}
           allBase={this.state.allBase}

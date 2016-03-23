@@ -42,13 +42,25 @@ export let registerHandler = handler('registerHandler');
 export let callHandler = handler('callHandler');
 
 // cached  user login info
-let loginInfo = {}
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
         resolve({loginToken: response.token, userName: response.userName})
       })
   });
+}
+
+export let getUserInfoFromAppWithTimeout = function() {
+  return new Promise((resolve, reject) => {
+    let timer = setTimeout( () => {
+      reject(new Error('time out'))
+    }, 1000)
+
+    callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
+        clearTimeout(timer)
+        resolve(response)
+      })
+  })
 }
 
 // export let getUserInfoFromApp = function() {
