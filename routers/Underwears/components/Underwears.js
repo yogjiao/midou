@@ -52,8 +52,6 @@ class Underwears extends React.Component {
     }
     //this.state.tagsIndex[0] = 0
 
-    this.state.isUnderwears = props.route.path.indexOf("underwears") == 0
-    this.state.isCollections = props.route.path.indexOf("collections") == 0
     this.initSearchParams(props)
 
   }
@@ -101,15 +99,9 @@ class Underwears extends React.Component {
      let fetchFn = fetchable
 
      let url
-
-     if (this.state.isCollections) {
-       url=`${FETCH_COLLECTIONS}/${this.state.pageIndex}/${this.state.pageSize}`
-       fetchFn = fetchAuth
-     } else {
-       let {size, tags} = this.getSearchParams()
-       url=`${FETCH_GOODS}/${size}/${this.state.category}/`
-         + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
-     }
+     let {size, tags} = this.getSearchParams()
+     url=`${FETCH_GOODS}/${size}/${this.state.category}/`
+       + `${tags}/${this.state.pageIndex}/${this.state.pageSize}`
      this.state.isFetching = true
      let nextState = {
        isHiddenScrollingSpin: isScrollingFetch? false : true,
@@ -273,17 +265,11 @@ class Underwears extends React.Component {
 
   };
   componentWillMount = () => {
-    if (this.state.isCollections) {
-      this.state.headerName = '我的收藏'
-    }
   };
   componentWillUnmount = () => {
-    alert('componentWillUnmount')
-
     document.removeEventListener('scroll', this.scrollingHandler);
   };
   componentDidMount = () => {
-  alert('componentDidMount')
     this.fetchData();
     document.addEventListener('scroll', this.scrollingHandler);
   };
@@ -295,18 +281,8 @@ class Underwears extends React.Component {
     return (
       <div className="uw-list-container">
         <PageHeader headerName={this.state.headerName}>
-        {
-          this.state.isCollections?
-          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>:
           <div></div>
-        }
-
-         {
-           this.state.isUnderwears?
-           (<div className="menu-search" onClick={this.openFilterHanler}>筛选</div>):
-           ''
-         }
-
+          <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
         </PageHeader>
         <div className="list-wrap">
           <div className="adjuxt-wrap clearfix">

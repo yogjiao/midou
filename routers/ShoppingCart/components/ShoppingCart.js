@@ -518,11 +518,11 @@ class ShoppingCart extends React.Component {
   };
   componentWillUnmount = () => {
 
-    document.removeEventListener('scroll', this.handleScroll.bind(this));
+    document.removeEventListener('scroll', this.handleScroll);
   };
   componentDidMount = () => {
     this.fetchCartData()
-    document.addEventListener('scroll', this.handleScroll.bind(this));
+    document.addEventListener('scroll', this.handleScroll);
 
   };
   componentWillReceiveProps = (nextProps) => {
@@ -536,6 +536,10 @@ class ShoppingCart extends React.Component {
     nextState.selectedIds = ids
     nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
+  backHandler = () => {
+    this.props.history.goBack();
+
+  };
   render() {
     let url = this.state.selectedIds.length > 0?
                 (`${BASE_PAGE_DIR}/order-created/` + this.state.selectedIds.join()):
@@ -545,7 +549,11 @@ class ShoppingCart extends React.Component {
         <PageHeader
           headerName={this.state.headerName}
         >
-          <div></div>
+          {
+            this.props.location.query.from == 'app'?
+            <div />:
+            <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+          }
           {this.state.menu}
         </PageHeader>
         {

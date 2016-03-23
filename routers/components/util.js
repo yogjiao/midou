@@ -18,11 +18,11 @@ export function pick(source, ...args) {
 }
 
 export function getCookie(name) {
-  let text = `${name}=\s*(\w+)\s*;`
-  let pattern = new RegExp(text, 'i')
+  let text = `${name}=([^;]+)`
+  let parttern = new RegExp(text, 'i')
   let value
   try {
-    value = pattern.match(document.cookie)[1]
+    value = document.cookie.match(parttern)[1]
   } catch (e) {
     value = ''
   }

@@ -54,11 +54,11 @@ export let getUserInfoFromAppWithTimeout = function() {
   return new Promise((resolve, reject) => {
     let timer = setTimeout( () => {
       reject(new Error('time out'))
-    }, 1000)
+    }, 2000)
 
     callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
         clearTimeout(timer)
-        resolve(response)
+        resolve({loginToken: response.token, userName: response.userName})
       })
   })
 }

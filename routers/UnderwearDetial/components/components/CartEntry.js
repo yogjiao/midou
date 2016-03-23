@@ -15,21 +15,29 @@ class CartEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEmpty: '0'
+      isEmpty: '1'
     }
   }
   fetchDate = () => {
     fetchAuth(FETCH_CARTS_STATE)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
-          if (data.is_empty == '1') {
-            this.setState({isEmpty: '1'})
+          if (data.is_empty == '0') {
+            this.setState({isEmpty: '0'})
           }
         }
       })
   };
   thisHandler = () => {
-    window.location.href = `${BASE_PAGE_DIR}/carts/scan`
+    let token = getMiDouToken()
+    if (token) {
+      window.location.href = `${BASE_PAGE_DIR}/carts/scan`
+    } else {
+      getUserInfoFromAppWithTimeout()
+        .then(() => {
+          window.location.href = `${BASE_PAGE_DIR}/carts/scan`
+        })
+    }
   };
   componentDidMount = () => {
     let token = getMiDouToken()
@@ -42,7 +50,7 @@ class CartEntry extends React.Component {
       <div className="cart-entry-container" onClick={this.thisHandler}>
         <i className="iconfont icon-cart">
         {
-          this.state.isEmpty == '1'? (<span></span>) : ''
+          this.state.isEmpty == '0'? (<span></span>) : ''
         }
         </i>
       </div>
