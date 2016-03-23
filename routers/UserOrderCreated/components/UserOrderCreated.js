@@ -16,7 +16,7 @@ import {
   PUT_TO_ORDER,
 
 } from 'macros.js'
-import {notifyAppToCheckout} from 'webviewInterface.js'
+import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update');
 
@@ -183,6 +183,10 @@ class UserOrderCreated extends React.Component {
       })
   };
   backHandler = () => {
+    backToNativePage()
+      .then((data)=>{
+
+      })
     this.props.history.goBack()
   };
   componentDidMount = () => {

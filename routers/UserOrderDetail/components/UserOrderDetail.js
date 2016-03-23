@@ -16,7 +16,7 @@ import {
   PUT_TO_ORDER
 } from 'macros.js'
 import orderState from 'orderState.js'
-import {notifyAppToCheckout} from 'webviewInterface.js'
+import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import provinces from 'provinces'
 let update = require('react-addons-update');
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
@@ -87,6 +87,10 @@ class UserOrderDetail extends React.Component {
   };
 
   backHandler = () => {
+    backToNativePage()
+      .then((data)=>{
+
+      })
     this.props.history.goBack();
   };
   componentWillMount = () => {
