@@ -63,7 +63,7 @@ export let UNDERWEAR_BASE_SIZE = [
 ]
 
 export let UNDERWEAR_SIZE = [
-  {value: '0', text: 'ALL'},
+  {value: '0', text: 'All'},
   {value: 'S', text: 'S'},
   {value: 'M', text: 'M'},
   {value: 'L', text: 'L'},
