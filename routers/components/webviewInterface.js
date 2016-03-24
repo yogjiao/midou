@@ -8,10 +8,13 @@ import {
   CALL_HANDLER_BACK_TO_NATIVE_PAGE,
   CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL,
   CALL_HANDLER_REDIRECT_TO_NEXT,
-  CALL_HANDLER_GET_APP_VERSION
+  CALL_HANDLER_GET_APP_VERSION,
+  IOS_APP_STORE_URL,
+  DOWNLOAD_APP_URL
 } from 'macros.js'
 
-
+import {getMiDouToken} from 'commonApp.js'
+import ua from 'uaParser.js'
 function setupWebViewJavascriptBridge(callback) {
     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
     if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
@@ -44,30 +47,29 @@ export let callHandler = handler('callHandler');
 // cached  user login info
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
-    callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-        resolve({loginToken: response.token, userName: response.userName})
-      })
-  });
-}
+    if (ua.isApp()) {
+      let midouToken = getMiDouToken()
+      if (midouToken) {
+        resolve({loginToken: midouToken})
+      } else {
+        callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
+            resolve({loginToken: response.token, userName: response.userName})
+          })
+      }
+    } else if(ua.getOS().name = 'iOS' && ua.isWeixin()) {
+      window.location.href = DOWNLOAD_APP_URL
+      reject(new Error('not login'))
+    } else {
+      window.location.href = IOS_APP_STORE_URL
+      reject(new Error('not login'))
+    }
 
-export let getUserInfoFromAppWithTimeout = function() {
-  return new Promise((resolve, reject) => {
-    let timer = setTimeout( () => {
-      reject(new Error('time out'))
-    }, 2000)
-
-    callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-        clearTimeout(timer)
-        resolve({loginToken: response.token, userName: response.userName})
-      })
   })
 }
 
-// export let getUserInfoFromApp = function() {
-//   return new Promise((resolve, reject) => {
-//     resolve({loginToken: TEST_TOKEN})
-//   });
-// }
+
+
+
 
 
 export let callOutLoginPanel = function() {

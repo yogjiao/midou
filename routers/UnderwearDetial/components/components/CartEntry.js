@@ -8,7 +8,7 @@ import {
   FETCH_CARTS_STATE
 } from 'macros.js'
 import {fetchAuth} from 'fetch.js'
-import {getUserInfoFromAppWithTimeout} from 'webviewInterface.js'
+import {getUserInfoFromApp} from 'webviewInterface.js'
 import {getMiDouToken} from 'commonApp.js'
 import {FETCH_SUCCESS} from 'macros.js'
 class CartEntry extends React.Component {
@@ -33,7 +33,7 @@ class CartEntry extends React.Component {
     if (token) {
       window.location.href = `${BASE_PAGE_DIR}/carts/scan`
     } else {
-      getUserInfoFromAppWithTimeout()
+      getUserInfoFromApp()
         .then(() => {
           window.location.href = `${BASE_PAGE_DIR}/carts/scan`
         })
