@@ -17,10 +17,15 @@ import uaParser from 'uaParser.js'
 function checkStatus(response) {
   if (response.status == 200 ) {
     return response
-  } else {
-    var error = new Error(response.statusText)
+  } else if (response.status == 502){
+    alert('断网了')
+    let error = new Error(response.statusText)
     error.response = response
-    alert('服务器开发失职啊！')
+    throw error
+  } else {
+    alert('系统错误')
+    let error = new Error(response.statusText)
+    error.response = response
     throw error
   }
 }

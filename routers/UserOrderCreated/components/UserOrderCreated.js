@@ -299,6 +299,7 @@ class UserOrderCreated extends React.Component {
           </div>
         </div>
         <Selection
+          title="我的优惠"
           isHidden={this.state.isHiddenSelection}
           selectedIndex={this.state.couponSelectedIndex}
           source={this.state.coupon.map((item, index) => {

@@ -48,7 +48,12 @@ const rootRoute = {
       require('./Collections'),
       require('./404')
       ]
-  } ]
+  } ],
+  onLeave: function(params, replace) {
+  },
+  onEnter: function(params, replace) {
+  
+  }
 }
 
 render(

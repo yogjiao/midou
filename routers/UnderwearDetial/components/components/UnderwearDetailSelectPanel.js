@@ -108,7 +108,7 @@ class UnderwearDetailSelectPanel extends React.Component {
               <dt>
                 <i className="iconfont icon-triangle-left-top" />
                 <span className="label-name">请选择盒子服务</span>
-                <Link to={`${BASE_PAGE_DIR}/box-service`} className="what-is-box">什么是盒子服务？</Link>
+                <a href={`${BASE_PAGE_DIR}/box-service`} className="what-is-box">什么是盒子服务？</a>
               </dt>
               {
                  this.props.boxes.map((item, index) => {

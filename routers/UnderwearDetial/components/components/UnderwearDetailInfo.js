@@ -19,7 +19,7 @@ class UnderweardetailInfo extends React.Component {
           <div className="detail-item-wrap">
             <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />盒子服务</h6>
             <div className="detail-content box-service-info">
-                <Link className="img-wrap" to={`${BASE_PAGE_DIR}/box-service`}><img src="/app-static/img/box-detail.png" /></Link>
+                <a className="img-wrap" href={`${BASE_PAGE_DIR}/box-service`}><img src="/app-static/img/box-detail.png" /></a>
                 {/*
                   <h5>担心内衣不合身？</h5>
                   <h6>打开盒子，把试衣间带回家</h6>
@@ -48,11 +48,11 @@ class UnderweardetailInfo extends React.Component {
                     return (
                       <div className="recommend-wrap" key={index}>
                         <div className="detail-content">
-                          <Link to={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
+                          <a href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                             <div className="img-wrap"><img src={item.thumb_img} /></div>
                             <div className="pro-name">{item.name}</div>
                             <div className="pro-price">&yen; {item.price}</div>
-                          </Link>
+                          </a>
                         </div>
                       </div>
                     )
