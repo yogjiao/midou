@@ -36,7 +36,7 @@ rd.eachSync('dist/js', function (f, s) {
 });
 
 
-let content = fs.readFileSync('index.html', {encoding: 'utf8'})
+let content = fs.readFileSync('index.template.html', {encoding: 'utf8'})
 
 content = util.format(content, vendors, main)
 
