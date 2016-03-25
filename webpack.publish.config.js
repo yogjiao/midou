@@ -100,6 +100,7 @@ var config = {
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
       new webpack.DefinePlugin({
+        __DEBUG__: false,
         __VERSION__: JSON.stringify(packages.version)
       }),
       new webpack.optimize.DedupePlugin(),

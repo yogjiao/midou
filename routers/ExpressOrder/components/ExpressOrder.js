@@ -13,6 +13,7 @@ import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
+import {backToNativePage} from 'webviewInterface.js'
 
 let update = require('react-addons-update')
 
@@ -41,6 +42,10 @@ class ExpressOrder extends React.Component {
     this.setState({remark: event.target.value.substr(0, 200)});
   };
   backHandler = () => {
+    backToNativePage()
+      .then((data)=>{
+
+      })
     this.props.history.goBack()
   };
   saveHanler = () => {

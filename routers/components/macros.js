@@ -161,7 +161,8 @@ export let CHEST_FEATRUES_7 = [
 ]
 
 /********************************url**********************************/
-export let YUN_DA = 'http://m.kuaidi100.com/index_all.html?type=yunda&'
+export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
+
 export let BASE_PAGE_DIR = '/app-page/' + __VERSION__;
 
 export let BASE_STATIC_DIR = '/app-static'

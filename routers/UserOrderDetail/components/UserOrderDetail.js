@@ -12,7 +12,7 @@ import {
   FETCH_ORDER,
   FETCH_SUCCESS,
   PAY_WAY,
-  YUN_DA,
+  EXPRESS,
   PUT_TO_ORDER
 } from 'macros.js'
 import orderState from 'orderState.js'
@@ -124,7 +124,7 @@ class UserOrderDetail extends React.Component {
       stack = (
         <div className="flow-wrap">
           <div className="justify-wrap">
-            <a href={`${YUN_DA}postid=${this.state.order[0].waybill_number}`}>查看物流</a>
+            <a href={`${EXPRESS}?type=${this.state.order[0].express_company_id}&postid=${this.state.order[0].waybill_number}`}>查看物流</a>
           </div>
         </div>
       )

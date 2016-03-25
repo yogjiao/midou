@@ -15,9 +15,9 @@ let vendors, main;
 let vendorsHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/vendors.js')).digest('hex');
 // let mainHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/main.js')).digest('hex');
 
-vendors = 'dist/js/'+ vendorsHash +'.vendors.js'
+vendors = vendorsHash +'.vendors.js'
 
-fs.renameSync('dist/js/vendors.js', vendors)
+fs.renameSync('dist/js/vendors.js',  'dist/js/'+ vendors)
 
 
 //let venderParttern = /([\w.]+.vendors.js)$/
