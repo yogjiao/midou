@@ -54,13 +54,30 @@ class Step extends React.Component {
       recommend_bottom_bust: '',
       recommend_cup: '',
       selectedData: {
-          "age_group": {selectedIndex: -1, text: '选择年龄',  featureSource: ASSISTANT_FEATRUES_AGE},
-
-          "bottom_bust": {selectedIndex: -1, text: '选择低围', featureSource: ASSISTANT_FEATRUES_BASE_SIZE},
-          "cup": {selectedIndex: -1, text: '选择罩杯', featureSource: ASSISTANT_FEATRUES_BRA_SIZE},
-
-          "sleepwear_size": {selectedIndex: -1, text: '选择睡衣尺码', featureSource: ASSISTANT_FEATRUES_SIZE},
-
+          "age_group": {
+            selectedIndex: -1,
+            defaultText: '选择年龄',
+            text: '',
+            featureSource: ASSISTANT_FEATRUES_AGE
+          },
+          "bottom_bust": {
+            selectedIndex: -1,
+            defaultText: '选择低围',
+            text: '',
+            featureSource: ASSISTANT_FEATRUES_BASE_SIZE
+          },
+          "cup": {
+            selectedIndex: -1,
+            defaultText: '选择罩杯',
+            text: '',
+            featureSource: ASSISTANT_FEATRUES_BRA_SIZE
+          },
+          "sleepwear_size": {
+            selectedIndex: -1,
+            defaultText: '选择睡衣尺码',
+            text: '',
+            featureSource: ASSISTANT_FEATRUES_SIZE
+          },
           "look_gather": {
               selectedIndex: 0,
               value: 1,
@@ -112,9 +129,18 @@ class Step extends React.Component {
             imgs: ['feature-7-1.png', 'feature-7-2.png', 'feature-7-3.png']
           },
 
-          "upper_bust": {selectedIndex: -1, text:'选择上胸围', tips: '仔细观察你的胸部，他们是'},
-          "under_bust": {selectedIndex: -1,  text:'选择下胸围',   tips: '仔细观察你的胸部，他们是'},
-
+          "upper_bust": {
+            selectedIndex: -1,
+            defaultText: '选择上胸围',
+            text:'',
+            tips: '仔细观察你的胸部，他们是'
+          },
+          "under_bust": {
+            selectedIndex: -1,
+            defaultText: '选择下胸围',
+            text:'',
+            tips: '仔细观察你的胸部，他们是'
+          }
       }
     }
 
@@ -236,164 +262,167 @@ class Step extends React.Component {
   };
   render() {
     let {stepId} = this.props.params
-    let nextStep = 1 * stepId + 1
-    let selectedIndex, featureSource, selection
-    let content
-    switch (stepId) {
-      case '1':
-        content = (<Age source={this.state.selectedData.age_group}/>) //age_group
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.age_group.value
-          if (!is) {
-            this.promptMsg = '请选择年龄'
-          }
-          return is
-        };
-        break;
-      case '2':
-        content = (<Bra source={this.state.selectedData.bottom_bust} source_1={this.state.selectedData.cup}/>)
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.bottom_bust.value
-          let is_1 = !!this.state.selectedData.cup.value
-          if (!is) {
-            this.promptMsg = '请选择底围'
-          } else if (!is_1) {
-            this.promptMsg = '请选择罩杯'
-          }
-          return is && is_1
-        };
-        break;
-      case '3':
-        content = (<Nighty source={this.state.selectedData.sleepwear_size}/>)
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.sleepwear_size.value
-          if (!is) {
-            this.promptMsg = '请选择睡衣尺码'
-          }
-          return is
-        };
-        break;
-      case '4':
-        this.state.featureName = 'look_gather'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.look_gather.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '5':
-        this.state.featureName = 'look_stand'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.look_stand.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '6':
-        this.state.featureName = 'look_chassis'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.look_chassis.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '7':
-        this.state.featureName = 'look_accessory_breast'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.look_accessory_breast.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '8':
-        this.state.featureName = 'thickness'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.thickness.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '9':
-        this.state.featureName = 'underwear_style'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.underwear_style.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '10':
-        this.state.featureName = 'ordinary_style'
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.ordinary_style.value
-          if (!is) {
-            this.promptMsg = '请选择您的胸部特征'
-          }
-          return is
-        };
-        break;
-      case '11':
-        this.state.selectedData['upper_bust'].featureSource = this.makeSizeItem(61, 120, 0.5)
-        content = (<UpperBust source={this.state.selectedData.upper_bust}/>) //age_group
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.upper_bust.value
-          if (!is) {
-            this.promptMsg = '请选择您的上胸围'
-          }
-          return is
-        };
-        break;
-      case '12':
-        let upper
-        try {
-          upper = (this.state.selectedData['upper_bust'].value - 0.5) || 90
-        } catch (e) {
-          upper = 90
-        }
-        this.state.featureName = 'under_bust'
-        this.state.selectedData['under_bust'].featureSource = this.makeSizeItem(60, upper, 0.5)
-        content = (<UnderBust source={this.state.selectedData.under_bust}/>) //age_group
-        this.isSelectedValue = () => {
-          let is = !!this.state.selectedData.under_bust.value
-          if (!is) {
-            this.promptMsg = '请选择您的下胸围'
-          }
-          return is
-        };
-        break;
+   let nextStep = 1 * stepId + 1
+   let selectedIndex, featureSource, selection, configData
+   let content
+   switch (stepId) {
+     case '1':
+       content = (<Age source={this.state.selectedData.age_group}/>) //age_group
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.age_group.value
+         if (!is) {
+           this.promptMsg = '请选择年龄'
+         }
+         return is
+       };
+       break;
+     case '2':
+       content = (<Bra source={this.state.selectedData.bottom_bust} source_1={this.state.selectedData.cup}/>)
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.bottom_bust.value
+         let is_1 = !!this.state.selectedData.cup.value
+         if (!is) {
+           this.promptMsg = '请选择底围'
+         } else if (!is_1) {
+           this.promptMsg = '请选择罩杯'
+         }
+         return is && is_1
+       };
+       break;
+     case '3':
+       content = (<Nighty source={this.state.selectedData.sleepwear_size}/>)
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.sleepwear_size.value
+         if (!is) {
+           this.promptMsg = '请选择睡衣尺码'
+         }
+         return is
+       };
+       break;
+     case '4':
+       this.state.featureName = 'look_gather'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.look_gather.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '5':
+       this.state.featureName = 'look_stand'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.look_stand.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '6':
+       this.state.featureName = 'look_chassis'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.look_chassis.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '7':
+       this.state.featureName = 'look_accessory_breast'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.look_accessory_breast.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '8':
+       this.state.featureName = 'thickness'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.thickness.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '9':
+       this.state.featureName = 'underwear_style'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.underwear_style.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '10':
+       this.state.featureName = 'ordinary_style'
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.ordinary_style.value
+         if (!is) {
+           this.promptMsg = '请选择您的胸部特征'
+         }
+         return is
+       };
+       break;
+     case '11':
+       this.state.selectedData['upper_bust'].featureSource = this.makeSizeItem(61, 120, 0.5)
+       content = (<UpperBust source={this.state.selectedData.upper_bust}/>) //age_group
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.upper_bust.value
+         if (!is) {
+           this.promptMsg = '请选择您的上胸围'
+         }
+         return is
+       };
+       break;
+     case '12':
+       let upper
+       try {
+         upper = (this.state.selectedData['upper_bust'].value - 0.5) || 90
+       } catch (e) {
+         upper = 90
+       }
+       this.state.featureName = 'under_bust'
+       this.state.selectedData['under_bust'].featureSource = this.makeSizeItem(60, upper, 0.5)
+       content = (<UnderBust source={this.state.selectedData.under_bust}/>) //age_group
+       this.isSelectedValue = () => {
+         let is = !!this.state.selectedData.under_bust.value
+         if (!is) {
+           this.promptMsg = '请选择您的下胸围'
+         }
+         return is
+       };
+       break;
 
-    }
-    if (stepId > 3 && stepId <= this.state.stepNum - 2) {
-      let props = this.state.selectedData[this.state.featureName]
-      content = (
-        <Chest {...props}/>
-      )
-    } else {
-      try {
-        selectedIndex = this.state.selectedData[this.state.featureName].selectedIndex
-        featureSource = this.state.selectedData[this.state.featureName].featureSource
-      } catch (err) {
-        selectedIndex = -1
-        featureSource = []
-      }
+   }
+   if (stepId > 3 && stepId <= this.state.stepNum - 2) {
+     let props = this.state.selectedData[this.state.featureName]
+     content = (
+       <Chest {...props}/>
+     )
+   } else {
+     try {
+       configData = this.state.selectedData[this.state.featureName]
+       selectedIndex = configData.selectedIndex
+       featureSource = configData.featureSource
+     } catch (err) {
+       configData = {}
+       selectedIndex = -1
+       featureSource = []
+     }
       selection = (
         <Selection
-         itemType='1'
-         selectedIndex={selectedIndex}
-         isHidden={this.state.isHiddenSelection}
-         source={featureSource}
-         selectionHandler={this.selectionHandler}
+          title={configData.defaultText}
+          itemType='1'
+          selectedIndex={selectedIndex}
+          isHidden={this.state.isHiddenSelection}
+          source={featureSource}
+          selectionHandler={this.selectionHandler}
         />
       )
     }
