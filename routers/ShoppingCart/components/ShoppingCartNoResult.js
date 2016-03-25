@@ -12,7 +12,7 @@ class ShoppingCartNoResult extends React.Component {
         </div>
         <div className="cart-coming">
           <p>快选几件放进来吧！</p>
-          <span>Thank  you  for  shopping  here  and  have  a  <a href={`${BASE_PAGE_DIR}/underwears`}>nice</a>  day !</span>
+          <span>Thank  you  for  shopping  here  and  have  a  nice  day !</span>
 
         </div>
       </div>

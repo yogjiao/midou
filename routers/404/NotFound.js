@@ -14,7 +14,7 @@ class NotFound extends React.Component {
 
         <div className="home-coming">
           <p>哎呀，您访问的页面不存在！</p>
-          <span>Return  to  the  <a href={`${BASE_PAGE_DIR}/scene/0`}>homepage</a>.</span>
+          <span>Return  to  the homepage.</span>
         </div>
         <div className="nx-wrap"><a href={`${BASE_PAGE_DIR}/scene/0`}><img src={`${BASE_STATIC_DIR}/img/neixin.png`} /></a></div>
       </div>
