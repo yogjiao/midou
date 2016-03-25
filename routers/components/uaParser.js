@@ -7,9 +7,20 @@ parser.isWeixin = () => {
   return /MicroMessenger/.test(window.navigator.userAgent || '')
 }
 
+let appParttern = /neixin\/(\d+\.\d+(?:\.\d+)?)/i
+
 parser.isApp = () => {
-  return /neixin\/\d+\.\d+(\.\d+)?/.test(window.navigator.userAgent || '')
+  return appParttern.test(window.navigator.userAgent || '')
 }
 
+parser.getAppVerison = () => {
+  let version
+  try {
+    version = window.navigator.userAgent.match(appParttern)[1]
+  } catch (e) {
+    version = 0
+  }
+  return version
+}
 
 export default parser

@@ -98,7 +98,7 @@ let fetchMock = (url, options = {}) => {
             })
 };
 
-if (DEBUG) {
+if (__DEBUG__) {
  fetchAuth = fetchMock
 }
 // if (uaParser.getOS().name != 'iOS') {

@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
-
+var packages = require(path.resolve(__dirname, 'package.json'))
 
 var node_modules = path.resolve(__dirname, 'node_modules');
 
@@ -93,12 +93,10 @@ var config = {
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
       new webpack.DefinePlugin({
-        DEBUG: true
+        __DEBUG__: true,
+        __VERSION__:  JSON.stringify(packages.version)
       }),
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-      }),
       new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js'),
 
       //new ExtractTextPlugin('styles.css')

@@ -20,7 +20,6 @@ fastclick(document.body);
 import '../less/index.less'
 import App from './App/App.js'
 
-
 const rootRoute = {
   component: App,
   childRoutes: [ {//createElement
@@ -52,7 +51,7 @@ const rootRoute = {
   onLeave: function(params, replace) {
   },
   onEnter: function(params, replace) {
-  
+
   }
 }
 

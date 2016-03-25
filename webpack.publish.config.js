@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
 
-
+var packages = require(path.resolve(__dirname, 'package.json'))
 var node_modules = path.resolve(__dirname, 'node_modules');
 
 var pathToReact = path.resolve(node_modules, 'react/dist/react.min.js');
@@ -53,7 +53,7 @@ var config = {
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
         path: path.resolve(__dirname, 'dist/js'),
-        filename: '[name].js',
+        filename: '[hash].[name].js',
         chunkFilename: '[chunkhash].chunk.js',
         publicPath: "/app-static/js/"
     },
@@ -99,11 +99,11 @@ var config = {
       //    Promise: 'imports?this=>global!es6-promise',
       //    fetch: 'imports?this=>global!whatwg-fetch',
       // }),
+      new webpack.DefinePlugin({
+        __VERSION__: JSON.stringify(packages.version)
+      }),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-      }),
       new webpack.optimize.CommonsChunkPlugin("vendors", 'vendors.js'),
 
       //new ExtractTextPlugin('styles.css')

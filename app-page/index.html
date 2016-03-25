@@ -9,7 +9,7 @@
   <script type="text/javascript">
       !function(a, b, c) {
         function q() {
-            var d = Math.max((o ? e[h]().width : f.innerWidth) / (a / b), c);
+            var d = Math.min(Math.max((o ? e[h]().width : f.innerWidth) / (a / b), c), 68);// 68 * 0.3 = 20 font-size = [12, 20]
             d != p && (k.innerHTML = "html{font-size:" + d + "px!important;" + n + "}", p = d)
         }
         function r() {
@@ -40,6 +40,6 @@
 
   </div>
   <script src="/dist/vendors.js"></script>
-  <script src="/dist/main.js?v=123132"></script>
+  <script src="/dist/main.js"></script>
 </body>
 </html>

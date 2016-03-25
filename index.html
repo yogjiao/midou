@@ -6,7 +6,7 @@
   <script type="text/javascript">
       !function(a, b, c) {
         function q() {
-            var d = Math.max((o ? e[h]().width : f.innerWidth) / (a / b), c);
+            var d = Math.min(Math.max((o ? e[h]().width : f.innerWidth) / (a / b), c), 68);// 68 * 0.3 = 20
             d != p && (k.innerHTML = "html{font-size:" + d + "px!important;" + n + "}", p = d)
         }
         function r() {
@@ -36,6 +36,6 @@
 </head>
 <body>
   <div id="app-container"></div>
-  <script src="/app-static/js/vendors.js?hash=%s"></script>
-  <script src="/app-static/js/main.js?hash=%s"></script>
+  <script src="/app-static/js/%s"></script>
+  <script src="/app-static/js/%s"></script>
 </body>
