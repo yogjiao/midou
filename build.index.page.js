@@ -8,10 +8,17 @@ const packages = require(path.resolve(__dirname, 'package.json'))
 console.log('dist/index.html building')
 
 
- let vendorsHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/vendors.js')).digest('hex');
-// let mainHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/main.js')).digest('hex');
 
 let vendors, main;
+
+
+let vendorsHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/vendors.js')).digest('hex');
+// let mainHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/main.js')).digest('hex');
+
+vendors = 'dist/js/'+ vendorsHash +'.vendors.js'
+
+fs.renameSync('dist/js/vendors.js', vendors)
+
 
 //let venderParttern = /([\w.]+.vendors.js)$/
 let mainParttern = /([\w.]+.main.js)$/
@@ -31,7 +38,7 @@ rd.eachSync('dist/js', function (f, s) {
 
 let content = fs.readFileSync('index.html', {encoding: 'utf8'})
 
-content = util.format(content, vendors + '.vendors.js', main)
+content = util.format(content, vendors, main)
 
 // const exec = require('child_process').exec;
 // const child = exec('mkdir dist/1.1.0',
