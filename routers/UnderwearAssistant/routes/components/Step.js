@@ -51,33 +51,16 @@ class Step extends React.Component {
       featureName: '',
       // featureSource: [],
       // selectedIndex: -1,
-      recommend_bottom_bust: '-',
-      recommend_cup: '-',
+      recommend_bottom_bust: '',
+      recommend_cup: '',
       selectedData: {
-          "age_group": {
-            selectedIndex: -1,
-            defaultText: '选择年龄',
-            text: '',
-            featureSource: ASSISTANT_FEATRUES_AGE
-          },
-          "bottom_bust": {
-            selectedIndex: -1,
-            defaultText: '选择低围',
-            text: '',
-            featureSource: ASSISTANT_FEATRUES_BASE_SIZE
-          },
-          "cup": {
-            selectedIndex: -1,
-            defaultText: '选择罩杯',
-            text: '',
-            featureSource: ASSISTANT_FEATRUES_BRA_SIZE
-          },
-          "sleepwear_size": {
-            selectedIndex: -1,
-            defaultText: '选择睡衣尺码',
-            text: '',
-            featureSource: ASSISTANT_FEATRUES_SIZE
-          },
+          "age_group": {selectedIndex: -1, text: '选择年龄',  featureSource: ASSISTANT_FEATRUES_AGE},
+
+          "bottom_bust": {selectedIndex: -1, text: '选择低围', featureSource: ASSISTANT_FEATRUES_BASE_SIZE},
+          "cup": {selectedIndex: -1, text: '选择罩杯', featureSource: ASSISTANT_FEATRUES_BRA_SIZE},
+
+          "sleepwear_size": {selectedIndex: -1, text: '选择睡衣尺码', featureSource: ASSISTANT_FEATRUES_SIZE},
+
           "look_gather": {
               selectedIndex: 0,
               value: 1,
@@ -129,18 +112,8 @@ class Step extends React.Component {
             imgs: ['feature-7-1.png', 'feature-7-2.png', 'feature-7-3.png']
           },
 
-          "upper_bust": {
-            selectedIndex: -1,
-            defaultText: '选择上胸围',
-            text:'',
-            tips: '仔细观察你的胸部，他们是'
-          },
-          "under_bust": {
-            selectedIndex: -1,
-            defaultText: '选择下胸围',
-            text:'',
-            tips: '仔细观察你的胸部，他们是'
-          },
+          "upper_bust": {selectedIndex: -1, text:'选择上胸围', tips: '仔细观察你的胸部，他们是'},
+          "under_bust": {selectedIndex: -1,  text:'选择下胸围',   tips: '仔细观察你的胸部，他们是'},
 
       }
     }
@@ -240,7 +213,7 @@ class Step extends React.Component {
     nextState && this.setState(nextState)
   };
   backHandler = () => {
-    if (this.props.params.stepId == '1' && ua.isApp) {
+    if (this.props.params.stepId == '1' && ua.isApp()) {
       backToNativePage()
         .then((data) => {
       })
@@ -264,7 +237,7 @@ class Step extends React.Component {
   render() {
     let {stepId} = this.props.params
     let nextStep = 1 * stepId + 1
-    let selectedIndex, featureSource, selection, configData
+    let selectedIndex, featureSource, selection
     let content
     switch (stepId) {
       case '1':
@@ -408,17 +381,14 @@ class Step extends React.Component {
       )
     } else {
       try {
-        configData = this.state.selectedData[this.state.featureName]
-        selectedIndex = configData.selectedIndex
-        featureSource = configData.featureSource
+        selectedIndex = this.state.selectedData[this.state.featureName].selectedIndex
+        featureSource = this.state.selectedData[this.state.featureName].featureSource
       } catch (err) {
-        configData = {}
         selectedIndex = -1
         featureSource = []
       }
       selection = (
         <Selection
-         title={configData.defaultText}
          itemType='1'
          selectedIndex={selectedIndex}
          isHidden={this.state.isHiddenSelection}
@@ -440,11 +410,9 @@ class Step extends React.Component {
           (
             <div className="step-container" onClick={this.thisHandler}>
               {
-                this.props.params.stepId == 1 || ua.isWeixin?
-                '':
-                (
-                  <div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>
-                )
+                ua.isApp() || this.props.params.stepId != '1'?
+                (<div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>):
+                ''
               }
               <div className="step-index arial">{`${stepId}/${this.state.stepNum}`}</div>
               <div className="step-wrap">
