@@ -13,12 +13,12 @@ let vendors, main;
 
 
 let vendorsHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/vendors.js')).digest('hex');
-// let mainHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/main.js')).digest('hex');
+let mainHash = crypto.createHash('sha256').update(fs.readFileSync('dist/js/main.js')).digest('hex');
 
 vendors = vendorsHash +'.vendors.js'
-
+main = mainHash +'.main.js'
 fs.renameSync('dist/js/vendors.js',  'dist/js/'+ vendors)
-
+fs.renameSync('dist/js/main.js',  'dist/js/'+ main)
 
 //let venderParttern = /([\w.]+.vendors.js)$/
 let mainParttern = /([\w.]+.main.js)$/

@@ -53,7 +53,7 @@ var config = {
     },//[ path.resolve(__dirname, 'app.js')],//'webpack/hot/dev-server',
     output: {
         path: path.resolve(__dirname, 'dist/js'),
-        filename: '[hash].[name].js',
+        filename: '[name].js',
         chunkFilename: '[chunkhash].chunk.js',
         publicPath: "/app-static/js/"
     },
