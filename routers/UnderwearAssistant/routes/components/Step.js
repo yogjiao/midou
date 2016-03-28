@@ -202,7 +202,7 @@ class Step extends React.Component {
 
   postAssistentData =  () => {
     let fetchMethod = ua.isWeixin? fetchable : fetchAuth
-    let url = ua.isWeixin? PUT_WEIXIN_ASSISTANT_INFO : PUT_ASSISTANT_INFO
+    let url = ua.isApp()? PUT_ASSISTANT_INFO : PUT_WEIXIN_ASSISTANT_INFO
 
     this.setState({isHiddenPageSpin: false})
     let data = {}
