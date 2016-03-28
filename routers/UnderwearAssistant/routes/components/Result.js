@@ -11,9 +11,10 @@ class Result extends React.Component {
     backToHomeNativePage();
   };
   render() {
-    let className = ua.isWeixin()?
-      'assistant-result-container assistant-result-container-weixin' :
-      'assistant-result-container'
+    let className = ua.isApp()?
+      'assistant-result-container':
+      'assistant-result-container assistant-result-container-weixin'
+
     let img = `url(${BASE_STATIC_DIR}/img/as-radius.png)`
     return (
       <div className={className}>
