@@ -12,7 +12,7 @@ import {
   BASE_PAGE_DIR,
   BASE_STATIC_DIR,
   PUT_ASSISTANT_INFO,
-  PUT_WEIXIN_ASSISTANT_INFO,
+  PUT_NO_AUTH_ASSISTANT_INFO,
   FETCH_SUCCESS,
 
   ASSISTANT_FEATRUES_AGE,
@@ -201,8 +201,8 @@ class Step extends React.Component {
   };
 
   postAssistentData =  () => {
-    let fetchMethod = ua.isWeixin? fetchable : fetchAuth
-    let url = ua.isApp()? PUT_ASSISTANT_INFO : PUT_WEIXIN_ASSISTANT_INFO
+    let fetchMethod = ua.isApp()? fetchAuth : fetchable
+    let url = ua.isApp()? PUT_ASSISTANT_INFO : PUT_NO_AUTH_ASSISTANT_INFO
 
     this.setState({isHiddenPageSpin: false})
     let data = {}

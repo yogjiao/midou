@@ -219,4 +219,4 @@ export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
 
 export let PUT_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant'
 
-export let PUT_WEIXIN_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant_weixin'
+export let PUT_NO_AUTH_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant_weixin'
