@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, browserHistory } from 'react-router'
-import {BASE_PAGE_DIR} from 'macros.js'
+import {BASE_ROUTER_DIR} from 'macros.js'
 
 //React.initializeTouchEvents(true);
 //import ocBridge from './components/WebViewJavascriptBridge.js'
@@ -23,7 +23,7 @@ import App from './App/App.js'
 const rootRoute = {
   component: App,
   childRoutes: [ {//createElement
-    path: `${BASE_PAGE_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
+    path: `${BASE_ROUTER_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
     //indexRoute: { component: Home },//require('./Home/Home.js')
