@@ -227,7 +227,7 @@ class Underwears extends React.Component {
         tags = 0
       }
 
-      let url  = `${BASE_PAGE_DIR}/underwears/${size}/${this.state.category}/${tags}`
+      let url  = `${BASE_PAGE_DIR}/search/${size}/${this.state.category}/${tags}`
       this.props.history.push(url)
     }
     else if (target = getParentByClass(e.target, 'btn-close')) {

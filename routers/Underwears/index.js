@@ -6,7 +6,7 @@ import {BASE_PAGE_DIR} from 'macros.js'
 <Route path="/files/*.*">           // 匹配 /files/hello.jpg 和 /files/path/to/hello.jpg
 */
 module.exports = {
-  path: 'underwears(/:size/:category/:tags)',
+  path: 'search(/:size/:category/:tags)',
   // path: /.*/,
   //indexRoute: { onEnter: (nextState, replace) => replace(`${BASE_PAGE_DIR}/underwears/0/0/0`) },
   getComponent(location, cb) {

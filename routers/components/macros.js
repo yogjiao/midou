@@ -82,9 +82,7 @@ export let UNDERWEAR_TAGS = [
     {value: "4", text:  "美背"},
     {value: "5", text:  "薄杯"},
     {value: "6", text:  "运动"},
-    {value: "7", text:  "无钢圈"},
-    {value: "8", text:  "情趣"},
-    {value: "9", text:  "底裤"}
+    {value: "7", text:  "无钢圈"}
 ]
 
 
@@ -163,7 +161,7 @@ export let CHEST_FEATRUES_7 = [
 /********************************url**********************************/
 export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
-export let BASE_PAGE_DIR = '/app-page/' + __VERSION__;
+export let BASE_PAGE_DIR = '/app-page' //'/app-page/' + __VERSION__;
 export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
 //export let BASE_PAGE_DIR = '/app-page/*.*.*/';
 
