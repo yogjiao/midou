@@ -30,6 +30,7 @@ const rootRoute = {
     childRoutes: [
       require('./Home'),
       require('./Underwears'),
+      require('./UnderwearsIndex'),
       require('./UnderwearDetial'),
       require('./ShoppingCart'),
       require('./UserOrderCreated'),
