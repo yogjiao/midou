@@ -32,7 +32,7 @@ class UnderwearsIndex extends React.Component {
       <div className="uw-index-container">
         <PageHeader headerName={this.state.headerName}>
           <div></div>
-          <div className="menu-search" >所有单品</div>
+          <a className="menu-search" href={`${BASE_PAGE_DIR}/search`}>所有单品</a>
         </PageHeader>
         <div className="swiper-container">
           <div className="swiper-wrapper">
@@ -64,7 +64,7 @@ class UnderwearsIndex extends React.Component {
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>情趣</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/0/0/0`}>
+          <a href={`${BASE_PAGE_DIR}/search/0/0/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>全部单品</h6>
           </a>
