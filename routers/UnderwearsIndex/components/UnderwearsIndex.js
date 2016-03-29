@@ -17,24 +17,7 @@ class UnderwearsIndex extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      headerName: '所有单品',
-      pageIndex: 0,
-      pageSize: 6,
-      isFetching: false,
-      isHaveGoods: true,
-      isHiddenPageSpin: false,
-      isHiddenScrollingSpin: true,
-      isHiddenSearchPanel: true,
-      isNull: false,
-
-      sizeIndex: 0,
-      braSizeIndex: 0, // bra
-      baseSizeIndex: 0, // base
-      category: 0, //0: all, 1：文胸，2:底裤，3:情趣
-      tagsIndex: [0],//new Array(UNDERWEAR_TAGS.length), // tags
-      prolist: [
-        //  {id: "1", name: "写作欲侧漏时 偏偏偶遇阅读三行不能", href: "http://baidu.com", img: "/media/test.png"}
-        ]
+      headerName: '所有单品'
     }
     //this.state.tagsIndex[0] = 0
   }
@@ -67,23 +50,23 @@ class UnderwearsIndex extends React.Component {
           </a>
           <a href={`${BASE_PAGE_DIR}/underwears/0/2/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
-            <h6>内衣</h6>
+            <h6>底裤</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/`}>
+          <a href={`${BASE_PAGE_DIR}/underwears/0-0/1/4`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
-            <h6>内衣</h6>
+            <h6>美背</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/underwears/0-0/1/6`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
-            <h6>内衣</h6>
+            <h6>运动</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/underwears/0/3/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
-            <h6>内衣</h6>
+            <h6>情趣</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/underwears/0/0/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
-            <h6>内衣</h6>
+            <h6>全部单品</h6>
           </a>
         </div>
       </div>
