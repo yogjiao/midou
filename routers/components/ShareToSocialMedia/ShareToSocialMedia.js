@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import {BASE_STATIC_DIR} from 'macros.js'
+import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
+import Prompt from 'Prompt/Prompt.js'
 
 import './ShareToSocialMedia.less'
 
@@ -13,11 +16,56 @@ class ShareToSocialMedia extends React.Component {
           "imgUrl": "http://www.baidu.com"
 
   */
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isHidden: true,
+      promptMsg: ''
+    };
+
+  };
+  show = () => {
+    this.setState({isHidden: false})
+  };
+  hide = () => {
+    this.setState({isHidden: true})
+  };
+  thishandler = () => {
+    let target
+    let nextState;
+    if (target = getParentByClass(e.target, 'media-item')) {
+      nextState = {}
+      let type = target.getAttribute('data-type')
+      let data = {}
+      data.type = type
+      data.url = this.props.url
+      data.title = this.props.title
+      data.description = this.props.description
+      data.imgUrl = this.props.imgUrl
+      shareToSocialCircle(data)
+        .then( (data) => {
+          if (data.result == '1') {
+            this.setState({promptMsg: '分享成功'})
+          } else {
+            this.setState({promptMsg: '分享失败'})
+          }
+        })
+        .then(()=>{
+          this.refs['prompt'].show()
+        })
+      nextState.isHiddenSharePanel = true
+    } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
+      nextState = {}
+      nextState.isHidden = true
+    }
+    nextState && this.setState(nextState)
+  };
   render() {
     let style = {display: 'block'}
-    if (this.props.isHidden) style.display = 'none'
+    if (this.state.isHidden) style.display = 'none'
     return (
-      <div className="share-social-container" style={style} onClick={this.shareHandler}>
+      <div className="share-social-container" style={style} onClick={this.thisHandler}>
         <div className="blur-overlay"></div>
         <div className="share-content">
           <h6>分享至：</h6>
@@ -41,6 +89,7 @@ class ShareToSocialMedia extends React.Component {
           </ul>
           <div className="cancel-shrare">取消</div>
         </div>
+        <Prompt msg={this.state.promptMsg}/>
       </div>
     )
   }
