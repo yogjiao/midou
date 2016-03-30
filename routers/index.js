@@ -29,6 +29,7 @@ const rootRoute = {
     //indexRoute: { component: Home },//require('./Home/Home.js')
     childRoutes: [
       require('./Home'),
+      require('./Collocation'),
       require('./Underwears'),
       require('./UnderwearsIndex'),
       require('./UnderwearDetial'),
