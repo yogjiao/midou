@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import {BASE_STATIC_DIR} from 'macros.js'
 import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
 import Prompt from 'Prompt/Prompt.js'
-
+import {getParentByClass} from 'util.js'
 import './ShareToSocialMedia.less'
 
 class ShareToSocialMedia extends React.Component {
@@ -31,7 +31,7 @@ class ShareToSocialMedia extends React.Component {
   hide = () => {
     this.setState({isHidden: true})
   };
-  thishandler = () => {
+  thisHandler = (e) => {
     let target
     let nextState;
     if (target = getParentByClass(e.target, 'media-item')) {
@@ -54,7 +54,7 @@ class ShareToSocialMedia extends React.Component {
         .then(()=>{
           this.refs['prompt'].show()
         })
-      nextState.isHiddenSharePanel = true
+      nextState.isHidden= true
     } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
       nextState = {}
       nextState.isHidden = true
@@ -94,5 +94,13 @@ class ShareToSocialMedia extends React.Component {
     )
   }
 }
+
+ShareToSocialMedia.propTypes = {
+  url: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  description: React.PropTypes.string.isRequired,
+  imgUrl: React.PropTypes.string.isRequired
+}
+
 
 export default ShareToSocialMedia
