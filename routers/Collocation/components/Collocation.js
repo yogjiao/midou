@@ -154,6 +154,7 @@ class Collocation extends React.Component {
           imgUrl={this.state.match.match_img}
         />
         <Prompt ref="prompt" msg={this.state.promptMsg}/>
+        <PageSpin isHidden={this.state.isHiddenPageSpin} />
       </div>
     )
   }
