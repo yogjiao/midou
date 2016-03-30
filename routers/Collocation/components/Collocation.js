@@ -7,13 +7,15 @@ import {
   BASE_PAGE_DIR,
   BASE_STATIC_DIR,
   FETCH_MATCH_GOODS,
+  PUT_COLLECTION,
   FETCH_SUCCESS
 } from 'macros.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {backToNativePage} from 'webviewInterface.js'
 import {getParentByClass} from 'util.js'
-// import fetch from '../../components/fetch.js'
+import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
+import Prompt from 'Prompt/Prompt.js'
 import Swiper from 'Swiper'
 
 import './Collocation.less'
@@ -24,7 +26,6 @@ class Collocation extends React.Component {
     this.state = {
       headerName: '',
       isHiddenPageSpin: false,
-      isHiddenSharePanel: true,
       match: {},
       goods: []
     }
@@ -37,24 +38,49 @@ class Collocation extends React.Component {
         if (data.rea == FETCH_SUCCESS) {
           data.isHiddenPageSpin = true
           this.setState(data, () => {
-            this.swiper.updateSlidesSize()
-            this.swiper.updatePagination()
+            this.swiper.update()
           })
         } else {
 
         }
 
       })
-      .catch(() => {
+      .catch((e) => {
         this.setState({isHiddenPageSpin: true})
+      })
+  };
+  /*
+  */
+  putCollectionData = (goodsId) => {
+    //promptMsg
+    let url = `${PUT_COLLECTION}/${goodsId}`
+    fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState({
+            promptMsg: '收藏成功'
+          })
+        }
+      })
+      .catch((e) => {
+        this.setState({
+          promptMsg: '收藏失败'
+        })
+      })
+      .then(() => {
+        this.refs['prompt'].show()
       })
   };
   thisHandler = (e) => {
     let target
     if (target = getParentByClass(e.target, 'icon-arrow-left')) {
       this.props.history.goBack()
+      backToNativePage()
     } else if (target = getParentByClass(e.target, 'icon-share')) {
-      nextState.isHiddenSharePanel = false
+      this.refs['share'].show()
+    } else if (target = getParentByClass(e.target, 'icon-collection')) {
+
+      this.putCollectionData(target.getAttribute('data-id'))
     }
   };
   formatTime = (seconds) => {
@@ -101,15 +127,15 @@ class Collocation extends React.Component {
                         return (
                           <div className="swiper-slide" key={index}>
                             <div className="mix-item-wrap">
-                              <div className="img-wrap">
+                              <a className="img-wrap" href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                                 <div style={{backgroundImage: `url(${item.thumb_img})`}}/>
-                              </div>
+                              </a>
                               <div className="mix-intro">
                                 <div className="mix-adjust">
                                   <p>{item.intro}</p>
                                 </div>
                               </div>
-                              <div className="iconfont icon-collection" />
+                              <div className="iconfont icon-collection" data-id={item.id}/>
                             </div>
                           </div>
                         )
@@ -121,9 +147,13 @@ class Collocation extends React.Component {
           </div>
         </div>
         <ShareToSocialMedia
-          isHidden={this.state.isHiddenSharePanel}
+          ref="share"
+          url={window.location.href}
+          title={this.state.match.match_title}
+          description={this.state.match.match_intro}
+          imgUrl={this.state.match.match_img}
         />
-        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+        <Prompt ref="prompt" msg={this.state.promptMsg}/>
       </div>
     )
   }
