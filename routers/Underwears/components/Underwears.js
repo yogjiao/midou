@@ -253,16 +253,12 @@ class Underwears extends React.Component {
   openFilterHanler = () => {
     this.setState({isHiddenSearchPanel: false})
   };
-  backHandler = () => {
-    if (this.props.route.path == 'collections') {
+  thisHandler = (e) => {
+    let target
+    if (target = getParentByClass(e.target, 'icon-arrow-left')) {
+      this.props.history.goBack()
       backToNativePage()
-        .then((data)=>{
-
-        })
-    } else {
-      this.props.history.goBack();
     }
-
   };
   componentWillMount = () => {
   };
@@ -279,9 +275,9 @@ class Underwears extends React.Component {
   };
   render() {
     return (
-      <div className="uw-list-container">
+      <div className="uw-list-container" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
-          <div></div>
+          <div className="iconfont icon-arrow-left"></div>
           <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
         </PageHeader>
         <div className="list-wrap">
