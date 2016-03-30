@@ -17,7 +17,7 @@ class UnderwearsIndex extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      headerName: '所有单品'
+      headerName: '单品'
     }
     //this.state.tagsIndex[0] = 0
   }
@@ -30,7 +30,7 @@ class UnderwearsIndex extends React.Component {
   render() {
     return (
       <div className="uw-index-container">
-        <PageHeader headerName={this.state.headerName}>
+        <PageHeader headerName={this.state.headerName} isHiddenBottomBorder={true}>
           <div></div>
           <a className="menu-search" href={`${BASE_PAGE_DIR}/search`}>所有单品</a>
         </PageHeader>
@@ -44,23 +44,23 @@ class UnderwearsIndex extends React.Component {
         </div>
         <h2>热门分类</h2>
         <div className="grid-container">
-          <a href={`${BASE_PAGE_DIR}/underwears/0-0/1/0`}>
+          <a href={`${BASE_PAGE_DIR}/search/0-0/1/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>内衣</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/0/2/0`}>
+          <a href={`${BASE_PAGE_DIR}/search/0/2/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>底裤</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/0-0/1/4`}>
+          <a href={`${BASE_PAGE_DIR}/search/0-0/1/4`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>美背</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/0-0/1/6`}>
+          <a href={`${BASE_PAGE_DIR}/search/0-0/1/6`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>运动</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/underwears/0/3/0`}>
+          <a href={`${BASE_PAGE_DIR}/search/0/3/0`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
             <h6>情趣</h6>
           </a>
