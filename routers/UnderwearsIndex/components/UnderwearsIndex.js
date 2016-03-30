@@ -45,27 +45,27 @@ class UnderwearsIndex extends React.Component {
         <h2>热门分类</h2>
         <div className="grid-container">
           <a href={`${BASE_PAGE_DIR}/search/0-0/1/0`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-1.png)`}} /></div>
             <h6>内衣</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0/2/0`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-2.png)`}} /></div>
             <h6>底裤</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0-0/1/4`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-3.png)`}} /></div>
             <h6>美背</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0-0/1/6`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-4.png)`}} /></div>
             <h6>运动</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0/3/0`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-5.png)`}} /></div>
             <h6>情趣</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0/0/0`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/test.png)`}} /></div>
+            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-6.png)`}} /></div>
             <h6>全部单品</h6>
           </a>
         </div>
