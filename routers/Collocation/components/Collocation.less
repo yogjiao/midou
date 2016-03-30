@@ -1,5 +1,23 @@
 .collocation-container{
   background-color: @background-color;
+  width: 100%;
+  height: 100%;
+  .collocation-wrap{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .overlayer{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.4);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
   .mix-cover{
     width: 100%;
     position: absolute;
@@ -63,11 +81,12 @@
   position: fixed;
   box-sizing: border-box;
   width: 100%;
-  background-color: rgba(0,0,0,.4);
+
   height: 90%;
   padding: 1rem 0;
 }
 .swiper-wrapper{
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
