@@ -8,7 +8,9 @@ import {
   BASE_STATIC_DIR,
   FETCH_MATCH_GOODS,
   PUT_COLLECTION,
-  FETCH_SUCCESS
+  FETCH_SUCCESS,
+  FETCH_COLLECTIONS_STATE,
+  DELETE_COLLECTION
 } from 'macros.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchable, fetchAuth} from 'fetch.js'
@@ -38,12 +40,24 @@ class Collocation extends React.Component {
         if (data.rea == FETCH_SUCCESS) {
           data.isHiddenPageSpin = true
           this.setState(data, () => {
-            this.swiper.update()
+            this.swiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                slidesPerView: 1,
+                paginationClickable: true,
+                spaceBetween: space,
+                width: window.innerWidth - space * 4
+            });
           })
         } else {
 
         }
-
+        return data.goods || [];
+      })
+      .then((goods) => {
+        let ids = goods.map((item) => {
+          return item.id
+        })
+        this.freshCollectionBtnState(ids)
       })
       .catch((e) => {
         this.setState({isHiddenPageSpin: true})
@@ -51,24 +65,55 @@ class Collocation extends React.Component {
   };
   /*
   */
-  putCollectionData = (goodsId) => {
+  putCollectionData = (goodsId, isCancel) => {
     //promptMsg
-    let url = `${PUT_COLLECTION}/${goodsId}`
+    let url
+    if(isCancel) {
+      url  = `${DELETE_COLLECTION}/${goodsId}`
+    } else {
+      url  = `${PUT_COLLECTION}/${goodsId}`
+    }
     fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
-            promptMsg: '收藏成功'
+            promptMsg: isCancel? '收藏已取消' : '收藏成功'
           })
         }
       })
       .catch((e) => {
         this.setState({
-          promptMsg: '收藏失败'
+          promptMsg: isCancel? '取消收藏失败' : '收藏失败'
         })
       })
       .then(() => {
         this.refs['prompt'].show()
+      })
+  };
+  /**
+   * @param ids {Array}
+   */
+  freshCollectionBtnState = (ids) => {
+    ids = ids.join()
+    let url = `${FETCH_COLLECTIONS_STATE}/${ids}`
+    return fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          this.state.goods.map((item, index) => {
+            let temp = data.collect.find((item_1, index_1) => {
+              return item.id == item_1.id
+            })
+            if(temp) {
+              item.isCollected = true
+            }
+            return item
+          })
+          this.setState({});
+        } else {
+
+        }
+      })
+      .catch((e) => {
       })
   };
   thisHandler = (e) => {
@@ -79,8 +124,8 @@ class Collocation extends React.Component {
     } else if (target = getParentByClass(e.target, 'icon-share')) {
       this.refs['share'].show()
     } else if (target = getParentByClass(e.target, 'icon-collection')) {
-
-      this.putCollectionData(target.getAttribute('data-id'))
+      let isCancel = target.getAttribute('data-is-collected') == 'true'? true : false
+      this.putCollectionData(target.getAttribute('data-id'), isCancel)
     }
   };
   formatTime = (seconds) => {
@@ -92,57 +137,58 @@ class Collocation extends React.Component {
   };
   componentDidMount = () => {
     this.fetchData()
-
-    this.swiper = new Swiper('.swiper-container', {
-        pagination: '.swiper-pagination',
-        slidesPerView: 1,
-        paginationClickable: true,
-        spaceBetween: space,
-        width: window.innerWidth - space * 4
-    });
   };
   render() {
     let h = window.innerHeight;
+    let style = {
+      backgroundImage: `url(${this.state.match.match_img})`,
+      height: h
+    }
     return (
         <div className="collocation-container" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <div className="iconfont icon-arrow-left"></div>
           <div className="iconfont icon-share"></div>
         </PageHeader>
-        <div className="collocation-wrap" style={{backgroundImage: `url(${this.state.match.match_img})`, height: h}}>
+        <div className="collocation-wrap" style={style}>
           <div className="overlayer">
             <div className="swiper-container">
-
-                <div className="swiper-wrapper">
-                    <div className="swiper-slide">
-                      <div className="mix-cover">
-                        <h6>{this.state.match.match_title}</h6>
-                        <div className="mix-intro">{this.state.match.match_intro}
-                        </div>
-                        <div className="mix-time">{this.formatTime(this.state.match.ts)}</div>
+              <div className="swiper-wrapper">
+                  <div className="swiper-slide">
+                    <div className="mix-cover">
+                      <h6>{this.state.match.match_title}</h6>
+                      <div className="mix-intro">{this.state.match.match_intro}
                       </div>
+                      <div className="mix-time">{this.formatTime(this.state.match.ts)}</div>
                     </div>
-                    {
-                      this.state.goods.map((item, index) => {
-                        return (
-                          <div className="swiper-slide" key={index}>
-                            <div className="mix-item-wrap">
-                              <a className="img-wrap" href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
-                                <div style={{backgroundImage: `url(${item.thumb_img})`}}/>
-                              </a>
-                              <div className="mix-intro">
-                                <div className="mix-adjust">
-                                  <p>{item.intro}</p>
-                                </div>
+                  </div>
+                  {
+                    this.state.goods.map((item, index) => {
+                      return (
+                        <div className="swiper-slide" key={index}>
+                          <div className="mix-item-wrap">
+                            <a className="img-wrap" href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
+                              <div style={{backgroundImage: `url(${item.thumb_img})`}}/>
+                            </a>
+                            <div className="mix-intro">
+                              <div className="mix-adjust">
+                                <p>{item.intro}</p>
                               </div>
-                              <div className="iconfont icon-collection" data-id={item.id}/>
                             </div>
+                            <div
+                              data-id={item.id}
+                              data-is-collected={item.isCollected}
+                              className={item.isCollected?
+                                'iconfont icon-collection on' :
+                                'iconfont icon-collection'}
+                            />
                           </div>
-                        )
-                      })
-                    }
-                </div>
-                <div className="swiper-pagination"></div>
+                        </div>
+                      )
+                    })
+                  }
+              </div>
+              <div className="swiper-pagination"></div>
             </div>
           </div>
         </div>

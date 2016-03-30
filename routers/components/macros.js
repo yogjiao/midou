@@ -179,6 +179,8 @@ export let FETCH_MATCH_GOODS = FETCH_BASE_URL + '/get_match_goods'
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
 export let FETCH_COLLECTIONS = FETCH_BASE_URL + '/get_collection_page'
+export let FETCH_COLLECTIONS_STATE = FETCH_BASE_URL + '/get_collection_state'
+export let DELETE_COLLECTION = FETCH_BASE_URL + '/delete_collection'
 export let PUT_COLLECTION = FETCH_BASE_URL + '/collect_goods'
 
 //fetch good's detail
