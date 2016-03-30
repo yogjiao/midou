@@ -24,7 +24,7 @@ import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 import CartEntry from 'CartEntry.js'
 
 class Underweardetail extends React.Component {
@@ -311,41 +311,11 @@ class Underweardetail extends React.Component {
   };
   thisHandler = (e) => {
     let target
-    let nextState = {}
     if (target = getParentByClass(e.target, 'push-to-collection')) {
       this.putCollectionData()
     } else if (target = getParentByClass(e.target, 'icon-share')) {
-      nextState.isHiddenSharePanel = false
-    } else if (target = getParentByClass(e.target, 'media-item')) {
-      // "type": "微博,QQ,朋友圈,微信朋友",
-      //         "url": "网址",
-      //         "title": "这是标题",
-      //         "description": "这是描述",
-      //         "imgUrl": "http://www.baidu.com"
-      let goods = this.state.goods
-      let type = target.getAttribute('data-type')
-      let data = {}
-      data.type = type
-      data.url = window.location.href
-      data.title = goods.name
-      data.description = goods.match_intro
-      data.imgUrl = goods.main_img
-      shareToSocialCircle(data)
-        .then( (data) => {
-          if (data.result == '1') {
-            this.setState({promptMsg: '分享成功'})
-          } else {
-            this.setState({promptMsg: '分享失败'})
-          }
-        })
-        .then(()=>{
-          this.refs['prompt'].show()
-        })
-      nextState.isHiddenSharePanel = true
-    } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
-      nextState.isHiddenSharePanel = true
+      this.refs['share'].show()
     }
-    nextState && this.setState(nextState)
   };
   /**
    * borwer back own step
@@ -421,7 +391,11 @@ class Underweardetail extends React.Component {
           selectHandler={this.selectHandler}
         />
         <ShareToSocialMedia
-          isHidden={this.state.isHiddenSharePanel}
+          ref="share"
+          url={window.location.href}
+          title={this.state.goods.name}
+          description={this.state.goods.match_intro}
+          imgUrl={this.state.goods.main_img}
         />
         <Prompt msg={this.state.promptMsg} ref='prompt'/>
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
