@@ -19,6 +19,8 @@ import {getParentByClass} from 'util.js'
 import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
 import Prompt from 'Prompt/Prompt.js'
 import Swiper from 'Swiper'
+import ua from 'uaParser.js'
+import errors from 'errors.js'
 
 import './Collocation.less'
 let space = 20;
@@ -49,7 +51,9 @@ class Collocation extends React.Component {
             });
           })
         } else {
-
+          this.setState({
+            promptMsg: errors[data.rea]
+          })
         }
         return data.goods || [];
       })
@@ -57,7 +61,9 @@ class Collocation extends React.Component {
         let ids = goods.map((item) => {
           return item.id
         })
-        this.freshCollectionBtnState(ids)
+        if(ua.isApp()){
+          this.freshCollectionBtnState(ids)
+        }
       })
       .catch((e) => {
         this.setState({isHiddenPageSpin: true})
@@ -79,14 +85,25 @@ class Collocation extends React.Component {
           this.setState({
             promptMsg: isCancel? '收藏已取消' : '收藏成功'
           })
+        } else {
+          this.setState({
+            promptMsg: errors[data.rea]
+          })
         }
+        return data.gid
       })
       .catch((e) => {
         this.setState({
           promptMsg: isCancel? '取消收藏失败' : '收藏失败'
         })
       })
-      .then(() => {
+      .then((gid) => {
+        this.state.goods.map((item, index) => {
+          if (item.id == gid) {
+            item.isCollected = isCancel? false : true
+          }
+        })
+        this.setState()
         this.refs['prompt'].show()
       })
   };
