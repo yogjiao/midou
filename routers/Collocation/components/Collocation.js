@@ -103,7 +103,7 @@ class Collocation extends React.Component {
             item.isCollected = isCancel? false : true
           }
         })
-        this.setState()
+        this.forceUpdate()
         this.refs['prompt'].show()
       })
   };
