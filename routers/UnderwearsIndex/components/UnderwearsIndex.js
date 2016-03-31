@@ -34,7 +34,7 @@ class UnderwearsIndex extends React.Component {
           <div></div>
           <a className="menu-search" href={`${BASE_PAGE_DIR}/search`}>所有单品</a>
         </PageHeader>
-        <div className="swiper-container">
+        <div className="swiper-container bg-neixin" >
           <div className="swiper-wrapper">
               <div className="swiper-slide">
                 <a className="img-wrap" href={`${BASE_PAGE_DIR}/box-service`} style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/underwears-banner-1.jpg)`}}></a>
