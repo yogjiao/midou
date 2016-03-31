@@ -14,6 +14,11 @@ class Prompt extends React.Component {
       panel.classList.remove('on')
     }, 2000)
   };
+  // componentWillReceiveProps = (nextProps) => {
+  //   if (nextProps.msg) {
+  //     this.show();
+  //   }
+  // };
   render() {
     return (
       <div className="prompt-container" ref="prompt-container">
@@ -23,6 +28,6 @@ class Prompt extends React.Component {
   }
 }
 Prompt.defaultProps = {
-  msg: '蜜豆欢迎您'
+  msg: 'welcome'
 }
 export default Prompt
