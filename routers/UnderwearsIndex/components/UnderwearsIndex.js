@@ -36,9 +36,9 @@ class UnderwearsIndex extends React.Component {
         </PageHeader>
         <div className="swiper-container">
           <div className="swiper-wrapper">
-              <div className="swiper-slide"> 1</div>
-              <div className="swiper-slide"> 2</div>
-              <div className="swiper-slide"> 3</div>
+              <div className="swiper-slide">
+                <a className="img-wrap" href={`${BASE_PAGE_DIR}/box-service`} style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/underwears-banner-1.jpg)`}}></a>
+              </div>
           </div>
           <div className="swiper-pagination"></div>
         </div>
