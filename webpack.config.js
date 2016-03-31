@@ -22,7 +22,7 @@ var config = {
     context: cwd,
     resolve: {
         root:[__dirname],
-        modulesDirectories: ["web_modules", "node_modules", "components"],
+        modulesDirectories: ["web_modules", "node_modules", "components", "less"],
         alias: {
           // 'react': pathToReact,
           // 'react-dom': pathToReactDom,
@@ -54,8 +54,8 @@ var config = {
         loaders: [
           // LESS
           {
-            test: /\.less$/,
-            loader: 'style!css!postcss!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +', paths: ["'+ path.resolve(__dirname, 'less') +'/"]}'
+            test: /\.less$/,//"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +',
+            loader: 'style!css!postcss!less?{paths: ["'+ path.resolve(__dirname, 'less') +'/"]}'
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,

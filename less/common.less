@@ -1,3 +1,4 @@
+@import "variables.less";
 .clearfix{
   zoom:1;
   &:before, &:after{ content:""; display:table; }
@@ -8,7 +9,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+.bg-neixin{
+  background-image: ~'url(@{base-static-dir}/neixin.png)';
+}
 .bg-color-page{
   background-color: @page-background-color;
 }
