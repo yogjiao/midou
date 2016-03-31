@@ -5,7 +5,7 @@ basePath: /app-page
 /underwears 产品首页
 /search/0-0/0/1,2,3  单品搜索
 /underwear/:productId 产品详情
-/carts/scan   查看购物车
+/carts   查看购物车
 /carts/edited  编辑购物车
 /order-created/:cartIds  创建订单
 /order/:orderId 查看订单详情
