@@ -23,6 +23,7 @@ import App from './App/App.js'
 const rootRoute = {
   component: App,
   childRoutes: [ {//createElement
+    //https://github.com/reactjs/react-router/blob/master/docs/guides/RouteMatching.md
     path: `${BASE_ROUTER_DIR}`,//`${BASE_PAGE_DIR}/scene/:sceneId`,
     //component: require('../routers/Home'),
     //component: require('./App/App.js'),
