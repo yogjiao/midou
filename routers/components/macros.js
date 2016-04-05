@@ -41,6 +41,7 @@ export let ROUTER_SHOPPING_CART_EDIT = 'edit'
 export let ROUTER_RECIEVER_INFO_ADD = 'add'
 export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
 export let RECEIVERS_EDIT = 'edit'
+export let EDIT = 'edit'
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 // export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 // export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']

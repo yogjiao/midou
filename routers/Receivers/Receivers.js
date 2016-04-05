@@ -13,6 +13,7 @@ import {
   FETCH_SUCCESS,
   BASE_PAGE_DIR,
   ROUTER_RECIEVER_INFO_ADD,
+  EDIT,
   RECEIVERS_EDIT} from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
@@ -134,7 +135,7 @@ class Receivers extends React.Component {
     } else if (target = getParentByClass(e.target, 'receivers-item')){
       if (!this.props.params.receiversModel){
         let receiver = target.getAttribute('data-source')
-        localStorage.setItem('receiver', receiver);
+        localStorage.setItem('receiver', receiver)
         this.props.history.goBack();
       }
     }

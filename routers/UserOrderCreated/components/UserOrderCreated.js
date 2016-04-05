@@ -240,22 +240,22 @@ class UserOrderCreated extends React.Component {
             {
               this.props.params.receiver.id?
               (
-                <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers`}>
+                <Link className="dd-wrap font-gray on" to={`${BASE_PAGE_DIR}/receivers`}>
                   <div>
                     <div className="receiver-info-wrap">{this.props.params.receiver.name}</div>
                     <div className="receiver-info-wrap">{this.props.params.receiver.phone}</div>
                     <div className="receiver-info-wrap">{this.props.params.receiver.address}</div>
                   </div>
                   <i className="iconfont icon-gt" />
-                </a>
+                </Link>
               ):
               (
-                <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers`}>
+                <Link className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers`}>
                   <div className="info-wrap">
                      添加收货人信息
                   </div>
                   <i className="iconfont icon-gt" />
-                </a>
+                </Link>
               )
             }
           </dd>
