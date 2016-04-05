@@ -55,7 +55,7 @@ var config = {
           // LESS
           {
             test: /\.less$/,//"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +',
-            loader: 'style!css!postcss!less?{paths: ["'+ path.resolve(__dirname, 'less') +'/"]}'
+            loader: 'style!css!postcss!less'
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,
