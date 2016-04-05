@@ -21,8 +21,8 @@ class Selection extends React.Component {
                   <div><i className="iconfont icon-right"></i></div>
                   <div
                     data-value={item.value}
+                    dangerouslySetInnerHTML={{__html: item.text}}
                   >
-                    {item.text}
                   </div>
                 </li>
               )
