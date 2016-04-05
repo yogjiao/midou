@@ -157,8 +157,8 @@ class Receivers extends React.Component {
           <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
           {
             this.props.params.receiversModel == RECEIVERS_EDIT?
-              (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
-              (<Link to={`${BASE_PAGE_DIR}/receivers/${RECEIVERS_EDIT}`}>管理</Link>)
+              (<a href={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</a>):
+              (<a href={`${BASE_PAGE_DIR}/receivers/${RECEIVERS_EDIT}`}>管理</a>)
           }
         </PageHeader>
         <div className="list-wrap">
@@ -177,7 +177,10 @@ class Receivers extends React.Component {
                 return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
               }):
               this.props.params.receiversModel != RECEIVERS_EDIT?
-              <div className="add-receiver-wrap"><Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link></div>: ''
+              <div className="add-receiver-wrap">
+                <Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>
+              </div>:
+              ''
             }
           </ul>
           <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
