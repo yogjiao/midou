@@ -7,6 +7,7 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import Selection from 'Selection/Selection.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
+import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
 import {
   FETCH_ORDER,
@@ -14,12 +15,13 @@ import {
   PAY_WAY,
   EXPRESS,
   PUT_TO_ORDER,
-  BASE_STATIC_DIR
+  BASE_STATIC_DIR,
+  DELETE_ORDER
 } from 'macros.js'
 import orderState from 'orderState.js'
+import errors from 'errors.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import provinces from 'provinces'
-let update = require('react-addons-update');
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
 import FillPrice from './FillPrice.js'
@@ -72,6 +74,29 @@ class UserOrderDetail extends React.Component {
           });
         })
   };
+  deleteOrder = () => {
+    this.setState({isHiddenPageSpin: false})
+    let url = `${DELETE_ORDER}/${this.props.params.orderId}`
+    fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState({promptMsg: '订单删除成功'})
+          setTimeout(()=>{
+            this.props.history.goBack()
+          }, 1500)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+        }
+      })
+      .catch((e) => {
+        this.setState({promptMsg: e.message || '哎呀，出了点小差错，请重试'})
+      })
+      .then(() => {
+        this.setState({isHiddenPageSpin: true})
+        this.refs['prompt'].show()
+      })
+
+  };
   thisHandler = (e) => {
     let target;
     if (target = getParentByClass(e.target, 'btn-pay-lack')) {
@@ -84,6 +109,8 @@ class UserOrderDetail extends React.Component {
       this.checkout(target.getAttribute('data-oid'))
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
       this.checkout(this.props.params.orderId)
+    } else if (target = getParentByClass(e.target, 'btn-delete-order')) {
+      this.deleteOrder()
     }
   };
 
@@ -142,6 +169,7 @@ class UserOrderDetail extends React.Component {
       <div className="order-detail-container min-screen-height" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+          <div className="btn-delete-order">删除订单</div>
         </PageHeader>
         <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">
@@ -231,7 +259,8 @@ class UserOrderDetail extends React.Component {
           isReload={this.state.isReloadCheckoutWaitinglayer}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
         />
-
+        <PageSpin isHidden={this.state.isHiddenPageSpin} />
+        <Prompt msg={this.state.promptMsg}  ref="prompt"/>
       </div>
     )
   }

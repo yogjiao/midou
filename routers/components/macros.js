@@ -215,6 +215,7 @@ export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
 
 
 export let FETCH_ORDER = FETCH_BASE_URL + '/get_order'
+export let DELETE_ORDER = FETCH_BASE_URL + '/delete_order'
 export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 
 
