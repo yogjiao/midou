@@ -214,7 +214,7 @@ class Collocation extends React.Component {
           url={window.location.href}
           title={this.state.match.match_title}
           description={this.state.match.match_intro}
-          imgUrl={this.state.match.match_img}
+          imgUrl={this.state.match.share_img}
         />
         <Prompt ref="prompt" msg={this.state.promptMsg}/>
         <PageSpin isHidden={this.state.isHiddenPageSpin} />

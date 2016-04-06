@@ -86,7 +86,7 @@ class Receivers extends React.Component {
           return
         }
         if (data.rea == FETCH_SUCCESS) {
-          this.cities = data.city;
+          this.cities = this.cities? this.cities.concat(data.city) : data.city 
           let nextState = update(this.state, {
             receivers: {$push: data.address},
             lastReceiver: {$set: data.address[data.address.length - 1].id}
@@ -95,7 +95,7 @@ class Receivers extends React.Component {
         }
       })
       .catch((error) => {
-        alert(error.message)
+        //alert(error.message)
       })
       .then(() => {
         this.setState({
@@ -175,6 +175,7 @@ class Receivers extends React.Component {
                   return city.id == item.city
                 })
                 item.address = province.name + ' ' + city.name + ' ' + item.detail
+
                 return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
               }):
               this.props.params.receiversModel != RECEIVERS_EDIT?

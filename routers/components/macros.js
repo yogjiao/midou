@@ -1,4 +1,19 @@
+/********************************url**********************************/
+export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
+// export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
+// export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
+
+export let BASE_PAGE_DIR = '/app-page' //'/app-page/' + __VERSION__;
+export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
+//export let BASE_PAGE_DIR = '/app-page/*.*.*/';
+
+export let BASE_STATIC_DIR = '/app-static'
+
+export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
+
+// ajax base directory
+export let FETCH_BASE_URL = '/app'
 // test Cookie token
 //18520805758
 //666666
@@ -161,19 +176,7 @@ export let CHEST_FEATRUES_7 = [
     {value: "3", text:  "轻薄性感"}
 ]
 
-/********************************url**********************************/
-export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
-export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
-export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
-//export let BASE_PAGE_DIR = '/app-page/*.*.*/';
-
-export let BASE_STATIC_DIR = '/app-static'
-
-export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
-
-// ajax base directory
-export let FETCH_BASE_URL = '/app'
 
 // fetch scenes data for index page
 export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'

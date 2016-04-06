@@ -18,8 +18,8 @@ import {
 } from 'macros.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
-let update = require('react-addons-update');
-
+let update = require('react-addons-update')
+import errors from 'errors.js'
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 
@@ -166,21 +166,21 @@ class UserOrderCreated extends React.Component {
         return notifyAppToCheckout({oid: data.oid})
             .then((dataFromApp) => {
               this.setState({
-                isHiddenPageSpin: true,
                 isHiddenCheckoutWaitingLayer: false,
                 orderId: data.oid
               });
             })
 
-        } else if (data.rea == '2004') {
-          this.props.history.goBack()
+        } else {
+          throw new Error(errors[data.rea])
         }
       })
-      .catch(error => {
-        this.setState({isHiddenPageSpin: true})
+      .catch(e => {
+        this.setState({promptMsg: e.message || errors[data.rea]})
+        this.refs['prompt'].show()
       })
       .then(() => {
-        //this.setState({isHiddenPageSpin: true})
+        this.setState({isHiddenPageSpin: true})
       })
   };
   backHandler = () => {
@@ -250,7 +250,7 @@ class UserOrderCreated extends React.Component {
                 </Link>
               ):
               (
-                <Link className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers`}>
+                <Link className="dd-wrap font-gray" to={`${BASE_PAGE_DIR}/receivers`}>
                   <div className="info-wrap">
                      添加收货人信息
                   </div>

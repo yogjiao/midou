@@ -83,13 +83,17 @@ class UserOrderDetail extends React.Component {
           this.setState({promptMsg: '订单删除成功'})
           setTimeout(()=>{
             this.props.history.goBack()
+            backToNativePage()
+              .then((data)=>{
+
+              })
           }, 1500)
         } else {
           this.setState({promptMsg: errors[data.rea]})
         }
       })
       .catch((e) => {
-        this.setState({promptMsg: e.message || '哎呀，出了点小差错，请重试'})
+        this.setState({promptMsg: e.message || errors[1]})
       })
       .then(() => {
         this.setState({isHiddenPageSpin: true})
