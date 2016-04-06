@@ -13,7 +13,8 @@ import {
   FETCH_SUCCESS,
   PAY_WAY,
   EXPRESS,
-  PUT_TO_ORDER
+  PUT_TO_ORDER,
+  BASE_STATIC_DIR
 } from 'macros.js'
 import orderState from 'orderState.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
@@ -134,6 +135,7 @@ class UserOrderDetail extends React.Component {
       return item.id == address.province
     })
 
+    let bg = `url(${BASE_STATIC_DIR}/img/od-bg.png)`
     return (
 
 
@@ -141,7 +143,7 @@ class UserOrderDetail extends React.Component {
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
         </PageHeader>
-        <div className="status-container">
+        <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">
             <i>订单状态：</i><span>{orderState[Math.min(this.state.order[0].order_state, 22)]}</span>
           </div>
@@ -191,21 +193,21 @@ class UserOrderDetail extends React.Component {
                 {PAY_WAY[this.state.order[0].method_of_payment]}
                </div>
             </div>
-            <div className="dd-warp">
-               <div className="info-wrap font-gray">
-                  优惠方式
-               </div>
-               {
-                 coupon.id?
-                    (
-                     <div className="info-wrap font-gray">
-                        <div className="arial">{`-${coupon.price}元`}</div>
-                        <div className="discount-name">{`${coupon.name}`}</div>
-                     </div>
-                   ):
-                   (<div className="info-wrap font-gray"></div>)
-               }
-            </div>
+            {
+              coupon.id?
+              (
+                <div className="dd-warp">
+                   <div className="info-wrap font-gray">
+                      优惠方式
+                   </div>
+                   <div className="info-wrap font-gray">
+                      <div className="arial discount-price">{`-${coupon.price}元`}</div>
+                      <div className="discount-name">{`${coupon.name}`}</div>
+                   </div>
+                </div>
+              ) : ''
+            }
+
             <div className="dd-warp">
                <div className="info-wrap font-gray">
                   实际支付

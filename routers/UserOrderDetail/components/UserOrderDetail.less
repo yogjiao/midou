@@ -1,32 +1,35 @@
 @import "~variables.less";
 .order-detail-container{
+  background-color: @background-color;
   .status-container{
-    background: #eee9f4;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     text-align: center;
-    padding-bottom: 30px;
+    padding-bottom: .6rem;
   }
   .status-wrap{
-    font-size: 20px;
-    color: #fff;
-    padding-top: 30px;
+    padding-top: .6rem;
+    font-weight: 600;
     span{
       color: @purple;
     }
   }
   .order-id-wrap{
-    color: #d4d4d4;
-    padding-top: 20px;
+    padding-top: .5rem;
   }
   .order-tips{
-    color: #d4d4d4;
-    padding-top: 20px;
+    color: @font-color-lighter;
+    font-size: .26rem;
+    padding-top: .5rem;
   }
 
   .input-group{
     margin-top: 20px;
     dt{
-      text-indent: 15px;
-      padding-bottom: 15px;
+      font-weight: 600;
+      line-height: .5rem;
+      padding: .3rem 0 0 .3rem;
     }
     dd{
       background-color: #fff;
@@ -38,8 +41,8 @@
       display: flex;
       box-sizing: border-box;
       border-top: 1px solid #dedfe9;
-      padding: 10px 15px 10px 0;
-      margin-left: 15px;
+      padding: .3rem .3rem .3rem 0;
+      margin-left: .3rem;
       justify-content: space-between;
       align-items: center;
       &:first-child{
@@ -52,8 +55,12 @@
       padding: 5px 0;
     }
   }
+  .discount-price{
+    font-size: .1rem;
+    color: @orange-red;
+  }
   .discount-name{
-    font-size: 10px;
+    font-size: .1rem;
     color: #b4b4cb;
   }
 
