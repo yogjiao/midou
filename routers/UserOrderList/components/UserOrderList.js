@@ -92,7 +92,7 @@ class UserOrderList extends React.Component {
   };
   render() {
     return (
-      <div className="order-detail-container">
+      <div className="order-detail-container user-order-list">
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         </PageHeader>
