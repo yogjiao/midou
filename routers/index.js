@@ -48,6 +48,8 @@ const rootRoute = {
       require('./BoxService'),
       require('./CustomerService'),
       require('./Collections'),
+      require('./BusinessModel'),
+
       require('./404')
       ]
   } ],
