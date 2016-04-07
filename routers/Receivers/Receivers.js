@@ -28,7 +28,7 @@ class Receivers extends React.Component {
     this.state = {
       headerName: '我的收货地址',
       isHiddenConfirm: true,
-      confirmMsg: '你確定要刪除改收货人信息吗？',
+      confirmMsg: '你確定要刪除该收货人信息吗？',
       isHiddenPrompt: true,
       promptMsg: '收货人刪除成功',
       pageSize: 10,
@@ -86,7 +86,7 @@ class Receivers extends React.Component {
           return
         }
         if (data.rea == FETCH_SUCCESS) {
-          this.cities = this.cities? this.cities.concat(data.city) : data.city 
+          this.cities = this.cities? this.cities.concat(data.city) : data.city
           let nextState = update(this.state, {
             receivers: {$push: data.address},
             lastReceiver: {$set: data.address[data.address.length - 1].id}

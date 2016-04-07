@@ -32,6 +32,8 @@ class UserOrderDetail extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      isHiddenConfirm: true,
+      confirmMsg: '你確定要刪除该订单吗？',
       isHiddenPageSpin: true,
       isHiddenFillPrice: true,
       isHiddenCheckoutWaitingLayer: true,
@@ -64,14 +66,13 @@ class UserOrderDetail extends React.Component {
       })
   };
   checkout = (orderId) => {
-    this.setState({isHiddenPageSpin: false})
+    this.setState({
+      isHiddenCheckoutWaitingLayer: false,
+      isReloadCheckoutWaitinglayer: true
+    });
     notifyAppToCheckout({oid: orderId})
         .then((data)=> {
-          this.setState({
-            isHiddenPageSpin: true,
-            isHiddenCheckoutWaitingLayer: false,
-            isReloadCheckoutWaitinglayer: true
-          });
+
         })
   };
   deleteOrder = () => {
@@ -114,7 +115,7 @@ class UserOrderDetail extends React.Component {
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
       this.checkout(this.props.params.orderId)
     } else if (target = getParentByClass(e.target, 'btn-delete-order')) {
-      this.deleteOrder()
+      this.setState({isHiddenConfirm: false})
     }
   };
 
@@ -124,6 +125,13 @@ class UserOrderDetail extends React.Component {
 
       })
     this.props.history.goBack();
+  };
+  deleteReceiverHandler = () => {
+    this.deleteOrder()
+    this.setState({isHiddenConfirm: true})
+  };
+  deleteCancelHandler = () => {
+    this.setState({isHiddenConfirm: true})
   };
   componentWillMount = () => {
   };
@@ -262,6 +270,12 @@ class UserOrderDetail extends React.Component {
           orderId={this.state.orderId}
           isReload={this.state.isReloadCheckoutWaitinglayer}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
+        />
+        <Confirm
+          confirmHandler={this.deleteReceiverHandler}
+          isHidden={this.state.isHiddenConfirm}
+          msg={this.state.confirmMsg}
+          cancelHandler={this.deleteCancelHandler}
         />
         <PageSpin isHidden={this.state.isHiddenPageSpin} />
         <Prompt msg={this.state.promptMsg}  ref="prompt"/>
