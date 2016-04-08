@@ -6,13 +6,19 @@ module.exports = {
     })
   },
   onEnter: function (nextState, replace) {
-    let receiver
+    let receiver, payWay
     try {
       receiver = JSON.parse(localStorage.getItem('receiver')) || {}
+      localStorage.removeItem('receiver')
     } catch(err) {
       receiver = {}
     }
+    try {
+      payWay = localStorage.getItem('payWay') || ''
+    } catch(err) {
+      payWay = ''
+    }
       nextState.params.receiver = receiver
-      localStorage.clear()
+      nextState.params.payWay = payWay
   }
 }

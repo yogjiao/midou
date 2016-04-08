@@ -108,7 +108,7 @@ class ExpressOrder extends React.Component {
         <div className="service-layer" style={{display: this.state.isHiddenServiceLayer? 'none' : 'block'}}>
           <div className="service-wrap">
             进行申请退换货操作时<br />请先联系客服
-            <Link to={`${BASE_PAGE_DIR}/customer-service`} className="btn-sure">确定</Link>
+            <a href={`${BASE_PAGE_DIR}/customer-service`} className="btn-sure">确定</a>
           </div>
         </div>
       </div>

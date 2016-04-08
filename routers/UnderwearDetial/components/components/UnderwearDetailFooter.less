@@ -1,3 +1,4 @@
+@import "~variables.less";
 .uw-detail-container{
   .footer-wrap{
     height: 60px;
@@ -38,6 +39,11 @@
         position: relative;
         top: 50%;
         transform: translate(0, -50%);
+      }
+    }
+    .push-to-collection{
+      &.on{
+        color: @orange-red;
       }
     }
     .iconfont{

@@ -18,8 +18,8 @@ import {
 } from 'macros.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
-let update = require('react-addons-update');
-
+let update = require('react-addons-update')
+import errors from 'errors.js'
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 
@@ -33,7 +33,8 @@ class UserOrderCreated extends React.Component {
       headerName: '创建订单',
       promptMsg: '订单提交成功',
       goodList: [],
-      payWay: 'wx', //wx  zfb
+      payWay: props.params.payWay || 'wx', //wx  zfb
+      receiver: props.params.receiver,
 
       coupon: [],
       couponItemName: '选择优惠方式',
@@ -43,7 +44,6 @@ class UserOrderCreated extends React.Component {
       totalPrice: 0,
       totalCount: 0
     }
-
   }
   calculateTotal = (nextState) => {
     let price = 0, count = 0
@@ -101,6 +101,7 @@ class UserOrderCreated extends React.Component {
     if (target = getParentByClass(e.target, 'pay-way-wrap')) {
       nextState = {}
       nextState.payWay = target.getAttribute('data-pay-way')
+      localStorage.setItem('payWay', nextState.payWay)
     } else if (target = getParentByClass(e.target, 'coupon-wrap')) {
       if (!this.state.isLoadedCouponSource) {
         this.fetchCouponSource()
@@ -165,29 +166,31 @@ class UserOrderCreated extends React.Component {
         return notifyAppToCheckout({oid: data.oid})
             .then((dataFromApp) => {
               this.setState({
-                isHiddenPageSpin: true,
                 isHiddenCheckoutWaitingLayer: false,
                 orderId: data.oid
               });
             })
 
-        } else if (data.rea == '2004') {
-          this.props.history.goBack()
+        } else {
+          throw new Error(errors[data.rea])
         }
       })
-      .catch(error => {
-        this.setState({isHiddenPageSpin: true})
+      .catch(e => {
+        this.setState({promptMsg: e.message || errors[data.rea]})
+        this.refs['prompt'].show()
       })
       .then(() => {
-        //this.setState({isHiddenPageSpin: true})
+        this.setState({isHiddenPageSpin: true})
       })
   };
   backHandler = () => {
     backToNativePage()
       .then((data)=>{
-
+        if (data.result == '1') {
+          this.props.history.goBack()
+        }
       })
-    this.props.history.goBack()
+
   };
   componentDidMount = () => {
     let url = `${EDIT_CART_GOODS_BY_IDS}/${this.props.params.goodsIds}`
@@ -239,37 +242,60 @@ class UserOrderCreated extends React.Component {
             {
               this.props.params.receiver.id?
               (
-                <div>
-                  <div className="info-wrap">{this.props.params.receiver.name}</div>
-                  <div className="info-wrap">{this.props.params.receiver.phone}</div>
-                  <div className="info-wrap">{this.props.params.receiver.address}</div>
-                </div>
+                <Link className="dd-wrap font-gray on" to={`${BASE_PAGE_DIR}/receivers`}>
+                  <div>
+                    <div className="receiver-info-wrap">{this.props.params.receiver.name}</div>
+                    <div className="receiver-info-wrap">{this.props.params.receiver.phone}</div>
+                    <div className="receiver-info-wrap">{this.props.params.receiver.address}</div>
+                  </div>
+                  <i className="iconfont icon-gt" />
+                </Link>
               ):
               (
-                <div className="info-wrap font-gray">
-                   添加收货人信息
-                </div>
+                <Link className="dd-wrap font-gray" to={`${BASE_PAGE_DIR}/receivers`}>
+                  <div className="info-wrap">
+                     添加收货人信息
+                  </div>
+                  <i className="iconfont icon-gt" />
+                </Link>
               )
             }
-             <Link className="iconfont" to={`${BASE_PAGE_DIR}/receivers`}>&#xe600;</Link>
           </dd>
         </dl>
         <dl className="input-group">
           <dt className="ff-Medium">选择支付方式</dt>
-          <dd className="pay-way-wrap" data-pay-way="zfb">
-             <div className="info-wrap font-gray">
-                支付宝
+          <dd
+            className={
+              this.state.payWay == 'zfb'?
+              'dd-wrap pay-way-wrap font-gray on':
+              'dd-wrap pay-way-wrap font-gray'
+            }
+            data-pay-way="zfb"
+          >
+             <div className="info-wrap">
+                <i className="iconfont icon-zfb" />
+                支付宝支付
              </div>
              {
                this.state.payWay == 'zfb'?
                 (<i className="iconfont">&#xe611;</i>):
                 (<i className="iconfont">&#xe610;</i>)
+
              }
 
           </dd>
-          <dd className="pay-way-wrap"  data-pay-way="wx">
-             <div className="info-wrap font-gray">
-                微信
+          <dd
+            className={
+              this.state.payWay == 'wx'?
+              'dd-wrap pay-way-wrap font-gray on':
+              'dd-wrap pay-way-wrap font-gray'
+            }
+            data-pay-way="wx"
+          >
+
+             <div className="info-wrap">
+                <i className="iconfont icon-wx" />
+                微信支付
              </div>
              {
                this.state.payWay == 'wx'?
@@ -280,11 +306,17 @@ class UserOrderCreated extends React.Component {
         </dl>
         <dl className="input-group">
           <dt className="ff-Medium">选择优惠方式</dt>
-          <dd className="coupon-wrap">
-             <div className="info-wrap font-gray">
-                {this.state.couponItemName}
+          <dd
+            className={this.state.couponSelectedIndex > -1?
+              'dd-wrap coupon-wrap font-gray on':
+              'dd-wrap coupon-wrap font-gray'
+            }
+          >
+             <div className="info-wrap"
+               dangerouslySetInnerHTML={{__html: this.state.couponItemName}}
+             >
              </div>
-             <i className="iconfont">&#xe600;</i>
+             <i className="iconfont icon-gt"></i>
           </dd>
         </dl>
         <div className="check-out-wrap">
@@ -303,7 +335,11 @@ class UserOrderCreated extends React.Component {
           isHidden={this.state.isHiddenSelection}
           selectedIndex={this.state.couponSelectedIndex}
           source={this.state.coupon.map((item, index) => {
-            return {value: item.id, text: item.name, price: item.price}
+            return {
+              value: item.id,
+              text: `${item.name}  <span class="color-purple arial">-${item.price}</span>`,
+              price: item.price
+            }
           })}
           itemType='1'
         />

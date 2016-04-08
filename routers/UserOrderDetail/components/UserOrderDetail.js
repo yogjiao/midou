@@ -7,18 +7,21 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import Selection from 'Selection/Selection.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
+import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
 import {
   FETCH_ORDER,
   FETCH_SUCCESS,
   PAY_WAY,
   EXPRESS,
-  PUT_TO_ORDER
+  PUT_TO_ORDER,
+  BASE_STATIC_DIR,
+  DELETE_ORDER
 } from 'macros.js'
 import orderState from 'orderState.js'
+import errors from 'errors.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import provinces from 'provinces'
-let update = require('react-addons-update');
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
 import FillPrice from './FillPrice.js'
@@ -29,6 +32,8 @@ class UserOrderDetail extends React.Component {
   constructor(props) {// actionModel: scal edit
     super(props);
     this.state = {
+      isHiddenConfirm: true,
+      confirmMsg: '你確定要刪除该订单吗？',
       isHiddenPageSpin: true,
       isHiddenFillPrice: true,
       isHiddenCheckoutWaitingLayer: true,
@@ -61,15 +66,41 @@ class UserOrderDetail extends React.Component {
       })
   };
   checkout = (orderId) => {
-    this.setState({isHiddenPageSpin: false})
+    this.setState({
+      isHiddenCheckoutWaitingLayer: false,
+      isReloadCheckoutWaitinglayer: true
+    });
     notifyAppToCheckout({oid: orderId})
         .then((data)=> {
-          this.setState({
-            isHiddenPageSpin: true,
-            isHiddenCheckoutWaitingLayer: false,
-            isReloadCheckoutWaitinglayer: true
-          });
+
         })
+  };
+  deleteOrder = () => {
+    this.setState({isHiddenPageSpin: false})
+    let url = `${DELETE_ORDER}/${this.props.params.orderId}`
+    fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          this.setState({promptMsg: '订单删除成功'})
+          setTimeout(()=>{
+            this.props.history.goBack()
+            backToNativePage()
+              .then((data)=>{
+
+              })
+          }, 1500)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+        }
+      })
+      .catch((e) => {
+        this.setState({promptMsg: e.message || errors[1]})
+      })
+      .then(() => {
+        this.setState({isHiddenPageSpin: true})
+        this.refs['prompt'].show()
+      })
+
   };
   thisHandler = (e) => {
     let target;
@@ -83,6 +114,8 @@ class UserOrderDetail extends React.Component {
       this.checkout(target.getAttribute('data-oid'))
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
       this.checkout(this.props.params.orderId)
+    } else if (target = getParentByClass(e.target, 'btn-delete-order')) {
+      this.setState({isHiddenConfirm: false})
     }
   };
 
@@ -92,6 +125,13 @@ class UserOrderDetail extends React.Component {
 
       })
     this.props.history.goBack();
+  };
+  deleteReceiverHandler = () => {
+    this.deleteOrder()
+    this.setState({isHiddenConfirm: true})
+  };
+  deleteCancelHandler = () => {
+    this.setState({isHiddenConfirm: true})
   };
   componentWillMount = () => {
   };
@@ -134,14 +174,21 @@ class UserOrderDetail extends React.Component {
       return item.id == address.province
     })
 
+    let bg = `url(${BASE_STATIC_DIR}/img/od-bg.png)`
     return (
 
 
       <div className="order-detail-container min-screen-height" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+          {
+            this.state.order[0].order_state < '12'?
+            (<div className="btn-delete-order">删除订单</div>):
+            ''
+          }
+
         </PageHeader>
-        <div className="status-container">
+        <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">
             <i>订单状态：</i><span>{orderState[Math.min(this.state.order[0].order_state, 22)]}</span>
           </div>
@@ -191,21 +238,21 @@ class UserOrderDetail extends React.Component {
                 {PAY_WAY[this.state.order[0].method_of_payment]}
                </div>
             </div>
-            <div className="dd-warp">
-               <div className="info-wrap font-gray">
-                  优惠方式
-               </div>
-               {
-                 coupon.id?
-                    (
-                     <div className="info-wrap font-gray">
-                        <div className="arial">{`-${coupon.price}元`}</div>
-                        <div className="discount-name">{`${coupon.name}`}</div>
-                     </div>
-                   ):
-                   (<div className="info-wrap font-gray"></div>)
-               }
-            </div>
+            {
+              coupon.id?
+              (
+                <div className="dd-warp">
+                   <div className="info-wrap font-gray">
+                      优惠方式
+                   </div>
+                   <div className="info-wrap font-gray">
+                      <div className="arial discount-price">{`-${coupon.price}元`}</div>
+                      <div className="discount-name">{`${coupon.name}`}</div>
+                   </div>
+                </div>
+              ) : ''
+            }
+
             <div className="dd-warp">
                <div className="info-wrap font-gray">
                   实际支付
@@ -229,7 +276,14 @@ class UserOrderDetail extends React.Component {
           isReload={this.state.isReloadCheckoutWaitinglayer}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
         />
-
+        <Confirm
+          confirmHandler={this.deleteReceiverHandler}
+          isHidden={this.state.isHiddenConfirm}
+          msg={this.state.confirmMsg}
+          cancelHandler={this.deleteCancelHandler}
+        />
+        <PageSpin isHidden={this.state.isHiddenPageSpin} />
+        <Prompt msg={this.state.promptMsg}  ref="prompt"/>
       </div>
     )
   }

@@ -1,23 +1,24 @@
+@import "~variables.less";
 .reciever-info-container{
   background-color: #fff;
   .receiver-item{
-    border-bottom: 1px solid #d0d1df;
-    padding: 15px 0 15px 15px;
-    font-size: 14px;
+    border-bottom: 1px solid @border-color;
+    padding: .3rem 0 .3rem .3rem;
     input{
       border: none;
       box-sizing: border-box;
       width: 90%;
-      height: 30px;
-      line-height: 30px;
+      line-height: .4rem;
+      font-size: .3rem;
 
     }
     textarea{
       border: none;
       width: 90%;
-      line-height: 20px;
-      height: 60px;
-      padding: 5px;
+      line-height: .4rem;
+      height: .4rem * 2;
+      font-size: .3rem;
+      padding: 0 5px;
     }
   }
 }

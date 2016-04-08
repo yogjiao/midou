@@ -36,7 +36,7 @@ var config = {
     context: cwd,
     resolve: {
         root:[__dirname],
-        modulesDirectories: ["web_modules", "node_modules", "components"],
+        modulesDirectories: ["web_modules", "node_modules", "components", "less"],
         alias: {
           // 'react': pathToReact,
           // 'react-dom': pathToReactDom,
@@ -62,7 +62,7 @@ var config = {
           // LESS
           {
             test: /\.less$/,
-            loader: 'style!css!postcss!less?{"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +', includePath: "less"}'
+            loader: 'style!css!postcss!less'
           },
           {
             test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,

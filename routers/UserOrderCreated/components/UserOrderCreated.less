@@ -1,28 +1,49 @@
+@import "~variables.less";
 .order-created-container{
+  background-color: @background-color;
   .input-group{
-    margin-top: 20px;
+    border-bottom: 1px solid @border-color-light;
     dt{
-      text-indent: 15px;
-      padding-bottom: 15px;
+      padding: .6rem 0 .2rem .3rem;
+      font-weight: 600;
     }
-    dd{
+    .dd-wrap{
       position: relative;
       display: flex;
-      border: 1px solid #dedfe9;
-      border-width: 1px 0;
+      border-top: 1px solid #dedfe9;
       background-color: #fff;
-      padding: 5px 15px;
+      padding: .26rem .3rem;
       justify-content: space-between;
       align-items: center;
-      &:not(:first-child){
-        border-top: none;
-      }
+    }
+    .iconfont{
+      font-size: .4rem;
+    }
+    .icon-gt{
+      margin-right: -.1rem;
     }
   }
+  .receiver-info-wrap{
+    line-height: .5rem;
+  }
   .info-wrap{
-   padding: 5px 0;
   }
   .font-gray{
-    color: #b4b4cb;
+    color: @font-color-lighter;
+    &.on{
+      color: @font-color-light;
+    }
+  }
+  .pay-way-wrap{
+    .info-wrap{
+      display: flex;
+      align-items: center;
+    }
+    .icon-zfb{
+      font-size: .5rem;
+    }
+    .icon-wx{
+      margin-right: .1rem;
+    }
   }
 }

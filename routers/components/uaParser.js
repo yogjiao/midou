@@ -1,4 +1,4 @@
-import UAParser from 'UAParser'
+import UAParser from 'ua-parser-js'
 
 let parser = new UAParser()
 

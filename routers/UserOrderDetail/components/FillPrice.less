@@ -1,3 +1,4 @@
+@import "~variables.less";
 .fill-price-container{
   position: fixed;
   left: 0;
@@ -13,10 +14,10 @@
     transform: translate(-50%, -50%);
     width: 90%;
     box-sizing: border-box;
-    padding: 20px;
+    padding: .3rem;
     background-color: #fff;
     box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    border-radius: .1rem;
   }
   .img-wrap{
     width: 100%;
@@ -39,11 +40,15 @@
     text-align: center;
     transform: translateX(-50%);
     margin-top: 20px;
+    width: 3rem;
+    line-height: .6rem;
+    border-radius: .1rem;
+    background-color: @orange-red;
   }
   dl{
     line-height: 40px;
     >*{
-      border-bottom:1px solid #e1e1ea;
+      border-bottom:1px solid @border-color;
     }
     dt{
       padding-left: 15px;
@@ -56,11 +61,12 @@
     }
   }
   .color-purple{
-    color: @purple;
+    color: @orange-red;
   }
   .btn-close-fill-price{
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: .1rem;
+    right: 0;
+    font-size: .5rem;
   }
 }

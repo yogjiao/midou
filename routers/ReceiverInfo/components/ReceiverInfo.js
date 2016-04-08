@@ -17,7 +17,7 @@ import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
-
+import {backToNativePage} from 'webviewInterface.js'
 let update = require('react-addons-update')
 
 import './ReceiverInfo.less'
@@ -66,6 +66,7 @@ class ReceiverInfo extends React.Component {
   };
   backHandler = () => {
     this.props.history.goBack()
+    backToNativePage()
   };
   addressChangeHandler = (provinceId, cityId) => {
     this.state.province = provinceId
@@ -89,7 +90,7 @@ class ReceiverInfo extends React.Component {
           setTimeout(()=>{
             this.props.history.goBack()
           }, 1500)
-          
+
         } else {
           this.setState({promptMsg: '请填写完整信息'})
           this.refs['prompt'].show();

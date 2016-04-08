@@ -1,3 +1,4 @@
+@import "~variables.less";
 .confirm-container{
   position: fixed;
   top: 50%;
@@ -18,13 +19,17 @@
     justify-content: space-around;
     color: #fff;
   }
+  .btn-confirm,
+  .btn-cancel{
+
+    padding: .1rem .2rem;
+    border-radius: .1rem;
+  }
   .btn-confirm{
     background-color: @purple;
-    padding: 8px 20px;
+
   }
   .btn-cancel{
     background-color: #b4b4cb;
-    padding: 8px 20px;
-
   }
 }

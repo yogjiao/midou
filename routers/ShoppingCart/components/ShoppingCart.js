@@ -26,6 +26,8 @@ import Prompt from 'Prompt/Prompt.js'
 import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
 let update = require('react-addons-update');
+import ua from 'uaParser.js'
+import {backToNativePage} from 'webviewInterface.js'
 
 import './ShoppingCart.less'
 class ShoppingCart extends React.Component {
@@ -537,7 +539,16 @@ class ShoppingCart extends React.Component {
     nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
   };
   backHandler = () => {
-    this.props.history.goBack();
+    if (ua.isApp()) {
+      backToNativePage()
+        .then((data)=>{
+          if (data.result == '1') {
+            this.props.history.goBack()
+          }
+        })
+    } else {
+        this.props.history.goBack()
+    }
 
   };
   render() {

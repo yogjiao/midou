@@ -1,6 +1,23 @@
+/********************************url**********************************/
+export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
+// export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
+// export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
+
+export let BASE_PAGE_DIR = '/app-page/' + __VERSION__; //app-page/' + __VERSION__;
+export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
+//export let BASE_PAGE_DIR = '/app-page/*.*.*/';
+
+export let BASE_STATIC_DIR = '/app-static'
+
+export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
+
+// ajax base directory
+export let FETCH_BASE_URL = '/app'
 // test Cookie token
-export let TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNDUzODg1MjM3LCJleHAiOjE3NjkyNDUyMzd9.chIaWYg_3_Y9wuMMuYGluDtjDxDz7kDxdXGebpP1cX4'
+//18520805758
+//666666
+export let TEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NSIsImlhdCI6MTQ2MDA4NDgwMiwiZXhwIjoxNzc1NDQ0ODAyfQ.XOPXw1Dz-xviJLvjFOoJRU3PsN5n2Is5BlraLX09Lg0'
 export let MIDOU_TOKEN_NAME = 'x-midou-token'
 
 export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'
@@ -41,6 +58,7 @@ export let ROUTER_SHOPPING_CART_EDIT = 'edit'
 export let ROUTER_RECIEVER_INFO_ADD = 'add'
 export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
 export let RECEIVERS_EDIT = 'edit'
+export let EDIT = 'edit'
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 // export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 // export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
@@ -82,9 +100,7 @@ export let UNDERWEAR_TAGS = [
     {value: "4", text:  "美背"},
     {value: "5", text:  "薄杯"},
     {value: "6", text:  "运动"},
-    {value: "7", text:  "无钢圈"},
-    {value: "8", text:  "情趣"},
-    {value: "9", text:  "底裤"}
+    {value: "7", text:  "无钢圈"}
 ]
 
 
@@ -160,26 +176,17 @@ export let CHEST_FEATRUES_7 = [
     {value: "3", text:  "轻薄性感"}
 ]
 
-/********************************url**********************************/
-export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
-export let BASE_PAGE_DIR = '/app-page/' + __VERSION__;
-export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
-//export let BASE_PAGE_DIR = '/app-page/*.*.*/';
-
-export let BASE_STATIC_DIR = '/app-static'
-
-export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
-
-// ajax base directory
-export let FETCH_BASE_URL = '/app'
 
 // fetch scenes data for index page
 export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
+export let FETCH_MATCH_GOODS = FETCH_BASE_URL + '/get_match_goods'
 
 // fetch goods data for list page
 export let FETCH_GOODS = FETCH_BASE_URL + '/goods_filter'
 export let FETCH_COLLECTIONS = FETCH_BASE_URL + '/get_collection_page'
+export let FETCH_COLLECTIONS_STATE = FETCH_BASE_URL + '/get_collection_state'
+export let DELETE_COLLECTION = FETCH_BASE_URL + '/delete_collection'
 export let PUT_COLLECTION = FETCH_BASE_URL + '/collect_goods'
 
 //fetch good's detail
@@ -211,6 +218,7 @@ export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
 
 
 export let FETCH_ORDER = FETCH_BASE_URL + '/get_order'
+export let DELETE_ORDER = FETCH_BASE_URL + '/delete_order'
 export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 
 

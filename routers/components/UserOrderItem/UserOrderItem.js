@@ -14,7 +14,7 @@ class UserOrderItem extends React.Component {
     //this.setState({boxes: countBoxes(this.props.source.cup, this.props.source.bothrefm_bust)})
   };
   render = () => {
-    let row_1, row_2, row_3,
+    let row_1, row_2, row_3, row_4,
         pageType = this.props.pageType,
         itemType = this.props.itemType,
         price;
@@ -53,7 +53,7 @@ class UserOrderItem extends React.Component {
           }
 
 
-          if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
+          if (this.props.source.order_state >= 22 && this.props.source.order_state < 32){
             row_3 = (<a className="btn-box-operate return-uw" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</a>)
           } else {
             row_3 = (<span></span>)
@@ -65,12 +65,12 @@ class UserOrderItem extends React.Component {
       case '3':
         if (itemType == 1) {
           row_1 = (<a href={`${BASE_PAGE_DIR}/order/${this.props.oid}`}><i className="iconfont icon-gt"></i></a>)
-          row_3 = (<div className="create-time">{this.props.ts}</div>)
+          row_4 = (<div className="create-time">{this.props.ts}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">试</div>)
           row_2 = (<i></i>)
-          row_3 = (<div className="create-time">{this.props.ts}</div>)
+          row_4 = (<div className="create-time">{this.props.ts}</div>)
           price = <div className="price arial">&yen;{`${this.props.source.deposit}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         }
         break;
@@ -86,8 +86,14 @@ class UserOrderItem extends React.Component {
           <div className="img-wrap">
             {
               pageType=="2"?
-              (<a href={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}><img src={this.props.source.main_img} /></a>):
-              (<img src={this.props.source.main_img} />)
+              (
+                <a href={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}
+                  style={{backgroundImage: `url(${this.props.source.main_img})`}}
+                />
+              ):
+              (<a href={`${BASE_PAGE_DIR}/underwear/${this.props.source.gid}`}
+                style={{backgroundImage: `url(${this.props.source.main_img})`}}
+              />)
             }
           </div>
         </div>
@@ -117,6 +123,15 @@ class UserOrderItem extends React.Component {
               {row_3}
             </div>
           </div>
+          {
+            row_4?
+            (
+              <div className="row-wrap">
+                {row_4}
+              </div>
+            ):
+            ''
+          }
         </div>
       </div>
     )

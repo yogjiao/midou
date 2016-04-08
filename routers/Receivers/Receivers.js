@@ -13,12 +13,14 @@ import {
   FETCH_SUCCESS,
   BASE_PAGE_DIR,
   ROUTER_RECIEVER_INFO_ADD,
+  EDIT,
   RECEIVERS_EDIT} from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
+import {backToNativePage} from 'webviewInterface.js'
 let update = require('react-addons-update')
-
+import ua from 'uaParser.js'
 
 import './Receivers.less'
 class Receivers extends React.Component {
@@ -27,7 +29,7 @@ class Receivers extends React.Component {
     this.state = {
       headerName: '我的收货地址',
       isHiddenConfirm: true,
-      confirmMsg: '你確定要刪除改收货人信息吗？',
+      confirmMsg: '你確定要刪除该收货人信息吗？',
       isHiddenPrompt: true,
       promptMsg: '收货人刪除成功',
       pageSize: 10,
@@ -85,7 +87,7 @@ class Receivers extends React.Component {
           return
         }
         if (data.rea == FETCH_SUCCESS) {
-          this.cities = data.city;
+          this.cities = this.cities? this.cities.concat(data.city) : data.city
           let nextState = update(this.state, {
             receivers: {$push: data.address},
             lastReceiver: {$set: data.address[data.address.length - 1].id}
@@ -94,7 +96,7 @@ class Receivers extends React.Component {
         }
       })
       .catch((error) => {
-        alert(error.message)
+        //alert(error.message)
       })
       .then(() => {
         this.setState({
@@ -105,7 +107,17 @@ class Receivers extends React.Component {
       })
   };
   backHandler = () => {
-    this.props.history.goBack()
+    if (ua.isApp()) {
+      backToNativePage()
+        .then((data)=>{
+          if (data.result == '1') {
+            this.props.history.goBack()
+          }
+        })
+    } else {
+        this.props.history.goBack()
+    }
+
   };
   handleScroll = () => {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
@@ -134,7 +146,7 @@ class Receivers extends React.Component {
     } else if (target = getParentByClass(e.target, 'receivers-item')){
       if (!this.props.params.receiversModel){
         let receiver = target.getAttribute('data-source')
-        localStorage.setItem('receiver', receiver);
+        localStorage.setItem('receiver', receiver)
         this.props.history.goBack();
       }
     }
@@ -156,9 +168,9 @@ class Receivers extends React.Component {
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
           {
-            this.props.params.receiversModel == RECEIVERS_EDIT?
+            this.props.params.receiversModel == EDIT?
               (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
-              (<Link to={`${BASE_PAGE_DIR}/receivers/${RECEIVERS_EDIT}`}>管理</Link>)
+              (<Link to={`${BASE_PAGE_DIR}/receivers/${EDIT}`}>管理</Link>)
           }
         </PageHeader>
         <div className="list-wrap">
@@ -174,10 +186,14 @@ class Receivers extends React.Component {
                   return city.id == item.city
                 })
                 item.address = province.name + ' ' + city.name + ' ' + item.detail
+
                 return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
               }):
-              this.props.params.receiversModel != RECEIVERS_EDIT?
-              <div className="add-receiver-wrap"><Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link></div>: ''
+              this.props.params.receiversModel != EDIT?
+              <div className="add-receiver-wrap">
+                <Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>
+              </div>:
+              ''
             }
           </ul>
           <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>

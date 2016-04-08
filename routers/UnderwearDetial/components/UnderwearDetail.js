@@ -7,7 +7,7 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import Prompt from 'Prompt/Prompt.js'
 import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
-import {countBoxes} from 'commonApp.js'
+import {countBoxes, getMiDouToken} from 'commonApp.js'
 import {
   FETCH_GOOD,
   FETCH_STATUS_NO_MORE_PRODUCT,
@@ -15,6 +15,8 @@ import {
   BASE_PAGE_DIR,
   FETCH_SUCCESS,
   PUT_COLLECTION,
+  DELETE_COLLECTION,
+  FETCH_COLLECTIONS_STATE,
 } from 'macros.js'
 import errors from 'errors.js'
 import {fetchable, fetchAuth} from 'fetch.js'
@@ -24,7 +26,7 @@ import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {shareToSocialCircle, backToNativePage} from 'webviewInterface.js'
+import {backToNativePage} from 'webviewInterface.js'
 import CartEntry from 'CartEntry.js'
 
 class Underweardetail extends React.Component {
@@ -135,12 +137,18 @@ class Underweardetail extends React.Component {
         }
         let nextState = update(this.state, schema)
         this.setState(nextState)
+        return [nextState.goods.id]
       })
       .catch((error) => {
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true
         })
+      })
+      .then((ids) => {
+        if (getMiDouToken()) {
+          this.freshCollectionBtnState(ids)
+        }
       })
   };
   /**
@@ -190,26 +198,64 @@ class Underweardetail extends React.Component {
       })
 
   };
+  /**
+   * @param ids {Array}
+   */
+  freshCollectionBtnState = (ids) => {
+    ids = ids.join()
+    let url = `${FETCH_COLLECTIONS_STATE}/${ids}`
+    return fetchAuth(url)
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          if (this.state.goods.id == data.collect[0].id) {
+            this.state.goods.isCollected = true
+            this.forceUpdate();
+          }
+
+        } else {
+
+        }
+      })
+      .catch((e) => {
+      })
+  };
   /*
   */
-  putCollectionData = () => {
+  /*
+  */
+  putCollectionData = (goodsId, isCancel) => {
     //promptMsg
-    let url = `${PUT_COLLECTION}/${this.state.goods.id}`
+    let url
+    if(isCancel) {
+      url  = `${DELETE_COLLECTION}/${goodsId}`
+    } else {
+      url  = `${PUT_COLLECTION}/${goodsId}`
+    }
     fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
-            promptMsg: '收藏成功'
+            promptMsg: isCancel? '收藏已取消' : '收藏成功'
+          })
+        } else {
+          this.setState({
+            promptMsg: errors[data.rea]
           })
         }
+        return data.gid
       })
       .catch((e) => {
         this.setState({
-          promptMsg: '收藏失败'
+          promptMsg: isCancel? '取消收藏失败' : '收藏失败'
         })
       })
-      .then(() => {
-        this.refs['prompt'].show()
+      .then((gid) => {
+        if (this.state.goods.id == gid) {
+          this.state.goods.isCollected = isCancel? false : true
+          this.forceUpdate();
+          this.refs['prompt'].show()
+        }
+
       })
   };
   processMinus = (count) => {
@@ -311,41 +357,12 @@ class Underweardetail extends React.Component {
   };
   thisHandler = (e) => {
     let target
-    let nextState = {}
     if (target = getParentByClass(e.target, 'push-to-collection')) {
-      this.putCollectionData()
+      let isCancel = target.getAttribute('data-is-collected') == 'true'? true : false
+      this.putCollectionData(target.getAttribute('data-id'), isCancel)
     } else if (target = getParentByClass(e.target, 'icon-share')) {
-      nextState.isHiddenSharePanel = false
-    } else if (target = getParentByClass(e.target, 'media-item')) {
-      // "type": "微博,QQ,朋友圈,微信朋友",
-      //         "url": "网址",
-      //         "title": "这是标题",
-      //         "description": "这是描述",
-      //         "imgUrl": "http://www.baidu.com"
-      let goods = this.state.goods
-      let type = target.getAttribute('data-type')
-      let data = {}
-      data.type = type
-      data.url = window.location.href
-      data.title = goods.name
-      data.description = goods.match_intro
-      data.imgUrl = goods.main_img
-      shareToSocialCircle(data)
-        .then( (data) => {
-          if (data.result == '1') {
-            this.setState({promptMsg: '分享成功'})
-          } else {
-            this.setState({promptMsg: '分享失败'})
-          }
-        })
-        .then(()=>{
-          this.refs['prompt'].show()
-        })
-      nextState.isHiddenSharePanel = true
-    } else if (target = getParentByClass(e.target, 'cancel-shrare')) {
-      nextState.isHiddenSharePanel = true
+      this.refs['share'].show()
     }
-    nextState && this.setState(nextState)
   };
   /**
    * borwer back own step
@@ -412,6 +429,8 @@ class Underweardetail extends React.Component {
         <UnderweardetailInfo {...this.state.goods}/>
         <UnderweardetailFooter
           buyHandler={this.buyHandler}
+          isCollected={this.state.goods.isCollected}
+          id={this.state.goods.id}
         />
         <CartEntry />
         <UnderwearDetailSelectPanel
@@ -421,7 +440,11 @@ class Underweardetail extends React.Component {
           selectHandler={this.selectHandler}
         />
         <ShareToSocialMedia
-          isHidden={this.state.isHiddenSharePanel}
+          ref="share"
+          url={window.location.href}
+          title={this.state.goods.name}
+          description={this.state.goods.match_intro}
+          imgUrl={this.state.goods.share_img}
         />
         <Prompt msg={this.state.promptMsg} ref='prompt'/>
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
