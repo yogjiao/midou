@@ -186,9 +186,11 @@ class UserOrderCreated extends React.Component {
   backHandler = () => {
     backToNativePage()
       .then((data)=>{
-
+        if (data.result == '1') {
+          this.props.history.goBack()
+        }
       })
-    this.props.history.goBack()
+
   };
   componentDidMount = () => {
     let url = `${EDIT_CART_GOODS_BY_IDS}/${this.props.params.goodsIds}`

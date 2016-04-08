@@ -55,9 +55,9 @@ class UnderwearsIndex extends React.Component {
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-2.png)`}} /></div>
             <h6>底裤</h6>
           </a>
-          <a href={`${BASE_PAGE_DIR}/search/0-0/1/4`}>
+          <a href={`${BASE_PAGE_DIR}/search/0-0/1/1`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-3.png)`}} /></div>
-            <h6>美背</h6>
+            <h6>聚拢</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0-0/1/6`}>
             <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-4.png)`}} /></div>

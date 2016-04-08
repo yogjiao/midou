@@ -26,7 +26,8 @@ class UserOrderList extends React.Component {
       headerName: '所有订单',
       lastOrder: 0,
       pageSize: 5,
-      isHiddenPageSpin: true,
+      isHiddenPageSpin: false,
+      isHiddenScrollingSpin: true,
       orderList: [],
       isHaveGoods: true,
       isNull: false
@@ -96,23 +97,29 @@ class UserOrderList extends React.Component {
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
         </PageHeader>
+        <div className="order-list-wrap">
         {
           this.state.isNull?
           (<OrdersNoResult />):
           (
             <div>
-              {
-                 this.state.orderList.map((item, index) => {
-                  return (<UserOrderListGroup
-                            key={index}
-                            oid={item.id}
-                            source={item}
-                          />)
-                })
-              }
+              <div>
+                {
+                   this.state.orderList.map((item, index) => {
+                    return (<UserOrderListGroup
+                              key={index}
+                              oid={item.id}
+                              source={item}
+                            />)
+                  })
+                }
+              </div>
+              <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
             </div>
           )
         }
+        </div>
+        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
       </div>
     )
   }

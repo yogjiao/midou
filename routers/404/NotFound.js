@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 import {BASE_STATIC_DIR, BASE_PAGE_DIR} from 'macros.js'
-
+import {backToHomeNativePage} from 'webviewInterface.js'
 import './NotFound.less'
 class NotFound extends React.Component {
 

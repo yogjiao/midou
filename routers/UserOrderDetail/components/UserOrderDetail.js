@@ -181,7 +181,12 @@ class UserOrderDetail extends React.Component {
       <div className="order-detail-container min-screen-height" onClick={this.thisHandler}>
         <PageHeader headerName={this.state.headerName}>
           <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
-          <div className="btn-delete-order">删除订单</div>
+          {
+            this.state.order[0].order_state < '12'?
+            (<div className="btn-delete-order">删除订单</div>):
+            ''
+          }
+
         </PageHeader>
         <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">

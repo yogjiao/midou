@@ -21,6 +21,7 @@ import Prompt from 'Prompt/Prompt.js'
 import Swiper from 'Swiper'
 import ua from 'uaParser.js'
 import errors from 'errors.js'
+import {getMiDouToken} from 'commonApp.js'
 
 import './Collocation.less'
 let space = 20;
@@ -61,7 +62,7 @@ class Collocation extends React.Component {
         let ids = goods.map((item) => {
           return item.id
         })
-        if(ua.isApp()){
+        if(getMiDouToken()){
           this.freshCollectionBtnState(ids)
         }
       })

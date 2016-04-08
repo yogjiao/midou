@@ -11,6 +11,7 @@ import {fetchAuth} from 'fetch.js'
 import {getUserInfoFromApp} from 'webviewInterface.js'
 import {getMiDouToken} from 'commonApp.js'
 import {FETCH_SUCCESS} from 'macros.js'
+import ua from 'uaParser.js'
 class CartEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -30,12 +31,13 @@ class CartEntry extends React.Component {
   };
   thisHandler = () => {
     let token = getMiDouToken()
+
     if (token) {
-      window.location.href = `${BASE_PAGE_DIR}/carts/scan`
+      return
     } else {
       getUserInfoFromApp()
         .then(() => {
-          window.location.href = `${BASE_PAGE_DIR}/carts/scan`
+          window.location.reload()
         })
     }
   };
@@ -46,14 +48,20 @@ class CartEntry extends React.Component {
     }
   };
   render() {
+    let href, style = {}
+    if (getMiDouToken()) {
+      href = `${BASE_PAGE_DIR}/carts`
+    } else {
+      href = 'javascript:void(0)'
+    }
     return (
-      <div className="cart-entry-container" onClick={this.thisHandler}>
+      <a className="cart-entry-container" href={href} onClick={this.thisHandler}>
         <i className="iconfont icon-cart">
         {
           this.state.isEmpty == '0'? (<span></span>) : ''
         }
         </i>
-      </div>
+      </a>
     )
   }
 }

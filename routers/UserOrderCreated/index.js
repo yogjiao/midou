@@ -9,6 +9,7 @@ module.exports = {
     let receiver, payWay
     try {
       receiver = JSON.parse(localStorage.getItem('receiver')) || {}
+      localStorage.removeItem('receiver')
     } catch(err) {
       receiver = {}
     }
