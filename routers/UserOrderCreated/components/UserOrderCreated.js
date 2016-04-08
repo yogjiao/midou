@@ -163,13 +163,16 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-        return notifyAppToCheckout({oid: data.oid})
-            .then((dataFromApp) => {
-              this.setState({
-                isHiddenCheckoutWaitingLayer: false,
-                orderId: data.oid
-              });
-            })
+          this.setState({
+            isHiddenPageSpin: true,
+            isHiddenCheckoutWaitingLayer: false
+          });
+          return notifyAppToCheckout({oid: data.oid})
+              .then((dataFromApp) => {
+                this.setState({
+                  orderId: data.oid
+                });
+              })
 
         } else {
           throw new Error(errors[data.rea])
