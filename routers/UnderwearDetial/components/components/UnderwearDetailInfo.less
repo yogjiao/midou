@@ -1,8 +1,9 @@
 @import "~variables.less";
+@lineHeight: .54rem;
 .uw-detail-container{
   background-color: @page-background-color;
   .info-wrap{
-    margin: 0 .3rem;
+    margin: 0 .9rem;
     .pro-name{
       font-size: 18px;
       line-height: 0.5rem;
@@ -37,7 +38,7 @@
       }
 
       .detail-content{
-        line-height: .46rem;
+        line-height: @lineHeight;
         font-size: 0.3rem;
         color: @font-color-light;
         padding-top: 0.64rem;
@@ -53,7 +54,7 @@
         }
         .goods-detail-text-wrap{
           margin: 0.2rem 0 0 0;
-          line-height: .46rem;
+          line-height: @lineHeight;
         }
       }
       .box-service-info{

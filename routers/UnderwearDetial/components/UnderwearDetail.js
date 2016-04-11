@@ -421,7 +421,7 @@ class Underweardetail extends React.Component {
   render() {
     return (
       <div className="uw-detail-container" onClick={this.thisHandler}>
-        <PageHeader headerName="产品详情">
+        <PageHeader headerName="产品详情" isHiddenBottomBorder={true}>
           <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
           <div className="iconfont icon-share"></div>
         </PageHeader>
