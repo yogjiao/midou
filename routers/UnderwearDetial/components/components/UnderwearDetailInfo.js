@@ -12,10 +12,15 @@ class UnderweardetailInfo extends React.Component {
         <div className="pro-name">{this.props.name}</div>
         <div className="pro-price">&yen; {this.props.price}</div>
         <div className="detail-item-list">
+        {
+          /*
           <div className="detail-item-wrap">
             <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />商品介绍</h6>
             <div className="detail-content" dangerouslySetInnerHTML={{__html: this.props.match_intro}}></div>
           </div>
+          */
+        }
+
           <div className="detail-item-wrap">
             <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />盒子服务</h6>
             <div className="detail-content box-service-info">
