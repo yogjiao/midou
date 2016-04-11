@@ -12,7 +12,7 @@ class Prompt extends React.Component {
     },10)
     setTimeout(() => {
       panel.classList.remove('on')
-    }, 2000)
+    }, 3000)
   };
   // componentWillReceiveProps = (nextProps) => {
   //   if (nextProps.msg) {
