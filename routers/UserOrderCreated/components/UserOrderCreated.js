@@ -70,29 +70,48 @@ class UserOrderCreated extends React.Component {
     //this.setState(nextState)
     return {price: price, count: count};
   };
-  fetchCouponSource = () => {
-    let url = `${FETCH_COUPONS}`
-    this.setState({isHiddenPageSpin: false})
+  fetchData = () => {
+    let url = `${EDIT_CART_GOODS_BY_IDS}/${this.props.params.goodsIds}`
+    this.setState({
+      isHiddenPageSpin: true
+    })
     fetchAuth(url)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
           this.setState({
-          //  couponItemName: data.coupon[0].name,
-            coupon: data.coupon,
-            isHiddenSelection: false
+            goodList: data.cart,
+            isHiddenPageSpin: true
           })
-        } else if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+        }
+      })
+      .then(() => {
+        return this.fetchCouponSource()
+      })
+      .catch(error => {
+        //this.setState({isHiddenPageSpin: true})
+      })
+      .then(() => {
+        this.setState({isHiddenPageSpin: true})
+      })
+  };
+  fetchCouponSource = () => {
+    let url = `${FETCH_COUPONS}`
+    this.setState({isHiddenPageSpin: false})
+    return fetchAuth(url)
+      .then(data => {
+        if (data.rea == FETCH_SUCCESS) {
           this.setState({
-            promptMsg: '没有符合条件的优惠信息'
+            couponItemName: `${data.coupon[0].name}  <span class="color-purple arial">-${data.coupon[0].price}</span>`,
+            couponSelectedIndex: 0,
+            coupon: data.coupon
           })
-          this.refs['prompt'].show()
         }
       })
       .catch(error => {
         //this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
-        this.setState({isHiddenPageSpin: true, isLoadedCouponSource:true})
+        this.setState({isLoadedCouponSource:true})
       })
   };
   thisHandler = (e) => {
@@ -163,16 +182,13 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-          this.setState({
-            isHiddenPageSpin: true,
-            isHiddenCheckoutWaitingLayer: false
-          });
-          return notifyAppToCheckout({oid: data.oid})
-              .then((dataFromApp) => {
-                this.setState({
-                  orderId: data.oid
-                });
-              })
+        return notifyAppToCheckout({oid: data.oid})
+            .then((dataFromApp) => {
+              this.setState({
+                isHiddenCheckoutWaitingLayer: false,
+                orderId: data.oid
+              });
+            })
 
         } else {
           throw new Error(errors[data.rea])
@@ -196,25 +212,7 @@ class UserOrderCreated extends React.Component {
 
   };
   componentDidMount = () => {
-    let url = `${EDIT_CART_GOODS_BY_IDS}/${this.props.params.goodsIds}`
-    this.setState({
-      isHiddenPageSpin: true
-    })
-    fetchAuth(url)
-      .then(data => {
-        if (data.rea == FETCH_SUCCESS) {
-          this.setState({
-            goodList: data.cart,
-            isHiddenPageSpin: true
-          })
-        }
-      })
-      .catch(error => {
-        //this.setState({isHiddenPageSpin: true})
-      })
-      .then(() => {
-        this.setState({isHiddenPageSpin: true})
-      })
+    this.fetchData()
 
   };
   componentWillReceiveProps = (props) => {
