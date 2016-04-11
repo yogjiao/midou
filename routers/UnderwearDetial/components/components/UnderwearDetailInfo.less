@@ -63,7 +63,11 @@
 
       .img-wrap{
         text-align: center;
-        background-color: #fff;
+
+        &:not(a){
+          background-color: #fff;
+        }
+        display: block;
         img{
           max-width: 100%;
           max-height: 4.8rem;

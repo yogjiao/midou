@@ -56,7 +56,6 @@ class UnderweardetailInfo extends React.Component {
                           <a href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                             <div className="img-wrap"><img src={item.thumb_img} /></div>
                             <div className="pro-name">{item.name}</div>
-                            <div className="pro-price">&yen; {item.price}</div>
                           </a>
                         </div>
                       </div>
