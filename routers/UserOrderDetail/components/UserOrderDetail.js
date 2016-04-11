@@ -190,7 +190,7 @@ class UserOrderDetail extends React.Component {
         </PageHeader>
         <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">
-            <i>订单状态：</i><span>{orderState[Math.min(this.state.order[0].order_state, 22)]}</span>
+            <i>订单状态：</i><span>{orderState[this.state.order[0].order_state]}</span>
           </div>
           <div className="order-id-wrap">
             <i>订单号：</i><span>{this.state.order[0].id}</span>
@@ -204,6 +204,7 @@ class UserOrderDetail extends React.Component {
             return (<UserOrderDetailGroup
                       key={index}
                       source={item}
+                      orderState={this.state.order[0].order_state}
                     />)
           })
         }

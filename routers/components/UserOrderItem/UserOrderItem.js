@@ -4,6 +4,7 @@ import {a} from 'react-router'
 import {
   BASE_PAGE_DIR
 } from 'macros.js'
+import orderState from 'orderState.js'
 import './UserOrderItem.less'
 class UserOrderItem extends React.Component {
   /**
@@ -32,8 +33,9 @@ class UserOrderItem extends React.Component {
         break;
       case '2':
         if (itemType == 1) {
-
-          if (this.props.source.order_state >= 12) {
+          if (['30', '31', '40', '41'].indexOf(this.props.source.order_state) > -1) {
+            row_1 = (<span>{orderState[this.props.source.order_state]}</span>)
+          } else if (this.props.source.order_state >= 12) {
             row_1 = (<a className="btn-draw-back" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/0`}>退款</a>)
           } else {
             row_1 = (<span></span>)
@@ -41,8 +43,9 @@ class UserOrderItem extends React.Component {
           price = <div className="price arial">&yen;{`${this.props.source.price}`}<i className="iconfont icon-close"/>{this.props.source.count}</div>
         } else if (itemType == 2) {
           row_1 = (<div className="prepay-icon">试</div>)
-
-          if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
+          if (['32', '33', '40', '41'].indexOf(this.props.source.order_state) > -1) {
+            row_2 = (<span>{orderState[this.props.source.order_state]}</span>)
+          } else if (this.props.source.order_state >= 12 && this.props.source.order_state < 32){
             if (this.props.source.order_state  == '13') {
               row_2 = (<div className="btn-box-operate">已补差价</div>)
             } else {
@@ -52,8 +55,7 @@ class UserOrderItem extends React.Component {
             row_2 = (<span></span>)
           }
 
-
-          if (this.props.source.order_state >= 22 && this.props.source.order_state < 32){
+          if (this.props.orderState >= 22 && this.props.orderState < 32){
             row_3 = (<a className="btn-box-operate return-uw" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</a>)
           } else {
             row_3 = (<span></span>)
@@ -77,9 +79,6 @@ class UserOrderItem extends React.Component {
 
 
     }
-
-
-
     return (
       <div className="order-item-container">
         <div className="column">
