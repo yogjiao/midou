@@ -55,7 +55,7 @@ class UserOrderItem extends React.Component {
             row_2 = (<span></span>)
           }
 
-          if (this.props.orderState >= 22 && this.props.orderState < 32){
+          if (this.props.source.order_state < 30 && ['22','23','24', '80'].indexOf(this.props.orderState) > -1){
             row_3 = (<a className="btn-box-operate return-uw" href={`${BASE_PAGE_DIR}/express/${this.props.source.id}/1`}>返回内衣</a>)
           } else {
             row_3 = (<span></span>)
