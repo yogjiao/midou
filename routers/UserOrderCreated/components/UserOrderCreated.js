@@ -14,7 +14,9 @@ import {
   BASE_PAGE_DIR,
   FETCH_COUPONS,
   PUT_TO_ORDER,
-
+  SELECT,
+  LS_PAY_WAY,
+  LS_RECEIVER
 } from 'macros.js'
 import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
@@ -22,6 +24,7 @@ let update = require('react-addons-update')
 import errors from 'errors.js'
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
+import ua from 'uaParser.js'
 
 import './UserOrderCreated.less'
 class UserOrderCreated extends React.Component {
@@ -33,8 +36,8 @@ class UserOrderCreated extends React.Component {
       headerName: '创建订单',
       promptMsg: '订单提交成功',
       goodList: [],
-      payWay: props.params.payWay || 'wx', //wx  zfb
-      receiver: props.params.receiver,
+      payWay: localStorage.getItem(LS_PAY_WAY) || 'wx', //wx  zfb
+      receiver: JSON.parse(localStorage.getItem(LS_RECEIVER)) || {},
 
       coupon: [],
       couponItemName: '选择优惠方式',
@@ -153,7 +156,7 @@ class UserOrderCreated extends React.Component {
     let nextState = {}
 
     let data = {}
-    data.address_id = this.props.params.receiver.id
+    data.address_id = this.state.receiver.id
     if (!data.address_id) {
       nextState.promptMsg = '请选择收货人地址'
       this.setState(nextState)
@@ -211,9 +214,42 @@ class UserOrderCreated extends React.Component {
       })
 
   };
+  isNeedFreshReceiver = (r) => {
+    return ['id', 'name', 'phone', 'province', 'city', 'detail'].some((item, index) => {
+      return r[item] != this.state.receiver[item]
+    })
+  };
+  freshReceiverFromLS = () => {
+    try {
+      let selectReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
+      if (this.isNeedFreshReceiver(selectReceiver)) {
+        this.setState({receiver: selectReceiver})
+      }
+    } catch (e) {
+      this.setState({receiver: {}})
+    }
+    clearTimeout(this.timer)
+    this.timer = setTimeout(() => {
+      this.freshReceiverFromLS()
+    }, 1000)
+
+  };
   componentDidMount = () => {
     this.fetchData()
 
+    // window.addEventListener('storage', (e) => {
+    //   alert(e.key)
+    //   if (e.key == LS_RECEIVER) {
+    //     let selectReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
+    //     this.setState({receiver: selectReceiver})
+    //
+    //   }
+    // }, false);
+
+    this.freshReceiverFromLS()
+  };
+  componentWillUnmount = () => {
+    clearInterval(this.timer)
   };
   componentWillReceiveProps = (props) => {
 
@@ -226,9 +262,15 @@ class UserOrderCreated extends React.Component {
   render() {
     return (
       <div className="order-created-container" onClick={this.thisHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
-        </PageHeader>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+            </PageHeader>
+          )
+        }
         {
            this.state.goodList.map((item, index) => {
             return (<UserOrderCreatedGroup
@@ -241,24 +283,26 @@ class UserOrderCreated extends React.Component {
           <dt className="ff-Medium">收货人信息</dt>
           <dd>
             {
-              this.props.params.receiver.id?
+              this.state.receiver.id?
               (
-                <Link className="dd-wrap font-gray on" to={`${BASE_PAGE_DIR}/receivers`}>
+                <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
                   <div>
-                    <div className="receiver-info-wrap">{this.props.params.receiver.name}</div>
-                    <div className="receiver-info-wrap">{this.props.params.receiver.phone}</div>
-                    <div className="receiver-info-wrap">{this.props.params.receiver.address}</div>
+                    <div className="receiver-info-wrap">{this.state.receiver.name}</div>
+                    <div className="receiver-info-wrap">{this.state.receiver.phone}</div>
+                    <div className="receiver-info-wrap">
+                      {`${this.state.receiver.provinceName} ${this.state.receiver.cityName} ${this.state.receiver.detail}`}
+                    </div>
                   </div>
                   <i className="iconfont icon-gt" />
-                </Link>
+                </a>
               ):
               (
-                <Link className="dd-wrap font-gray" to={`${BASE_PAGE_DIR}/receivers`}>
+                <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
                   <div className="info-wrap">
                      添加收货人信息
                   </div>
                   <i className="iconfont icon-gt" />
-                </Link>
+                </a>
               )
             }
           </dd>

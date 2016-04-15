@@ -22,6 +22,27 @@ export let MIDOU_TOKEN_NAME = 'x-midou-token'
 
 export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'
 export let FETCH_SUCCESS = '0'
+// for router
+export let ROUTER_SHOPPING_CART_SCAN = 'scan'
+export let ROUTER_SHOPPING_CART_EDIT = 'edit'
+export let ROUTER_RECIEVER_INFO_ADD = 'add'
+export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
+export let RECEIVERS_EDIT = 'edit'
+
+export let EDIT = 'edit'
+export let SCAN = 'scan'
+
+export let CREATE = 'create'
+export let READ = 'read'
+export let UPDATE = 'update'
+export let DELETE = 'delete'
+export let SELECT = 'select'
+
+/*********localStorage key**********/
+export let LS_RECEIVER = 'receiver'
+export let LS_PAY_WAY = 'payway'
+
+export let LS_IS_FRESH_RECEIVERS = 'isfreshReceivers'
 /******** callHandler - js call bc *******/
 
 
@@ -52,13 +73,10 @@ export let CALL_HANDLER_GET_APP_VERSION = 'getAppVersionCallback'
 
 export let IOS_APP_STORE_URL = 'https://itunes.apple.com/cn/app/nei-xin/id1091167426?mt=8'
 
-// for router
-export let ROUTER_SHOPPING_CART_SCAN = 'scan'
-export let ROUTER_SHOPPING_CART_EDIT = 'edit'
-export let ROUTER_RECIEVER_INFO_ADD = 'add'
-export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
-export let RECEIVERS_EDIT = 'edit'
-export let EDIT = 'edit'
+
+
+
+
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 // export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 // export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']

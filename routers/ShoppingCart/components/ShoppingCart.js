@@ -8,8 +8,8 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
 import {
     BASE_PAGE_DIR,
-    ROUTER_SHOPPING_CART_SCAN,
-    ROUTER_SHOPPING_CART_EDIT,
+    SCAN,
+    EDIT,
     FETCH_SUCCESS,
     FETCH_CARTS,
     FETCH_STATUS_NO_MORE_PRODUCT,
@@ -27,13 +27,23 @@ import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
 let update = require('react-addons-update');
 import ua from 'uaParser.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 
 import './ShoppingCart.less'
 class ShoppingCart extends React.Component {
   constructor(props) {// actionModel: scal edit
-    super(props);
+    super(props)
     this.state = {
+      actionModel: SCAN
+    }
+    this.initState()
+  }
+  /**
+   *  initial state when actionModel changed
+   */
+  initState = (nextState) => {
+    let state = nextState || this.state
+    Object.assign(state, {
       selectedIds: [],
       goodList: [],
       totalPrice: 0,
@@ -49,9 +59,9 @@ class ShoppingCart extends React.Component {
       isFetching: false,
       isHaveGoods: true,
       isNull: false
-    }
+    })
 
-  }
+  };
   /**
    * flat the box service data based on item.count
    * eg: [{count: 2, ...}] => [{count: 1, ...}, {count: 1, ...}]
@@ -375,8 +385,10 @@ class ShoppingCart extends React.Component {
         })
       })
   };
-
-  editHandler = (e) => {
+  /**
+   * for edit mostly
+   */
+  thisHandler = (e) => {
     let target,
         nextState;
 
@@ -388,9 +400,11 @@ class ShoppingCart extends React.Component {
       }
       return
     }
-
-
-    if (target = getParentByClass(e.target, 'btn-add')) {
+    if (target = getParentByClass(e.target, 'btn-scan-carts')) {
+      nextState = {actionModel: SCAN}
+    } else if (target = getParentByClass(e.target, 'btn-edit-carts')) {
+      nextState = {actionModel: EDIT}
+    } else if (target = getParentByClass(e.target, 'btn-add')) {
        this.assignDataPramas(target)
        if (this.itemId == '-1') {
         this.putBoxService()
@@ -493,30 +507,33 @@ class ShoppingCart extends React.Component {
   menuHanler = () => {
     switch (this.props.params.actionModel) {
 
-      case ROUTER_SHOPPING_CART_SCAN:
+      case SCAN:
         this.props.history.push()
         break;
-      case ROUTER_SHOPPING_CART_EDIT:
-      //  this.props.history.push(`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`)
+      case EDIT:
+      //  this.props.history.push(`${BASE_PAGE_DIR}/carts/${SCAN}`)
       this.props.history.goBack()
         break;
     }
     this.props.history.goForward()
   };
-  switchHeader = (props) => {
-    switch (props.params.actionModel) {
-      case ROUTER_SHOPPING_CART_SCAN:
-        this.state.headerName = '购物车'
-        this.state.menu = <Link to={`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_EDIT}`}>编辑</Link>
+  switchHeader = (state = this.state) => {
+
+    switch (state.actionModel) {
+      case EDIT:
+        state.headerName = '编辑购物车'
+        state.menu = <div className="btn-scan-carts">完成</div>
         break;
-      case ROUTER_SHOPPING_CART_EDIT:
-        this.state.headerName = '编辑购物车'
-        this.state.menu = <Link to={`${BASE_PAGE_DIR}/carts/${ROUTER_SHOPPING_CART_SCAN}`}>完成</Link>
-        break;
+      default:
+        state.headerName = '购物车'
+        state.menu = <div className="btn-edit-carts">编辑</div>
     }
+
+
   };
   componentWillMount = () => {
-    this.switchHeader(this.props)
+    this.switchHeader()
+
   };
   componentWillUnmount = () => {
 
@@ -526,17 +543,35 @@ class ShoppingCart extends React.Component {
     this.fetchCartData()
     document.addEventListener('scroll', this.handleScroll);
 
-  };
-  componentWillReceiveProps = (nextProps) => {
-    this.switchHeader(nextProps)
-  };
-  componentWillUpdate = (nextProps, nextState) => {
-    let ids = []
-    nextState.goodList.forEach( (item, index) => {
-      if (item.goods[0].isSelected) ids.push(item.id)
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '3') {
+        this.setState({actionModel: EDIT})
+      } else if (data.type == '5') {
+        this.setState({actionModel: SCAN})
+      }  else if (data.type == '6') {
+        this.initState()
+        this.fetchCartData()
+      }
     })
-    nextState.selectedIds = ids
-    nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+  };
+  // componentWillReceiveProps = (nextProps) => {
+  //   this.switchHeader(nextProps)
+  // };
+  componentWillUpdate = (nextProps, nextState) => {
+    if (this.state.actionModel != nextState.actionModel) {
+      this.initState()
+      this.switchHeader(nextState)
+      this.initState(nextState)
+      this.fetchCartData()
+    } else {
+      let ids = []
+      nextState.goodList.forEach( (item, index) => {
+        if (item.goods[0].isSelected) ids.push(item.id)
+      })
+      nextState.selectedIds = ids
+      nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+    }
+
   };
   backHandler = () => {
     if (ua.isApp()) {
@@ -556,17 +591,19 @@ class ShoppingCart extends React.Component {
                 (`${BASE_PAGE_DIR}/order-created/` + this.state.selectedIds.join()):
                 "javascript:void(0);"
     return (
-      <div className="shopping-cart-container" onClick={this.editHandler}>
-        <PageHeader
-          headerName={this.state.headerName}
-        >
-          {
-            this.props.location.query.from == 'app'?
-            <div />:
-            <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
-          }
-          {this.state.menu}
-        </PageHeader>
+      <div className="shopping-cart-container" onClick={this.thisHandler}>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader
+              headerName={this.state.headerName}
+            >
+              <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+              {this.state.menu}
+            </PageHeader>
+          )
+        }
         {
           this.state.isNull?
           (<ShoppingCartNoResult />):
@@ -579,7 +616,7 @@ class ShoppingCart extends React.Component {
                               key={index}
                               source={item.goods}
                               cid={item.id}
-                              actionModel={this.props.params.actionModel}
+                              actionModel={this.state.actionModel}
                               isSelectedAll={this.state.isSelectedAll}
                              />
                             )

@@ -30,10 +30,6 @@ class UnderwearsIndex extends React.Component {
   render() {
     return (
       <div className="uw-index-container">
-        <PageHeader headerName={this.state.headerName} isHiddenBottomBorder={true}>
-          <div></div>
-          <a className="menu-search" href={`${BASE_PAGE_DIR}/search`}>所有单品</a>
-        </PageHeader>
         <div className="swiper-container bg-neixin" >
           <div className="swiper-wrapper">
               <div className="swiper-slide">

@@ -22,7 +22,8 @@ let update = require('react-addons-update')
 
 import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import UnderwearSearchPanel from 'UnderwearSearchPanel.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 // import fetch from '../../components/fetch.js'
 
 
@@ -267,7 +268,14 @@ class Underwears extends React.Component {
   };
   componentDidMount = () => {
     this.fetchData();
-    document.addEventListener('scroll', this.scrollingHandler);
+    document.addEventListener('scroll', this.scrollingHandler)
+
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '1') {
+        this.setState({isHiddenSearchPanel: false})
+      }
+    })
+      
   };
   componentWillReceiveProps = (nextProps) => {
     this.initSearchParams(nextProps)
@@ -276,10 +284,16 @@ class Underwears extends React.Component {
   render() {
     return (
       <div className="uw-list-container" onClick={this.thisHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <div className="iconfont icon-arrow-left"></div>
-          <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
-        </PageHeader>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <div className="iconfont icon-arrow-left"></div>
+              <div className="menu-search" onClick={this.openFilterHanler}>筛选</div>
+            </PageHeader>
+          )
+        }
         <div className="list-wrap">
           <div className="adjuxt-wrap clearfix">
               {

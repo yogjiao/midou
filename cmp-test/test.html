@@ -30,6 +30,11 @@ function myStorage_handler(evt)
     // alert('The window where the change was made was '+evt.source);
     init()
 }
+
+setInterval(function(){
+  alert(localStorage.getItem('shirtSize') + '-' + localStorage.getItem('shirtColor'))
+}, 5000)
+
 </script>
 </head>
 

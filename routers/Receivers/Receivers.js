@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import {Link} from 'react-router'
 import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
@@ -12,15 +13,20 @@ import {
   DELETE_RECEIVERS,
   FETCH_SUCCESS,
   BASE_PAGE_DIR,
-  ROUTER_RECIEVER_INFO_ADD,
-  EDIT,
-  RECEIVERS_EDIT} from 'macros.js'
+  CREATE,
+  SELECT,
+  RECEIVERS_EDIT,
+  LS_RECEIVER,
+  LS_IS_FRESH_RECEIVERS
+} from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
 import {backToNativePage} from 'webviewInterface.js'
 let update = require('react-addons-update')
 import ua from 'uaParser.js'
+import Hammer from 'hammerjs'
+
 
 import './Receivers.less'
 class Receivers extends React.Component {
@@ -58,6 +64,15 @@ class Receivers extends React.Component {
           })
           this.setState(nextState)
           this.refs['prompt'].show();
+
+          let persistenceReceiver
+          try {
+            persistenceReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
+            if (persistenceReceiver.id == receiverId) {
+              localStorage.removeItem(LS_RECEIVER)
+            }
+          } catch (e) {}
+
         }
       })
       .catch((error) => {
@@ -70,6 +85,28 @@ class Receivers extends React.Component {
           isHiddenScrollingSpin: true
         })
       })
+
+  };
+  fresh = () => {
+    this.state.lastReceiver = 0
+    this.state.receivers = []
+    this.fetchListData()
+  };
+  freshWhenDetectingSignal = () => {
+    try {
+      if (localStorage.getItem(LS_IS_FRESH_RECEIVERS) == '1') {
+        localStorage.removeItem(LS_IS_FRESH_RECEIVERS)
+        this.fresh()
+      }
+    } catch (e) {
+
+    } finally {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.freshWhenDetectingSignal()
+      }, 2000)
+    }
+
 
   };
   fetchListData = (isScrollLoading) => {
@@ -139,24 +176,81 @@ class Receivers extends React.Component {
   };
   crudHandler = (e) => {
     let target
-    if (target = getParentByClass(e.target, 'btn-delete')) {
+    if (target = getParentByClass(e.target, 'icon-delete')) {
       this.dataId = target.getAttribute('data-id')
       this.dataIndex = target.getAttribute('data-index')
-      this.setState({isHiddenConfirm: false})
-    } else if (target = getParentByClass(e.target, 'receivers-item')){
-      if (!this.props.params.receiversModel){
+      this.deleteReceiverHandler()
+      //this.setState({isHiddenConfirm: false})
+    } else if (target = getParentByClass(e.target, 'receiver-select')){
+      if (this.props.params.actionModel == SELECT){
         let receiver = target.getAttribute('data-source')
-        localStorage.setItem('receiver', receiver)
-        this.props.history.goBack();
+        localStorage.setItem(LS_RECEIVER, receiver)
+        this.backHandler()
       }
+
     }
   };
   componentDidMount = () => {
     this.fetchListData()
     document.addEventListener('scroll', this.handleScroll);
+
+    // get a reference to an element
+    let target
+    let maxDistance = 0
+    let minDistance = 0
+    let stage = ReactDOM.findDOMNode(this)
+    let mc = new Hammer(stage);
+    // subscribe to events
+    mc.on('tap', (e) => {
+      try {
+        this.openTarget.style.transform = ''
+      } catch (e) {}
+
+      this.crudHandler(e)
+    })
+    mc.on('panstart', (e) => {
+      target = getParentByClass(e.target || e.pointers[0].target, 'receivers-item-wrap')
+      maxDistance = -(target.querySelector('.action-wrap').clientWidth)
+      minDistance = -(target.querySelector('.action-wrap').firstChild.clientWidth)
+    })
+    mc.on('panmove', (e) => {
+      if (target !== this.openTarget) {
+        try {
+          this.openTarget.style.transform = ''
+        } catch (e) {
+
+        }
+      }
+      if (target) {
+        let x = Math.max(maxDistance, e.deltaX)
+        target.style.transform = `translateX(${x}px)`
+      }
+    })
+    mc.on('panend', (e) => {
+      if (minDistance > e.deltaX) {
+        target.style.transform = `translateX(${maxDistance}px)`
+        this.openTarget = target
+      } else {
+        target.style.transform = ''
+        target = null
+      }
+    })
+    // mc.on('swipeleft', (e) => {
+    //
+    // })
+
+    // window.addEventListener('storage', (e) => {
+    //   if (e.key == LS_IS_FRESH_RECEIVERS) {
+    //     localStorage.removeItem(LS_IS_FRESH_RECEIVERS, 1)
+    //     this.fresh()
+    //
+    //   }
+    // }, false);
+
+    this.freshWhenDetectingSignal()
   };
   componentWillUnmount = () => {
-
+    clearTimeout(this.timer)
     document.removeEventListener('scroll', this.handleScroll);
   };
   componentWillUpdate = (nextProps, nextState) => {
@@ -164,19 +258,22 @@ class Receivers extends React.Component {
   };
   render() {
     return (
-      <div className="receivers-container" onClick={this.crudHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
-          {
-            this.props.params.receiversModel == EDIT?
-              (<Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>):
-              (<Link to={`${BASE_PAGE_DIR}/receivers/${EDIT}`}>管理</Link>)
-          }
-        </PageHeader>
+      <div className="receivers-container">
+      {
+        ua.isApp()?
+        '':
+        (
+          <PageHeader headerName={this.state.headerName}>
+            <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+            <a href={`${BASE_PAGE_DIR}/receiver/${CREATE}`}>新增地址</a>
+          </PageHeader>
+        )
+      }
+
         <div className="list-wrap">
           <ul className="pro-list">
             {
-              this.state.receivers.length?
+
               this.state.receivers.map((item, index) => {
 
                 let province = provinces.find((province, index) => {
@@ -185,14 +282,22 @@ class Receivers extends React.Component {
                 let city = this.cities.find((city, index) => {
                   return city.id == item.city
                 })
+                item.provinceName = province.name
+                item.cityName = city.name
                 item.address = province.name + ' ' + city.name + ' ' + item.detail
 
-                return <ReceiversItem key={index} {...item} index={index} receiversModel={this.props.params.receiversModel}/>;
-              }):
-              this.props.params.receiversModel != EDIT?
-              <div className="add-receiver-wrap">
-                <Link to={`${BASE_PAGE_DIR}/receiver/${ROUTER_RECIEVER_INFO_ADD}`}>添加收货人</Link>
-              </div>:
+                return <ReceiversItem key={index} {...item} index={index} actionModel={this.props.params.actionModel}/>;
+              })
+            }
+            {
+              this.state.receivers.length < 5?
+              <a
+                className="add-receiver-wrap"
+                href={`${BASE_PAGE_DIR}/receiver/${CREATE}`}
+              >
+                <i className="iconfont icon-add"/>
+                <span>添加收货人信息</span>
+              </a>:
               ''
             }
           </ul>

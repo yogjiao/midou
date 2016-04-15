@@ -7,7 +7,9 @@ class ScrollingSpin extends React.Component {
     let style = {}
     style.display = this.props.isHidden? 'none' : 'block'
     return (
-      <div className="scrolling-spin" style={style}>加载中...</div>
+      <div className="scrolling-spin" >
+         <div style={style}>加载中...</div>
+      </div>
     )
   }
 }

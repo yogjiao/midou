@@ -24,6 +24,7 @@ let update = require('react-addons-update')
 import UnderwearListItem from 'UnderwearListItem/UnderwearListItem.js'
 import CollectionsNoResult from 'CollectionsNoResult.js'
 import {backToNativePage} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 // import fetch from '../../components/fetch.js'
 
 
@@ -128,9 +129,16 @@ class Collections extends React.Component {
   render() {
     return (
       <div className="uw-list-container">
-        <PageHeader headerName={this.state.headerName}>
-          <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
-        </PageHeader>
+        {
+           ua.isApp()?
+           '':
+           (
+             <PageHeader headerName={this.state.headerName}>
+               <div className="iconfont" onClick={this.backHandler}>&#xe609;</div>
+             </PageHeader>
+           )
+        }
+
         {
           this.state.isNull?
           (<CollectionsNoResult />):

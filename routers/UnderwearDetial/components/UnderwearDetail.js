@@ -26,8 +26,9 @@ import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp, calloutNewWebview} from 'webviewInterface.js'
 import CartEntry from 'CartEntry.js'
+import ua from 'uaParser.js'
 
 class Underweardetail extends React.Component {
   constructor(props) {
@@ -179,10 +180,13 @@ class Underweardetail extends React.Component {
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           if (this.state.buyActionModel == 1) {
-            this.props.history.push(`${BASE_PAGE_DIR}/order-created/${data.cid}`)
-            this.props.history.goForward()
+            // this.props.history.push()
+            // this.props.history.goForward()
+            calloutNewWebview({url:`${window.location.origin}${BASE_PAGE_DIR}/order-created/${data.cid}`})
+          } else {
+            this.setState({promptMsg: '商品已添加到购物车'})
           }
-          this.setState({promptMsg: '商品已添加到购物车'})
+
         } else if (data.rea == '2003'){
           this.setState({promptMsg: '你选择的型号没有库存了'})
         } else {
@@ -417,14 +421,28 @@ class Underweardetail extends React.Component {
   }
   componentDidMount = () => {
     this.fetchDetailData(this.props.params.productId)
+
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '2') {
+        this.refs['share'].show()
+      }
+    })
+
   };
   render() {
     return (
       <div className="uw-detail-container" onClick={this.thisHandler}>
-        <PageHeader headerName="产品详情" isHiddenBottomBorder={true}>
-          <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
-          <div className="iconfont icon-share"></div>
-        </PageHeader>
+
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName="产品详情" isHiddenBottomBorder={true}>
+              <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+              <div className="iconfont icon-share"></div>
+            </PageHeader>
+          )
+        }
         <UnderweardetailBanner img={this.state.goods.thumb_img_list}/>
         <UnderweardetailInfo {...this.state.goods}/>
         <UnderweardetailFooter

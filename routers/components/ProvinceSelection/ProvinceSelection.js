@@ -80,7 +80,13 @@ class ProvinceSelection extends React.Component {
           nextState.cityIndex = target.getAttribute('data-index')
           nextState.isHiddenSelection = true
           this.setState(nextState)
-          this.props.onAddressChange(this.state.provinceId, nextState.cityId)
+          let changedData = {
+            cityId: nextState.cityId,
+            cityName: nextState.cityName,
+            provinceId: this.state.provinceId,
+            provinceName: this.state.provinceName,
+          }
+          this.props.onAddressChange(changedData)
           break;
       }
     } else if (target = getParentByClass(e.target, 'select-bg-layout')) {
@@ -126,7 +132,8 @@ class ProvinceSelection extends React.Component {
            nextState.isHiddenPageSpin = true
 
            this.setState(nextState)
-           this.props.onAddressChange(nextState.provinceId, nextState.cityId)
+           let changedData = pick(nextState, 'provinceId','provinceName','cityId','cityName')
+           this.props.onAddressChange(changedData)
 
          }
       })

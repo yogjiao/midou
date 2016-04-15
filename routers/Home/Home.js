@@ -21,7 +21,7 @@ class Home extends React.Component {
     super(props, context);
     this.state = {
       pageIndex: 0,
-      pageSize: 2,
+      pageSize: 5,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -48,6 +48,8 @@ class Home extends React.Component {
           this.state.isHaveGoods = false
           if (this.state.pageIndex == 0) {
             this.setState({isExpect: true})
+          } else {
+            this.setState({isHiddenScrollingSpin: true})
           }
         } else if (data.rea == FETCH_SUCCESS) {
           let nextState = update(this.state, {
@@ -66,7 +68,7 @@ class Home extends React.Component {
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
-          isHiddenScrollingSpin: true
+          //isHiddenScrollingSpin: true
         })
       })
   };

@@ -44,6 +44,28 @@ function handler(handlerName) {
 export let registerHandler = handler('registerHandler');
 export let callHandler = handler('callHandler');
 
+
+/*************registerHandler******************/
+/*
+{
+  1: '内衣搜索'
+  2: '分享'
+  3: '购物车编辑'
+  4: '删除订单'
+  5：'购物车浏览'
+  6：'刷新购物车'
+  7：'保存物流信息'
+  8：'保存收货人信息'
+}
+*/
+export let receiveNotificationsFromApp = function(callback){
+    registerHandler('notifyWebBridge', callback)//data, responseCallback
+}
+
+
+
+/*************callHandler******************/
+
 // cached  user login info
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
@@ -69,8 +91,15 @@ export let getUserInfoFromApp = function() {
 
 
 
+//calloutNewWebview
 
-
+export let calloutNewWebview = function(param) {
+  return new Promise((resolve, reject) => {
+    callHandler('calloutNewWebview', param || {}, function(response) {
+        resolve(response)
+      })
+  });
+}
 
 export let callOutLoginPanel = function() {
   return new Promise((resolve, reject) => {

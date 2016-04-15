@@ -1,29 +1,44 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {BASE_PAGE_DIR, ROUTER_RECIEVER_INFO_EDIT, RECEIVERS_EDIT} from 'macros.js'
+import {BASE_PAGE_DIR, UPDATE, SELECT} from 'macros.js'
 
 import './ReceiversItem.less'
 class ReceiversItem extends React.Component {
   render() {
     return (
-      <li className="receivers-item" data-source={JSON.stringify(this.props)}>
-        <div className="column">
-           <div>{this.props.name}</div>
-           <div className="arial">{this.props.phone}</div>
-           <div>{this.props.address}</div>
+      <li className="receivers-item" >
+        <div className="receivers-item-wrap">
+          {
+
+            this.props.actionModel == SELECT?
+            (
+              <div className="info-wrap receiver-select" data-source={JSON.stringify(this.props)}>
+                 <div className="receiver-name">{this.props.name}</div>
+                 <div className="receiver-phone arial">{this.props.phone}</div>
+                 <div className="receiver-address">{this.props.address}</div>
+              </div>
+            ):
+            (
+              <a className="info-wrap" href={`${BASE_PAGE_DIR}/receiver/${this.props.id}/${UPDATE}`}>
+                 <div className="receiver-name">{this.props.name}</div>
+                 <div className="receiver-phone arial">{this.props.phone}</div>
+                 <div className="receiver-address">{this.props.address}</div>
+              </a>
+            )
+          }
+
+          <div className="action-wrap">
+            <a
+              className="iconfont icon-edit"
+              href={`${BASE_PAGE_DIR}/receiver/${this.props.id}/${UPDATE}`}
+            />
+            <i
+              className="iconfont icon-delete"
+              data-id={this.props.id}
+              data-index={this.props.index}
+            />
+          </div>
         </div>
-        {
-          this.props.receiversModel == RECEIVERS_EDIT?
-           (
-             <div className="column">
-               <i className="iconfont btn-edit">
-                 <Link to={`${BASE_PAGE_DIR}/receiver/${this.props.id}/${ROUTER_RECIEVER_INFO_EDIT}`}>&#xe601;</Link>
-               </i>
-               <i className="iconfont btn-delete" data-id={this.props.id} data-index={this.props.index}>&#xe608;</i>
-             </div>
-           ):
-           ''
-        }
 
       </li>
     )
