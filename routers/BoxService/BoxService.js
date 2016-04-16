@@ -32,7 +32,7 @@ class BoxService extends React.Component {
                 <div className="box-service-wrap">
                   <h2>免费试衣</h2>
                   <div className="img-wrap">
-                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-1.png)`}}/>
+                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-3.png)`}}/>
                   </div>
                   <h6>购买1件送达2件</h6>
                   <p className="tips-wrap">
@@ -58,7 +58,7 @@ class BoxService extends React.Component {
                 <div className="box-service-wrap">
                   <h2>诚信得好礼</h2>
                   <div className="img-wrap">
-                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-3.png)`}}/>
+                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-1.png)`}}/>
                   </div>
                   <h6>升级盒子</h6>
                   <p className="tips-wrap">
