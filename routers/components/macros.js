@@ -1,11 +1,11 @@
 /********************************url**********************************/
 export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
-// export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
-// export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
+export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
+export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
 
-export let BASE_PAGE_DIR = '/app-page/' + __VERSION__; //app-page/' + __VERSION__;
-export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
+// export let BASE_PAGE_DIR = '/app-page/' + __VERSION__; //app-page/' + __VERSION__;
+// export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
 //export let BASE_PAGE_DIR = '/app-page/*.*.*/';
 
 export let BASE_STATIC_DIR = '/app-static'
