@@ -56,6 +56,7 @@ class Selection extends React.Component {
         className={'select-bg-layout' + ' ' + 'item-type-' + this.props.itemType}
         onClick={this.props.selectionHandler}
       >
+        <div className="select-over-layer"/>
         <div className="select-container" ref="select-container">
            <div className="select-header">{this.props.title}</div>
            <div className="select-body-wrap">

@@ -234,6 +234,8 @@ class Step extends React.Component {
     let nextState
     if (target = getParentByClass(e.target, 'select-item-wrap')) {
       nextState = this.getNextStateForSelectedData(target)
+    } else if (target = getParentByClass(e.target, 'select-over-layer')) {
+      nextState = {isHiddenSelection: true}
     }
 
     nextState && this.setState(nextState)
