@@ -117,7 +117,7 @@ class ReceiverInfo extends React.Component {
             this.cachedReceiver(cacheData)
           }
 
-          localStorage.setItem(LS_IS_FRESH_RECEIVERS, 1)//Math.random()
+          localStorage.setItem(LS_IS_FRESH_RECEIVERS, "1")//Math.random()
 
           this.setState(nextState)
           this.refs['prompt'].show()

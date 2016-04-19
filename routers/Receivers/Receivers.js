@@ -90,24 +90,26 @@ class Receivers extends React.Component {
   fresh = () => {
     this.state.lastReceiver = 0
     this.state.receivers = []
-    this.fetchListData()
+    this.cities = null
+    return this.fetchListData()
   };
   freshWhenDetectingSignal = () => {
     try {
       if (localStorage.getItem(LS_IS_FRESH_RECEIVERS) == '1') {
         localStorage.removeItem(LS_IS_FRESH_RECEIVERS)
         this.fresh()
+          .then(() => {
+            this.freshWhenDetectingSignal()
+          })
+      } else {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.freshWhenDetectingSignal()
+        }, 2000)
       }
     } catch (e) {
 
-    } finally {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.freshWhenDetectingSignal()
-      }, 2000)
     }
-
-
   };
   fetchListData = (isScrollLoading) => {
     this.state.isFetching = true
@@ -117,9 +119,10 @@ class Receivers extends React.Component {
     } else {
       this.setState({isHiddenPageSpin: false})
     }
-    fetchAuth(url)
+    return fetchAuth(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+
           this.state.isHaveaddress = false
           return
         }
@@ -133,7 +136,7 @@ class Receivers extends React.Component {
         }
       })
       .catch((error) => {
-        //alert(error.message)
+        alert(error.message)
       })
       .then(() => {
         this.setState({
