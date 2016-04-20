@@ -55,14 +55,19 @@ export let callHandler = handler('callHandler');
   5：'购物车浏览'
   6：'刷新购物车'
   7：'保存物流信息'
-  8：'保存收货人信息'
+  8：'保存收货人信息',
+  9: '选择收货人信息'
 }
 */
 export let receiveNotificationsFromApp = function(callback){
     registerHandler('notifyWebBridge', callback)//data, responseCallback
 }
 
-
+export let sendNotificationsToApp = function(data, callback){
+  callHandler('calloutNewWebview', param || {}, function(response) {
+      callback(response)
+    })
+}
 
 /*************callHandler******************/
 

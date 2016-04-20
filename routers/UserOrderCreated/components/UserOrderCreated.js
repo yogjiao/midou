@@ -18,7 +18,7 @@ import {
   LS_PAY_WAY,
   LS_RECEIVER
 } from 'macros.js'
-import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
+import {notifyAppToCheckout, backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 import errors from 'errors.js'
@@ -247,6 +247,10 @@ class UserOrderCreated extends React.Component {
     // }, false);
 
     this.freshReceiverFromLS()
+
+    receiveNotificationsFromApp(function(data){
+      alert(JSON.stringify(data))
+    })
   };
   componentWillUnmount = () => {
     clearInterval(this.timer)

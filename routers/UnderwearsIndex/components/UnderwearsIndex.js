@@ -22,9 +22,11 @@ class UnderwearsIndex extends React.Component {
     //this.state.tagsIndex[0] = 0
   }
   componentDidMount = () => {
+    
     var swiper = new Swiper('.swiper-container', {
       pagination: '.swiper-pagination',
-      paginationClickable: true
+      paginationClickable: true,
+      slidesPerView: 'auto'
     });
   };
   render() {

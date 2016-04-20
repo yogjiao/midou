@@ -21,7 +21,7 @@ class Home extends React.Component {
     super(props, context);
     this.state = {
       pageIndex: 0,
-      pageSize: 10,
+      pageSize: 6,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,

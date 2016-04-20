@@ -4,6 +4,7 @@ import {
   BASE_PAGE_DIR
 } from 'macros.js'
 import {backToNativePage} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 import Swiper from 'Swiper'
 
 import './BoxService.less'
@@ -25,7 +26,11 @@ class BoxService extends React.Component {
     let h = window.innerHeight
     return (
       <div className="box-servie-container">
-        <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+        {
+          ua.isApp()?
+          '':
+          (<i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>)
+        }
         <div className="swiper-container" style={{height: h}}>
           <div className="swiper-wrapper">
               <div className="swiper-slide">

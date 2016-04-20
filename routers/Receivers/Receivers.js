@@ -22,7 +22,7 @@ import {
 import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 let update = require('react-addons-update')
 import ua from 'uaParser.js'
 import Hammer from 'hammerjs'
@@ -48,6 +48,11 @@ class Receivers extends React.Component {
     };
 
   }
+  initState = () => {
+    this.state.lastReceiver = 0
+    this.state.receivers = []
+    this.state.cities = []
+  };
   deleteReceiver = (receiverId, index) => {
     let url = `${DELETE_RECEIVERS}/${receiverId}`
     this.setState({
@@ -88,27 +93,25 @@ class Receivers extends React.Component {
 
   };
   fresh = () => {
-    this.state.lastReceiver = 0
-    this.state.receivers = []
-    this.cities = null
+    this.initState()
     return this.fetchListData()
   };
   freshWhenDetectingSignal = () => {
+    clearTimeout(this.timer)
     try {
       if (localStorage.getItem(LS_IS_FRESH_RECEIVERS) == '1') {
         localStorage.removeItem(LS_IS_FRESH_RECEIVERS)
-        this.fresh()
+        this
+          .fresh()
           .then(() => {
-            this.freshWhenDetectingSignal()
           })
-      } else {
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          this.freshWhenDetectingSignal()
-        }, 2000)
       }
     } catch (e) {
 
+    } finally {
+      this.timer = setTimeout(() => {
+        this.freshWhenDetectingSignal()
+      }, 2000)
     }
   };
   fetchListData = (isScrollLoading) => {
@@ -251,6 +254,11 @@ class Receivers extends React.Component {
     // }, false);
 
     this.freshWhenDetectingSignal()
+
+   receiveNotificationsFromApp(function(data){
+     alert(JSON.stringify(data))
+   })
+
   };
   componentWillUnmount = () => {
     clearTimeout(this.timer)
