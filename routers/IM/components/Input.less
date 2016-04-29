@@ -1,0 +1,59 @@
+@import "~variables.less";
+
+.im-input-container{
+	.input-wraper{
+		display: flex;
+		background-color: #fff;
+		padding: .23rem .3rem;
+		border-bottom: 1px solid @border-color-light;
+		justify-content: space-between;
+		.txt-area{
+			line-height: .45rem;
+			height: .45rem;
+			overflow-y:hidden;
+			max-height: 1.35rem;
+			border: 0;
+			resize: none;
+			border-radius: 0;
+			margin: .1rem .1rem .1rem 0;
+			flex: 1 1 70%;
+			&:focus{
+				border-bottom: 1px solid @deep-sky-blue;
+			}
+		}
+		.btn-wraper{
+			display: flex;
+			flex-direction: column-reverse;
+			margin-bottom: .1rem;
+		}
+		.icon-add{
+			width: .5rem;
+			height: .5rem;
+			line-height: .48rem;
+			text-align: center;
+			color: @border-color-dark;
+			border: 1px solid @border-color-dark;
+			border-radius: 50%;
+			display: block;
+		}
+		.btn-post{
+			font-size: .2rem;
+			height: .5rem;
+			line-height: .48rem;
+			width: .7rem;
+			border-radius: .1rem;
+			background-color: @light-slate-blue;
+			color: #fff;
+			text-align: center;
+			display: none;
+		}
+	}
+	.media-wraper{
+		display: flex;
+		.iconfont{
+			font-size: 1.5rem;
+			color: @light-slate-blue;
+		}
+
+	}
+}

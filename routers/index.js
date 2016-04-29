@@ -48,7 +48,7 @@ const rootRoute = {
       require('./CustomerService'),
       require('./Collections'),
       require('./BusinessModel'),
-
+      require('./IM'),
       require('./404')
       ]
   } ],

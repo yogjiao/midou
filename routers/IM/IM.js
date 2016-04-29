@@ -1,31 +1,31 @@
 import React from 'react'
 import PageSpin from 'PageSpin/PageSpin.js'
-import HomeListItem from 'HomeListItem.js'
 import Prompt from 'Prompt/Prompt.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import {
   FETCH_INDEX_DATA,
   FETCH_STATUS_NO_MORE_PRODUCT,
   FETCH_SUCCESS,
-  BASE_STATIC_DIR,
-  BASE_PAGE_DIR
+  BASE_STATIC_DIR
 } from 'macros.js'
 import {fetchable} from 'fetch.js'
 import errors from  'errors.js'
-import HomeNoResult from 'HomeNoResult.js'
 let update = require('react-addons-update')
 
 import {getUserInfoFromApp} from 'webviewInterface.js'
+import MsgItem from 'MsgItem.js'
+import Input from 'Input.js'
+import Contacts from 'Contacts.js'
 
-import './Home.less'
-class Home extends React.Component {
+import './IM.less'
+class IM extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       pageIndex: 0,
       pageSize: 6,
-      isHiddenPageSpin: false,
-      isHiddenScrollingSpin: true,
+      isHiddenPageSpin: true,
+      isHiddenScrollingSpin: false,
       isFetching: false,
       isHaveGoods: true,
       goodsList: [],
@@ -33,7 +33,7 @@ class Home extends React.Component {
     };
 
   }
-  fetchListData = (isScrollLoading) => {
+  fetchHistoryData = (isScrollLoading) => {
     this.state.isFetching = true
     let url = `${FETCH_INDEX_DATA}/${this.props.params.sceneId}/${this.state.pageIndex}/${this.state.pageSize}`
     let nextState = {}
@@ -86,8 +86,19 @@ class Home extends React.Component {
       }
     }
   };
+  autoHeightHandler = (e) => {
+    e.target.style.height = 0
+    let h = e.target.scrollHeight
+    e.target.style.height = h + 'px'
+    if (e.target.value) {
+      this.refs['btn-post'].style.display = 'block'
+      this.refs['icon-add'].style.display = 'none'
+    } else {
+      this.refs['btn-post'].style.display = 'none'
+      this.refs['icon-add'].style.display = 'block'
+    }
+  };
   componentDidMount = () => {
-    this.fetchListData()
     document.addEventListener('scroll', this.handleScroll);
   };
   componentWillUnmount = () => {
@@ -105,25 +116,16 @@ class Home extends React.Component {
   // };
   render() {
     return (
-        <div className="home-container">
-
-          {
-            this.state.isExpect?
-            (<HomeNoResult />):
-            (
-              <div className="list-wrap">
-                <a href={`${BASE_PAGE_DIR}/im`} style={{fontSize: '30px'}}>im</a>
-                <ul className="pro-list">
-                  {
-                    this.state.goodsList.map(function(pro) {
-                      return <HomeListItem key={pro.id} {...pro}/>;
-                    })
-                  }
-                </ul>
-                <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-              </div>
-            )
-          }
+        <div className="im-container">
+          <div className="layout-container">
+            <div className="msg-container clearfix">
+              <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+              <MsgItem />
+            </div>
+            <Input />
+          </div>
+          <i className="iconfont icon-people btn-contacts"></i>
+          <Contacts />
           <PageSpin isHidden={this.state.isHiddenPageSpin}/>
           <Prompt msg={this.state.promptMsg} refs="prompt"/>
         </div>
@@ -140,4 +142,4 @@ class Home extends React.Component {
 // Home.context = {
 //   //pageSpin: pageSpin
 // }
-module.exports = Home
+module.exports = IM
