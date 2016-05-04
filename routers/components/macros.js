@@ -194,7 +194,10 @@ export let CHEST_FEATRUES_7 = [
     {value: "3", text:  "轻薄性感"}
 ]
 
-
+function prefixAjaxBaseUrl(url) {
+  url = ('/' + url).replace(/\/\//ig, '/')
+  return FETCH_BASE_URL + url
+}
 
 // fetch scenes data for index page
 export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
@@ -230,7 +233,6 @@ export let EDIT_CART_GOODS = FETCH_BASE_URL + '/edit_cart'
 export let EDIT_CART_GOODS_BY_IDS = FETCH_BASE_URL + '/get_cart'
 
 export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
-
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'
 export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
 
@@ -243,6 +245,10 @@ export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
 
 
-export let PUT_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant'
+export let PUT_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant')
+export let PUT_NO_AUTH_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant_weixin')
 
-export let PUT_NO_AUTH_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant_weixin'
+export let FETCH_SERVICE_HISTOR =  prefixAjaxBaseUrl('get_chat_history')
+export let PUT_MESSAGE =  prefixAjaxBaseUrl('send_message')
+
+export let WS_URL = 'ws://www.mielseno.com:8765'

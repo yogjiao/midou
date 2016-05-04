@@ -2,20 +2,28 @@ import React from 'react'
 import PageSpin from 'PageSpin/PageSpin.js'
 import Prompt from 'Prompt/Prompt.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {
-  FETCH_INDEX_DATA,
-  FETCH_STATUS_NO_MORE_PRODUCT,
-  FETCH_SUCCESS,
-  BASE_STATIC_DIR
-} from 'macros.js'
+
 import {fetchable} from 'fetch.js'
 import errors from  'errors.js'
-let update = require('react-addons-update')
 
 import {getUserInfoFromApp} from 'webviewInterface.js'
 import MsgItem from 'MsgItem.js'
 import Input from 'Input.js'
 import Contacts from 'Contacts.js'
+
+import {getParentByClass} from 'util.js'
+import {getMiDouToken} from 'commonApp.js'
+
+import {
+  FETCH_INDEX_DATA,
+  FETCH_STATUS_NO_MORE_PRODUCT,
+  FETCH_SUCCESS,
+  BASE_STATIC_DIR,
+  FETCH_SERVICE_HISTOR,
+  PUT_MESSAGE,
+  WS_URL
+} from 'macros.js'
+let update = require('react-addons-update')
 
 import './IM.less'
 class IM extends React.Component {
@@ -32,10 +40,17 @@ class IM extends React.Component {
       isExpect: false
     };
 
+    this._uniqueId = 0;
   }
+  uniqueId = () => {
+    return this._uniqueId++;
+  };
+  createSocket = () => {
+    this.ws = new WebSocket(WS_URL)
+  };
   fetchHistoryData = (isScrollLoading) => {
     this.state.isFetching = true
-    let url = `${FETCH_INDEX_DATA}/${this.props.params.sceneId}/${this.state.pageIndex}/${this.state.pageSize}`
+    let url = `${FETCH_SERVICE_HISTOR}/${this.props.params.sceneId}/${this.state.pageIndex}/${this.state.pageSize}`
     let nextState = {}
     if (isScrollLoading) {
       nextState.isHiddenScrollingSpin = false
@@ -86,19 +101,26 @@ class IM extends React.Component {
       }
     }
   };
-  autoHeightHandler = (e) => {
-    e.target.style.height = 0
-    let h = e.target.scrollHeight
-    e.target.style.height = h + 'px'
-    if (e.target.value) {
-      this.refs['btn-post'].style.display = 'block'
-      this.refs['icon-add'].style.display = 'none'
-    } else {
-      this.refs['btn-post'].style.display = 'none'
-      this.refs['icon-add'].style.display = 'block'
+  getSendMessage = () => {
+    let msg = {}
+    msg.id = 5005
+    msg.recipient = '800'
+    msg.txt = document.getElementById('textarea').value
+    msg.token = getMiDouToken()
+    msg.msgid = this.uniqueId()
+    return msg
+
+  };
+  thisHandler = (e) => {//icon-add
+    let target
+    if (target = getParentByClass(e.target, 'icon-add')) {
+      let msg = JSON.stringify(this.getSendMessage())
+      this.ws.send(msg)
     }
   };
   componentDidMount = () => {
+    this.createSocket()
+
     document.addEventListener('scroll', this.handleScroll);
   };
   componentWillUnmount = () => {
@@ -116,7 +138,7 @@ class IM extends React.Component {
   // };
   render() {
     return (
-        <div className="im-container">
+        <div className="im-container" onClick={this.thisHandler}>
           <div className="layout-container">
             <div className="msg-container clearfix">
               <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>

@@ -112,7 +112,7 @@ class Home extends React.Component {
             (<HomeNoResult />):
             (
               <div className="list-wrap">
-                <a href={`${BASE_PAGE_DIR}/im`} style={{fontSize: '30px'}}>im</a>
+                <a href={`${BASE_PAGE_DIR}/im`} style={{fontSize: '30px'}} id="test">im</a>
                 <ul className="pro-list">
                   {
                     this.state.goodsList.map(function(pro) {

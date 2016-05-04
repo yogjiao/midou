@@ -20,6 +20,18 @@ class Input extends React.Component {
     super(props, context);
 
   }
+  autoHeightHandler = (e) => {
+    e.target.style.height = 0
+    let h = e.target.scrollHeight
+    e.target.style.height = h + 'px'
+    if (e.target.value) {
+      this.refs['btn-post'].style.display = 'block'
+      this.refs['icon-add'].style.display = 'none'
+    } else {
+      this.refs['btn-post'].style.display = 'none'
+      this.refs['icon-add'].style.display = 'block'
+    }
+  };
   render() {
     return (
 			<div className="im-input-container">
@@ -28,6 +40,7 @@ class Input extends React.Component {
 						placeholder="请输入聊天内容..."
 						className="txt-area"
 						ref="textarea"
+            id="textarea"
 						onChange={this.autoHeightHandler}
 					/>
 					<div className="btn-wraper">
