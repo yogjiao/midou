@@ -74,10 +74,21 @@
         }
       }
       .recommend-wrap{
-        .detail-content:last-child{
-          .pro-price{
-            border: none;
+        text-align: center;
+        .detail-content{
+          &:last-child{
+            .pro-price{
+              border: none;
+            }
           }
+        }
+        .seperate-line{
+          width: 50%;
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+          border-top: 1px solid @border-color-light;
+          margin-top: .1rem;
         }
 
       }

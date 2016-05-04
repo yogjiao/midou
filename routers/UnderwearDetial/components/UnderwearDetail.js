@@ -464,8 +464,8 @@ class Underweardetail extends React.Component {
           description={this.state.goods.match_intro}
           imgUrl={this.state.goods.share_img}
         />
-        <Prompt msg={this.state.promptMsg} ref='prompt'/>
-        <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+        <Prompt msg={this.state.promptMsg} ref='prompt' />
+        <PageSpin isHidden={this.state.isHiddenPageSpin} />
       </div>
     )
   }
