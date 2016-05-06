@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router'
 
 import {BASE_PAGE_DIR} from 'macros.js'
-
+import AdditionalTips from 'AdditionalTips.js'
 import 'UnderweardetailInfo.less'
 class UnderweardetailInfo extends React.Component {
   render() {
@@ -56,6 +56,7 @@ class UnderweardetailInfo extends React.Component {
                           <a href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                             <div className="img-wrap"><img src={item.thumb_img} /></div>
                             <div className="pro-name">{item.name}</div>
+                            <div className="seperate-line" />
                           </a>
                         </div>
                       </div>
@@ -67,6 +68,7 @@ class UnderweardetailInfo extends React.Component {
             ''
           }
         </div>
+        <AdditionalTips />
       </div>
     )
   }

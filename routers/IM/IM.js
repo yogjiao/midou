@@ -21,10 +21,29 @@ import {
   BASE_STATIC_DIR,
   FETCH_SERVICE_HISTOR,
   PUT_MESSAGE,
-  WS_URL
+  WS_URL,
+  TEST_TOKEN
 } from 'macros.js'
 let update = require('react-addons-update')
+/*
+id: 56
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjU2LCJpYXQiOjE0NjIzNTM1NDUsImV4cCI6MTc3NzcxMzU0NX0.LzemqdTuWQosx33db7bCsLbjH4UHFArIZtZa_BJC8KE'
+*/
+/*
+微信信息日期展示
 
+1 今天
+xx:xx
+
+2 一周内
+星期x xx:xx
+
+3 超过一周
+2015年x月x日 xx:xx
+
+
+相邻消息间隔>=X分钟显才示时间Label
+*/
 import './IM.less'
 class IM extends React.Component {
   constructor(props, context) {
@@ -36,17 +55,85 @@ class IM extends React.Component {
       isHiddenScrollingSpin: false,
       isFetching: false,
       isHaveGoods: true,
-      goodsList: [],
+      msgList: [],
+      msgCached: {},
       isExpect: false
     };
 
     this._uniqueId = 0;
   }
   uniqueId = () => {
-    return this._uniqueId++;
+    return ++this._uniqueId;
+  };
+  msgHandler = (data) => {
+    switch (data.id) {
+      case '5002': //get user infor
+        this.state.userInfo = data.user
+        break;
+      case '5004': //respond sending msg //client_msgid
+        delete this.state.msgCached[data.chat.client_msgid]
+        break;
+      case '5009': //push msg from server
+        if (this.state.userInfo && !this.state.guestInfo) {
+          for (var key in data.users) {
+            if (key != this.state.userInfo.id) {
+              this.state.guestInfo = data.users[key]
+              break;
+            }
+          }
+        }
+        let nextState = update(this.state, {msgList: {$push: data.chats}})
+        this.setState(nextState)
+        break;
+      default:
+
+    }
+  };
+  getSendMessage = () => {
+    let msg = {}
+    msg.id = 5003
+    msg.recipient = getMiDouToken()? 85 : 56
+    msg.txt = document.getElementById('textarea').value
+    msg.token = getMiDouToken() || TEST_TOKEN
+    msg.client_msgid = this.uniqueId()
+    msg.ts = Date.now() / 1000
+    return msg
+
+  };
+  thisHandler = (e) => {//icon-add
+    let target
+    if (target = getParentByClass(e.target, 'btn-post')) {
+      let msg = this.getSendMessage()
+      let nextState
+
+      this.ws.send(JSON.stringify(msg))
+
+      delete msg.id
+      msg.sender = this.state.userInfo.id
+      nextState = update(this.state, {msgList: {$push: [msg]}})
+      this.setState(nextState)
+      this.state.msgCached[msg.client_msgid] = msg
+
+
+    }
   };
   createSocket = () => {
     this.ws = new WebSocket(WS_URL)
+
+    this.ws.onopen = function(e) {
+        let params = {}
+        params.id = 5001
+        params.token = getMiDouToken() || TEST_TOKEN
+        params = JSON.stringify(params)
+        e.target.send(params)
+		};
+    this.ws.onmessage = (e) => {
+      let data = JSON.parse(e.data)
+      this.msgHandler(data)
+    };
+		this.ws.onclose = function(msg) {
+		 console.log("Disconnected - status "+msg);
+    }
   };
   fetchHistoryData = (isScrollLoading) => {
     this.state.isFetching = true
@@ -61,7 +148,6 @@ class IM extends React.Component {
     fetchable(url)
       .then((data) => {
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
-
           this.state.isHaveGoods = false
           if (this.state.pageIndex == 0) {
             this.setState({isExpect: true})
@@ -101,23 +187,7 @@ class IM extends React.Component {
       }
     }
   };
-  getSendMessage = () => {
-    let msg = {}
-    msg.id = 5005
-    msg.recipient = '800'
-    msg.txt = document.getElementById('textarea').value
-    msg.token = getMiDouToken()
-    msg.msgid = this.uniqueId()
-    return msg
 
-  };
-  thisHandler = (e) => {//icon-add
-    let target
-    if (target = getParentByClass(e.target, 'icon-add')) {
-      let msg = JSON.stringify(this.getSendMessage())
-      this.ws.send(msg)
-    }
-  };
   componentDidMount = () => {
     this.createSocket()
 
@@ -136,13 +206,43 @@ class IM extends React.Component {
   //       alert(JSON.stringify(data));
   //     })
   // };
+
+  /*
+    msg type:
+    0: welcome
+    1: myself text
+    2: guest text
+    3: myselt img
+    4: guest img
+    5: product info mest
+  */
   render() {
     return (
         <div className="im-container" onClick={this.thisHandler}>
           <div className="layout-container">
             <div className="msg-container clearfix">
-              <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-              <MsgItem />
+              <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin} />
+              {
+                this.state.msgList.map((item, index, msgs) => {
+                //  debugger;
+                  let userInfo
+                  if (item.sender == this.state.userInfo.id) {
+                    item.msgType = 1
+                    userInfo = this.state.userInfo
+                  } else {//guestInfo
+                    item.msgType = 2
+                    userInfo = this.state.guestInfo
+                  }
+                  return (
+                    <MsgItem
+                      source={item}
+                      userInfo={userInfo}
+                      key={item.client_msgid || item.id}
+                    />
+                  )
+                })
+              }
+
             </div>
             <Input />
           </div>

@@ -251,4 +251,4 @@ export let PUT_NO_AUTH_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant_weixin
 export let FETCH_SERVICE_HISTOR =  prefixAjaxBaseUrl('get_chat_history')
 export let PUT_MESSAGE =  prefixAjaxBaseUrl('send_message')
 
-export let WS_URL = 'ws://www.mielseno.com:8765'
+export let WS_URL = 'ws://192.168.1.45:8765'

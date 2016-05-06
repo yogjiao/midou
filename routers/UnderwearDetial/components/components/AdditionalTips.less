@@ -1,0 +1,72 @@
+@import "~variables.less";
+
+.add-tips-container{
+	margin: .9rem 0;
+
+	.tips-header{
+		margin-bottom: .4rem;
+		background-color: #fff;
+		ul{
+			display: flex;
+			border: 1px solid @border-color;
+			>:last-child{
+				border-width: 0;
+			}
+			li{
+				color: @font-color-lighter;
+				border-right: 1px solid @border-color;
+				flex-basis:50%;
+				text-align:center;
+				margin: .1rem 0;
+				position: relative;
+				flex-wrap: wrap;
+				&:after{
+					left: 50%;
+					top: 100%;
+					transform: translate(-50%);
+					position:absolute;
+
+					width: .2rem;
+					height: .2rem;
+					content: '';
+					border: 1px solid @border-color;
+					border-width: 0 0 1px 1px;
+					background-color: #fff;
+				  transform: rotateZ(-45deg);
+					display: none;
+				}
+				>.iconfont{
+					display: block;
+					padding-top: .1rem;
+				}
+				>div{
+					padding: .1rem 0;
+					font-size: .24rem;
+				}
+				&.on{
+					.iconfont{
+						color: @light-slate-blue;
+					}
+					>div{
+						color: @font-color;
+					}
+					&:after{
+						display: block;
+					}
+				}
+			}
+			.iconfont{
+				font-size: .4rem;
+			}
+		}
+	}
+	.tips-content{
+		line-height: .45rem;
+		font-size: .28rem;
+		.tips-contant{
+			&:not(.on){
+				display: none;
+			}
+		}
+	}
+}
