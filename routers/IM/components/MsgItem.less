@@ -5,10 +5,12 @@
 @border-radius: .15rem;
 
 .msg-component{
-
+	&:last-child{
+		padding-bottom: .3rem;
+	}
 	.msg-wrap{
 		display: flex;
-		margin-top: .3rem;
+		padding-top: .3rem;
 	}
   .msg-col-1,
   .msg-col-3{
@@ -205,9 +207,9 @@
 
   }
   .time-tips{
-    margin-top: .6rem;
+    padding-top: .6rem;
     text-align: center;
-    font-family: arial;
+		font-size: .20rem;
     color: @font-color-lighter;
   }
 

@@ -28,3 +28,5 @@ export function getCookie(name) {
   }
   return value
 }
+
+export const REGEXP_URL = /https?\:\/\/.+/i;

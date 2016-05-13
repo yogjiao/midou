@@ -20,24 +20,36 @@ class ContactsItem extends React.Component {
     super(props, context);
   }
   render() {
+    let source = this.props.source
     return (
-			<div className="contacts-wraper">
+			<div className="contacts-wraper"
+        data-index={source.index}
+        data-id={source.id}
+      >
 				<div
 					className="avater"
-					style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/share-4.png)`}}
+					style={{backgroundImage: `url(${source.headimg})`}}
 				>
 				</div>
 				<div className="other-wraper">
-					<div className="user-name">科学空间交流圈</div>
-					<div className="date-wraper">星期五</div>
+					<div className="user-name">{source.name}</div>
+					<div className="date-wraper">{source.ts}</div>
 					<div className="newest-msg">
-						<p>我要退货！我要退货！我要退货！我要退货！我要退货！</p>
-						<div className="unread-num">24</div>
+						<p>{source.txt}</p>
+						<div className="unread-num"></div>
 					</div>
 				</div>
 			</div>
     )
   }
 }
+ContactsItem.defaultProps = {
+  source: {
+    backgroundImage: '',
+    name: '蜜豆',
+    ts: Math.floor(Date.now() / 1000) ,
+    txt: 'welcome 蜜豆'
 
+  }
+}
 export default ContactsItem

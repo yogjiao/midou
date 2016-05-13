@@ -49,8 +49,8 @@ class Input extends React.Component {
 					</div>
 				</div>
 				<div className="media-wraper">
-					<i className="iconfont icon-collection" />
-					<i className="iconfont icon-collection" />
+					<i className="iconfont icon-camera" />
+					<i className="iconfont icon-photo" />
 				</div>
 			</div>
     )
