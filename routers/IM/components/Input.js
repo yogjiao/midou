@@ -20,11 +20,12 @@ class Input extends React.Component {
     super(props, context);
 
   }
-  autoHeightHandler = (e) => {
-    e.target.style.height = 0
-    let h = e.target.scrollHeight
-    e.target.style.height = h + 'px'
-    if (e.target.value) {
+  textareaChangeHandler = (e) => {
+    let textarea = e? e.target : document.querySelector('#textarea')
+    textarea.style.height = 0
+    let h = textarea.scrollHeight
+    textarea.style.height = h + 'px'
+    if (textarea.value) {
       this.refs['btn-post'].style.display = 'block'
       this.refs['icon-add'].style.display = 'none'
     } else {
@@ -41,16 +42,19 @@ class Input extends React.Component {
 						className="txt-area"
 						ref="textarea"
             id="textarea"
-						onChange={this.autoHeightHandler}
+						onChange={this.textareaChangeHandler}
 					/>
 					<div className="btn-wraper">
-						<i className="iconfont icon-add" ref="icon-add"></i>
+						<i className="iconfont icon-add open-media-wraper" ref="icon-add"></i>
 						<div className="btn-post" ref="btn-post">发送</div>
 					</div>
 				</div>
-				<div className="media-wraper">
-					<i className="iconfont icon-camera" />
-					<i className="iconfont icon-photo" />
+				<div
+          className="media-wraper"
+          style={{display: this.props.isHiddenMediaWraper? 'none' : 'flex'}}
+        >
+					<i className="iconfont icon-camera media-item" />
+					<i className="iconfont icon-photo media-item" />
 				</div>
 			</div>
     )

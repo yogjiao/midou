@@ -13,7 +13,7 @@ import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 import ua from 'uaParser.js'
 let update = require('react-addons-update')
 
@@ -81,6 +81,11 @@ class ExpressOrder extends React.Component {
     if (this.props.params.isTry == '0') {
       this.setState({isHiddenServiceLayer: false})
     }
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '7') {
+        this.saveHanler()
+      }
+    })
   };
 
   render() {

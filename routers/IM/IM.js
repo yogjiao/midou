@@ -62,11 +62,13 @@ class IM extends React.Component {
       isFetchingContacts: false,
       isHasContactsData: true,
 
-      isSupport: false
+      isSupport: false,
+      isHiddenMediaWraper: true
     };
-    this.friendId = this.props.params.friendId
+    this.friendId = this.props.params.friendId || 56
     this.productId = this.props.location.query.productId
     this._uniqueId = 0;
+    alert(window.innerHeight)
   }
   uniqueId = () => {
     return ++this._uniqueId;
@@ -119,6 +121,11 @@ class IM extends React.Component {
   };
 
   msgHandler = (data) => {
+    if (data.r == '0') {
+      alert(errors[data.rea]);
+      return
+    }
+
     let nextState
     switch (data.id) {
       case '5002': //get user infor
@@ -198,10 +205,7 @@ class IM extends React.Component {
         this.refreshContact(contacts);
         break;
       default:
-        if (data.rea == '1001') {
-          alert('请先登录')
-          return
-        }
+
     }
   };
   sendProductMsgCard = () => {
@@ -231,7 +235,7 @@ class IM extends React.Component {
   getSendBaseInfo = () => {
     let msg = {}
     msg.id = 5003
-    msg.recipient = getMiDouToken()//? 85 : 56
+    msg.recipient = this.friendId//? 85 : 56
     msg.token = getMiDouToken()// || TEST_TOKEN
     msg.client_msgid = this.uniqueId()
     msg.ts = Date.now() / 1000
@@ -278,8 +282,8 @@ class IM extends React.Component {
     msg.id = 5005
     msg.start_id = this.state.lastMsgId
     msg.count = this.state.msgCountPerPage
-    msg.friend_id = getMiDouToken()? 85 : 56
-    msg.token = getMiDouToken() || TEST_TOKEN
+    msg.friend_id = getMiDouToken()//? 85 : 56
+    msg.token = getMiDouToken()// || TEST_TOKEN
 
     this.ws.send(JSON.stringify(msg))
 
@@ -309,10 +313,19 @@ class IM extends React.Component {
       delete msg.id
       msg.sender = this.state.userInfo.id
       nextState = update(this.state, {msgList: {$push: [msg]}})
-      this.setState(nextState, (e) => {
-        this.refreshMsgScrollerToEnd();
+      this.setState(nextState, () => {
+        this.refs['input-wraper'].textareaChangeHandler()
+        this.refreshMsgScrollerToEnd()
       })
       this.state.msgCached[msg.client_msgid] = msg
+    } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
+      this.setState({isHiddenMediaWraper: false}, () => {
+        this.refreshMsgScrollerToEnd()
+      })
+    } else if (target = getParentByClass(e.target, 'media-item')) {
+      this.setState({isHiddenMediaWraper: true}, () => {
+        this.refreshMsgScrollerToEnd()
+      })
     } else if (target = getParentByClass(e.target, 'post-link')) {
       let msg = this.getSendLink(target.getAttribute('data-link'))
       let nextState
@@ -424,7 +437,7 @@ class IM extends React.Component {
                 }
               </div>
             </div>
-            <Input />
+            <Input isHiddenMediaWraper={this.state.isHiddenMediaWraper} ref="input-wraper" />
           </div>
           {
             this.state.isSupport?
