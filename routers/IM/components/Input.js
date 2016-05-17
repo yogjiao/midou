@@ -50,8 +50,7 @@ class Input extends React.Component {
 					</div>
 				</div>
 				<div
-          className="media-wraper"
-          style={{display: this.props.isHiddenMediaWraper? 'none' : 'flex'}}
+          className={this.props.isHiddenMediaWraper? 'media-wraper none' : 'media-wraper'}
         >
 					<i className="iconfont icon-camera media-item" />
 					<i className="iconfont icon-photo media-item" />

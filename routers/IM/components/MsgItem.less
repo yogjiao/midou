@@ -29,7 +29,7 @@
   }
   .msg-col-2{
     position: relative;
-		flex-basis: 71%;
+		//flex-basis: 71%;
 		flex-grow: 0;
 		overflow: hidden;
     .msg-arrow{
@@ -61,10 +61,13 @@
       padding: .2rem .2rem .2rem (@gap-width + .2rem);
       font-size: .28rem;
       line-height: .28rem * 1.5;
-      img{
-        max-width: 100%;
-        display: block;
-      }
+			.img-wraper{
+				height: 5rem;
+				overflow: hidden;
+				background-size: contain;
+				border-radius: 0 .1rem .1rem 0;
+			}
+
 			a{
 				display: block;
 				width: 100%;
@@ -111,11 +114,13 @@
         }
         .msg-contant{
           padding: .2rem (@gap-width + .2rem) .2rem .2rem;
+
         }
       }
     }
     &.img-model{
       .msg-col-2{
+				flex-basis: 71%;
         .msg-contant{
           padding: 0;
         }

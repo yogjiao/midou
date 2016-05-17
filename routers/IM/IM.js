@@ -33,6 +33,12 @@ token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjU2LCJpYXQiOjE0
 + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
 */
 
+/* 客服
+id: 85
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjg1LCJpYXQiOjE0NjIzMjY1NDMsImV4cCI6MTc3NzY4NjU0M30.ngEkSoKJyEUkNQ2VrvVVOzMmg5WdQHnEyLqE1_8h8eY;'
++ 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+*/
+
 import './IM.less'
 class IM extends React.Component {
   constructor(props, context) {
@@ -65,10 +71,9 @@ class IM extends React.Component {
       isSupport: false,
       isHiddenMediaWraper: true
     };
-    this.friendId = this.props.params.friendId || 56
+    this.friendId = this.props.params.friendId
     this.productId = this.props.location.query.productId
     this._uniqueId = 0;
-    alert(window.innerHeight)
   }
   uniqueId = () => {
     return ++this._uniqueId;
@@ -111,7 +116,8 @@ class IM extends React.Component {
   };
   refreshContact = (contacts) => {
     let contactList = this.state.contactList.filter((contact, index, list) => {
-      return !contacts.some((item) => {item.sender == contact.sender})
+      let some = contacts.some((item) => {return item.sender == contact.sender})
+      return !some
     })
 
     contactList = contacts.concat(contactList)
@@ -121,11 +127,6 @@ class IM extends React.Component {
   };
 
   msgHandler = (data) => {
-    if (data.r == '0') {
-      alert(errors[data.rea]);
-      return
-    }
-
     let nextState
     switch (data.id) {
       case '5002': //get user infor
@@ -140,29 +141,38 @@ class IM extends React.Component {
         delete this.state.msgCached[data.chat.client_msgid]
         break;
       case '5006': // get history record
-        this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
-        this.state.lastMsgId = data.chats[0].id
-        this.state.isFetchingHistoryMsg = false
-        this.state.isHiddenScrollingSpin = true
-        nextState = update(this.state, {msgList: {$unshift: data.chats}})
-        if (nextState.isFirstFetchHistoryMsg) {//msgCount
-          nextState.isFirstFetchHistoryMsg = false
-          this.setState(nextState, () => {
-            this.refreshMsgScrollerToEnd();
-          })
-          // get product info
-          if (!this.state.isSupport) {
-            this.sendProductMsgCard()
+        if (data.r == '1') {
+          this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
+          this.state.lastMsgId = data.chats[0].id
+          this.state.isFetchingHistoryMsg = false
+          this.state.isHiddenScrollingSpin = true
+          let operate = [0, 0].concat(data.chats)
+          nextState = update(this.state, {msgList: {$splice: [operate]}})
+          if (nextState.isFirstFetchHistoryMsg) {//msgCount
+            nextState.isFirstFetchHistoryMsg = false
+            this.setState(nextState, () => {
+              this.refreshMsgScrollerToEnd();
+            })
+            // get product info
+            if (!this.state.isSupport) {
+              this.sendProductMsgCard()
+            }
+
+          } else {
+            this.setState(nextState, () => {
+              this.msgScroller.refresh();
+              let y = this.msgScrollerHeight - this.msgScroller.scrollerHeight
+              this.msgScroller.options.startY = y;
+              this.msgScroller.scrollTo(0, y);
+            })
           }
-
+        } else if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+          nextState = {isHiddenScrollingSpin: true}
         } else {
-          this.setState(nextState, () => {
-            this.msgScroller.refresh();
-
-            let y = this.msgScrollerHeight - this.msgScroller.scrollerHeight
-            this.msgScroller.scrollTo(0, y)
-          })
+          nextState = {isHiddenScrollingSpin: true, promptMsg: errors[data.rea]}
+          this.refs['prompt'].show()
         }
+        this.setState(nextState)
         break;
       case '5008': //contacts push from server
         this.state.isFetchingContacts = false
@@ -199,7 +209,8 @@ class IM extends React.Component {
         //build contacts
         let contacts = []
         data.chats.forEach((item, index, chats) => {
-          let contact = Object.assign({}, item, this.state.usersInfo[item.sender])
+
+          let contact = Object.assign({}, this.state.usersInfo[item.sender], item)
           contacts.push(contact)
         })
         this.refreshContact(contacts);
@@ -260,7 +271,6 @@ class IM extends React.Component {
     return msg
   };
   refreshMsgScrollerToEnd = () => {
-
     this.msgScroller.refresh();
     this.msgScroller.scrollTo(0, this.msgScroller.maxScrollY)
   };
@@ -275,14 +285,12 @@ class IM extends React.Component {
     }
     this.msgScrollerHeight = this.msgScroller.scrollerHeight
     this.state.isFetchingHistoryMsg = true
-    this.setState({isHiddenScrollingSpin: false}, () => {
-      this.msgScroller.refresh()
-    })
+    this.setState({isHiddenScrollingSpin: false})
     let msg = {}
     msg.id = 5005
     msg.start_id = this.state.lastMsgId
     msg.count = this.state.msgCountPerPage
-    msg.friend_id = getMiDouToken()//? 85 : 56
+    msg.friend_id = this.friendId//? 85 : 56
     msg.token = getMiDouToken()// || TEST_TOKEN
 
     this.ws.send(JSON.stringify(msg))
@@ -319,13 +327,7 @@ class IM extends React.Component {
       })
       this.state.msgCached[msg.client_msgid] = msg
     } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
-      this.setState({isHiddenMediaWraper: false}, () => {
-        this.refreshMsgScrollerToEnd()
-      })
-    } else if (target = getParentByClass(e.target, 'media-item')) {
-      this.setState({isHiddenMediaWraper: true}, () => {
-        this.refreshMsgScrollerToEnd()
-      })
+      this.setState({isHiddenMediaWraper: false})
     } else if (target = getParentByClass(e.target, 'post-link')) {
       let msg = this.getSendLink(target.getAttribute('data-link'))
       let nextState
@@ -339,7 +341,7 @@ class IM extends React.Component {
       })
       this.state.msgCached[msg.client_msgid] = msg
 
-    } else if (target = getParentByClass(e.target, 'icon-camera')) {
+    } else if (target = getParentByClass(e.target, 'media-item')) {
       calloutNativePhoto()
         .then((data) => {
           let nextState
@@ -349,7 +351,10 @@ class IM extends React.Component {
           delete msg.id
           msg.sender = this.state.userInfo.id
           nextState = update(this.state, {msgList: {$push: [msg]}})
-          this.setState(nextState)
+          nextState.isHiddenMediaWraper = true
+          this.setState(nextState, () => {
+            this.refreshMsgScrollerToEnd()
+          })
           this.state.msgCached[msg.client_msgid] = msg
         })
     } else if (target = getParentByClass(e.target, 'btn-contacts')) {
@@ -368,13 +373,6 @@ class IM extends React.Component {
           this.fetchHistoryMsg()
       }
     })
-
-    //document.addEventListener('scroll', this.handleScroll);
-
-
-  };
-  componentWillUnmount = () => {
-
   };
 
   /*
@@ -386,14 +384,9 @@ class IM extends React.Component {
     return (
         <div className="im-container" onClick={this.thisHandler}>
           <div className="layout-container">
-            <div className="msg-container clearfix" id="msg-scroller">
+            <div className="msg-container" id="msg-scroller">
               <div>
-                {
-                  this.state.isHiddenScrollingSpin?
-                  '':
-                  (<ScrollingSpin isHidden={false} />)
 
-                }
                 {
 
                   this.state.msgList.map((item, index, msgs) => {
@@ -407,7 +400,7 @@ class IM extends React.Component {
                           source={item}
                           lastTime={lastTime}
                           userInfo={userInfo}
-                          key={item.client_msgid || item.id}
+                          key={item.id || item.client_msgid}
                         />
                       )
                     }
@@ -430,7 +423,7 @@ class IM extends React.Component {
                         source={item}
                         lastTime={lastTime}
                         userInfo={userInfo}
-                        key={item.client_msgid || item.id}
+                        key={item.id || item.client_msgid}
                       />
                     )
                   })
@@ -439,6 +432,12 @@ class IM extends React.Component {
             </div>
             <Input isHiddenMediaWraper={this.state.isHiddenMediaWraper} ref="input-wraper" />
           </div>
+          {
+            this.state.isHiddenScrollingSpin?
+            '':
+            (<div className="msg-scrolling-spin">加载中...</div>)
+          }
+
           {
             this.state.isSupport?
             (<i className="iconfont icon-people btn-contacts"></i>) : ''

@@ -34,7 +34,7 @@ class MsgItem extends React.Component {
    */
   getTimeLabel = (currentTime, lastTime) => {
     lastTime = lastTime || 0
-    const IM_LABEL_INTERVAL = 0.3 * 60
+    const IM_LABEL_INTERVAL = 5 * 60
     const ONE_DAY = 24 * 60 * 60
     const ONE_WEEK = 7 * 60 * 60
     const ONE_YEAR = 365 * ONE_DAY
@@ -75,16 +75,42 @@ class MsgItem extends React.Component {
     let userInfo = this.props.userInfo
     let element
     let msgElement
+    let elementClass = 'msg-wrap'
 
     switch (source.msgType) {
       case 1:
-        msgElement = source.txt
+        msgElement = (<div className="msg-contant">{source.txt}</div>)
         break;
       case 2:
-        msgElement = (<image src={`data:image/jpg;base64,${source.img}`} />)
+        elementClass += ' img-model'
+        if (/.+\.(jpg|jpeg|png|gif)$/.test(source.img)) {
+          msgElement = (
+            <div className="msg-contant">
+              <div
+                className="img-wraper"
+                style={{backgroundImage: `url(${source.img})`}}
+              >
+              </div>
+            </div>)
+        } else {
+          if (source.img) {
+            source.img = source.img.replace(/\r\n/ig, '')
+          }
+          msgElement = (
+            <div className="msg-contant">
+              <div
+                className="img-wraper"
+                style={{backgroundImage: `url(data:image/jpg;base64,${source.img})`}}
+              >
+              </div>
+            </div>)
+        }
         break;
       case 3:
-        msgElement = (<a href={source.txt}>{source.txt}</a>)
+        msgElement = (
+          <div className="msg-contant">
+            <a href={source.txt}>{source.txt}</a>
+          </div>)
         break;
       default:
 
@@ -109,7 +135,7 @@ class MsgItem extends React.Component {
     ) :
     (
       <div
-        className={source.roleType == 1? 'msg-wrap right-model' : 'msg-wrap'}
+        className={source.roleType == 1?  `${elementClass} right-model` : elementClass}
       >
         <div className="msg-col-1">
           {
@@ -124,9 +150,8 @@ class MsgItem extends React.Component {
         <div className="msg-col-2">
           <div className="msg-arrow">
           </div>
-          <div className="msg-contant">
-            {msgElement}
-          </div>
+          {msgElement}
+
         </div>
         <div className="msg-col-3">
           {

@@ -6,7 +6,8 @@ import {
   FETCH_INDEX_DATA,
   FETCH_STATUS_NO_MORE_PRODUCT,
   FETCH_SUCCESS,
-  BASE_STATIC_DIR
+  BASE_STATIC_DIR,
+  BASE_PAGE_DIR
 } from 'macros.js'
 import {fetchable} from 'fetch.js'
 import errors from  'errors.js'
@@ -22,7 +23,9 @@ class ContactsItem extends React.Component {
   render() {
     let source = this.props.source
     return (
-			<div className="contacts-wraper"
+			<a className="contacts-wraper"
+        href={`${BASE_PAGE_DIR}/im/${source.sender}`}
+        data-source={JSON.stringify(source)}
         data-index={source.index}
         data-id={source.id}
       >
@@ -35,11 +38,11 @@ class ContactsItem extends React.Component {
 					<div className="user-name">{source.name}</div>
 					<div className="date-wraper">{source.ts}</div>
 					<div className="newest-msg">
-						<p>{source.txt}</p>
+						<p>{source.img? '[图片]' : source.txt}</p>
 						<div className="unread-num"></div>
 					</div>
 				</div>
-			</div>
+			</a>
     )
   }
 }

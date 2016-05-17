@@ -16,14 +16,15 @@
 			resize: none;
 			border-radius: 0;
 			margin: .1rem .1rem .1rem 0;
-			flex: 1 1 70%;
+			flex: 1 1 60%;
 			&:focus{
 				border-bottom: 1px solid @deep-sky-blue;
 			}
 		}
 		.btn-wraper{
 			display: flex;
-			flex-direction: column-reverse;
+		  flex-basis: 15%;
+			flex-direction: row-reverse;
 			margin-bottom: .1rem;
 		}
 		.icon-add{
@@ -38,9 +39,9 @@
 		}
 		.btn-post{
 			font-size: .2rem;
-			height: .5rem;
-			line-height: .48rem;
-			width: .7rem;
+			height: .6rem;
+			line-height: .58rem;
+			width: 1rem;
 			border-radius: .1rem;
 			background-color: @light-slate-blue;
 			color: #fff;
@@ -51,6 +52,9 @@
 	.media-wraper{
 	  background-color: #fff;
 		display: flex;
+		&.none{
+			display: none;
+		}
 		.iconfont{
 			display: block;
 			margin-left: .25rem;
