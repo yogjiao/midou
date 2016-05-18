@@ -112,7 +112,6 @@ class Home extends React.Component {
             (<HomeNoResult />):
             (
               <div className="list-wrap">
-                <a href="http://www.mielseno.com/nicein/im/85?productId=6" style={{fontSize: '1rem'}}><br />IMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIMIM</a>
                 <ul className="pro-list">
                   {
                     this.state.goodsList.map(function(pro) {

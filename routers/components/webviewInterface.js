@@ -168,7 +168,6 @@ export let getAppVerison = function(data) {
 export let calloutNativePhoto = function() {
   return new Promise((resolve, reject) => {
     callHandler('calloutPhoto', {}, function(response) {
-      alert(response)
         resolve(response)
       })
   });

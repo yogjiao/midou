@@ -56,6 +56,7 @@ class IM extends React.Component {
 
       usersInfo: {},
       lastMsgId: 0,
+      isHasHistoryMsgData: true,
       msgCountPerPage: 10,
       isFirstFetchHistoryMsg: true,
       isFetchingHistoryMsg: false,
@@ -68,37 +69,84 @@ class IM extends React.Component {
       isFetchingContacts: false,
       isHasContactsData: true,
 
-      isSupport: false,
-      isHiddenMediaWraper: true
+      isSupport: false,//是否客服
+      isHiddenMediaWraper: true,
+      isSelf: false
+
+      //isFirstCreateWS: true
     };
-    this.friendId = this.props.params.friendId
-    this.productId = this.props.location.query.productId
+    this.state.friendId = this.props.params.friendId
     this._uniqueId = 0;
   }
   uniqueId = () => {
     return ++this._uniqueId;
   };
-  createSocket = () => {
-    this.ws = new WebSocket(WS_URL)
+  hideMediaWraper = () => {
+    this.setState({isHiddenMediaWraper: true})
+  };
+  createSocket = (resolve) => {
+    return new Promise((resolve, reject) => {
+      this.ws = new WebSocket(WS_URL)
+      this.ws.onopen = (e) => {
+          resolve(e.target)
+          console.log('ws is opening')
+  		};
+      this.ws.onclose = (e) => {
+        console.log('ws is closing')
+      }
+    })
+  };
+  createChatRoom = () => {
+    return this.createSocket()
+            .then((ws) => {// for login to create chat room
+              let params = {}
+              params.id = 5001
+              params.token = getMiDouToken() //|| TEST_TOKE
+              params = JSON.stringify(params)
+              ws.send(params)
 
-    this.ws.onopen = (e) => {
-        let params = {}
-        params.id = 5001
-        params.token = getMiDouToken() //|| TEST_TOKE
-        params = JSON.stringify(params)
-        e.target.send(params)
-		};
-    this.ws.onmessage = (e) => {
-      let data = JSON.parse(e.data)
-      this.msgHandler(data)
-    };
-		this.ws.onclose = function(msg) {
-		 console.log("Disconnected - status "+msg);
+              return new Promise((resolve, reject) => {
+                ws.onmessage = (e) => {
+                  let data = JSON.parse(e.data)
+                  if (data.id == '5002') {
+                    this.state.userInfo = data.user // the user is logined currently
+                    this.state.isSupport = data.user.role == '1'? true : false
+                    this.state.isSelf = this.state.isSupport && this.state.friendId == this.state.userInfo.id
+                    if (this.state.isSelf) {
+                      this.setState({isHiddenContactsPanel: false})
+                    }
+                    resolve(ws)
+                  }
+                };
+              })
+            })
+            .then((ws) => {
+              ws.onmessage = (e) => {
+                let data = JSON.parse(e.data)
+                this.msgHandler(data)
+              }
+              return ws
+            })
+  };
+  ensureWsIsOpened = () => {
+    let connect
+    if (this.ws.readyState == 1) {
+      connect = new Promise((resolve, reject) => {
+        resolve(this.ws)
+      })
+    } else {
+      connect = this.createChatRoom()
     }
+
+    return connect
   };
 
   createContactsScroller = () => {
-    this.contactsScroller = new IScroll('#contacts-scroller', { probeType: 3, mouseWheel: true });
+    this.contactsScroller = new IScroll('#contacts-scroller', {
+      probeType: 3,
+      mouseWheel: true
+    })
+
     this.fetchContacts()
 
     let scrollHandler = () => {
@@ -108,9 +156,13 @@ class IM extends React.Component {
       }
       let scroller = this.contactsScroller
       if (scroller.y - scroller.maxScrollY > 200) {
-        this.fetchContacts()
+        this.ensureWsIsOpened()
+          .then((ws) => {
+            this.fetchContacts()
+          })
+
       }
-    }
+    };
 
     this.contactsScroller.on('scroll', scrollHandler);
   };
@@ -129,19 +181,24 @@ class IM extends React.Component {
   msgHandler = (data) => {
     let nextState
     switch (data.id) {
-      case '5002': //get user infor
-
-        this.state.userInfo = data.user // the user is logined currently
-        this.setState({isSupport: data.user.role == '1'? true : false})
-        // assume this fetched onece only
-        this.fetchHistoryMsg()
-        this.createContactsScroller()
-        break;
       case '5004': //respond sending msg //client_msgid
+        if (data.chat.img) {
+          let cachedImgMsg = this.state.msgCached[data.chat.client_msgid]
+
+          let msg = Object.assign(cachedImgMsg, data.chat)
+          nextState = update(this.state, {msgList: {$push: [msg]}})
+          this.setState(nextState, () => {
+            this.refreshMsgScrollerToEnd()
+          })
+        }
         delete this.state.msgCached[data.chat.client_msgid]
         break;
       case '5006': // get history record
-        if (data.r == '1') {
+        if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
+          this.state.isHasHistoryMsgData = false
+          this.setState({isHiddenScrollingSpin: true})
+          return
+        } else if (data.r == '1') {
           this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
           this.state.lastMsgId = data.chats[0].id
           this.state.isFetchingHistoryMsg = false
@@ -194,10 +251,9 @@ class IM extends React.Component {
         break;
       case '5009': //push msg from server
         this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
-        this.state.lastMsgId = data.chats[0].id
         this.state.isFetchingHistoryMsg = false
         let msgs = data.chats.filter((item, index, chats) => {
-          return item.sender == this.friendId
+          return item.sender == this.state.friendId
         })
         if (msgs && msgs.length) {
           nextState = update(this.state, {msgList: {$push: msgs}})
@@ -220,8 +276,8 @@ class IM extends React.Component {
     }
   };
   sendProductMsgCard = () => {
-    if (!this.productId) return
-    let url = `${FETCH_GOOD}/${this.productId}`
+    if (!this.props.location.query.productId) return
+    let url = `${FETCH_GOOD}/${this.props.location.query.productId}`
     return fetchable(url)
       .then((data) => {
         if (data.r != '1') return
@@ -232,7 +288,7 @@ class IM extends React.Component {
         msg.img = data.goods.main_img
         msg.name = data.goods.name
         msg.price = data.goods.price
-        msg.link = `${window.location.origin}${BASE_PAGE_DIR}/underwear/${this.productId}`
+        msg.link = `${window.location.origin}${BASE_PAGE_DIR}/underwear/${this.props.location.query.productId}`
         msg.ts = Math.floor(Date.now() / 1000)
         msg.client_msgid = this.uniqueId()
         let nextState = update(this.state, {msgList: {$push: [msg]}})
@@ -246,7 +302,7 @@ class IM extends React.Component {
   getSendBaseInfo = () => {
     let msg = {}
     msg.id = 5003
-    msg.recipient = this.friendId//? 85 : 56
+    msg.recipient = this.state.friendId//? 85 : 56
     msg.token = getMiDouToken()// || TEST_TOKEN
     msg.client_msgid = this.uniqueId()
     msg.ts = Date.now() / 1000
@@ -290,7 +346,7 @@ class IM extends React.Component {
     msg.id = 5005
     msg.start_id = this.state.lastMsgId
     msg.count = this.state.msgCountPerPage
-    msg.friend_id = this.friendId//? 85 : 56
+    msg.friend_id = this.state.friendId//? 85 : 56
     msg.token = getMiDouToken()// || TEST_TOKEN
 
     this.ws.send(JSON.stringify(msg))
@@ -313,49 +369,57 @@ class IM extends React.Component {
   thisHandler = (e) => {//icon-add
     let target
     if (target = getParentByClass(e.target, 'btn-post')) {
-      let msg = this.getSendMessage()
-      let nextState
-
-      this.ws.send(JSON.stringify(msg))
-
-      delete msg.id
-      msg.sender = this.state.userInfo.id
-      nextState = update(this.state, {msgList: {$push: [msg]}})
-      this.setState(nextState, () => {
-        this.refs['input-wraper'].textareaChangeHandler()
-        this.refreshMsgScrollerToEnd()
-      })
-      this.state.msgCached[msg.client_msgid] = msg
-    } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
-      this.setState({isHiddenMediaWraper: false})
-    } else if (target = getParentByClass(e.target, 'post-link')) {
-      let msg = this.getSendLink(target.getAttribute('data-link'))
-      let nextState
-      this.ws.send(JSON.stringify(msg))
-
-      delete msg.id
-      msg.sender = this.state.userInfo.id
-      nextState = update(this.state, {msgList: {$push: [msg]}})
-      this.setState(nextState, (e) => {
-        this.refreshMsgScrollerToEnd();
-      })
-      this.state.msgCached[msg.client_msgid] = msg
-
-    } else if (target = getParentByClass(e.target, 'media-item')) {
-      calloutNativePhoto()
-        .then((data) => {
+      this.ensureWsIsOpened()
+        .then((ws) => {
+          let msg = this.getSendMessage()
           let nextState
-          let msg = this.getSendImg(data.img)
-          this.ws.send(JSON.stringify(msg))
+
+          ws.send(JSON.stringify(msg))
 
           delete msg.id
           msg.sender = this.state.userInfo.id
           nextState = update(this.state, {msgList: {$push: [msg]}})
-          nextState.isHiddenMediaWraper = true
           this.setState(nextState, () => {
+            this.refs['input-wraper'].textareaChangeHandler()
             this.refreshMsgScrollerToEnd()
           })
           this.state.msgCached[msg.client_msgid] = msg
+        })
+    } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
+      this.setState({isHiddenMediaWraper: false}, () => {
+        this.refreshMsgScrollerToEnd()
+      })
+    } else if (target = getParentByClass(e.target, 'post-link')) {
+      this.ensureWsIsOpened()
+        .then((ws) => {
+          let msg = this.getSendLink(target.getAttribute('data-link'))
+          let nextState
+          ws.send(JSON.stringify(msg))
+
+          delete msg.id
+          msg.sender = this.state.userInfo.id
+          nextState = update(this.state, {msgList: {$push: [msg]}})
+          this.setState(nextState, (e) => {
+            this.refreshMsgScrollerToEnd();
+          })
+          this.state.msgCached[msg.client_msgid] = msg
+        })
+
+    } else if (target = getParentByClass(e.target, 'media-item')) {
+      calloutNativePhoto()
+        .then((data)=> {
+          this.ensureWsIsOpened()
+            .then((ws) => {
+              let nextState
+              let msg = this.getSendImg(data.img)
+              ws.send(JSON.stringify(msg))
+
+              delete msg.id
+              msg.sender = this.state.userInfo.id
+
+              this.setState({isHiddenMediaWraper: true})
+              this.state.msgCached[msg.client_msgid] = msg
+            })
         })
     } else if (target = getParentByClass(e.target, 'btn-contacts')) {
       this.setState({isHiddenContactsPanel: !this.state.isHiddenContactsPanel})
@@ -366,13 +430,33 @@ class IM extends React.Component {
 
 
   componentDidMount = () => {
-    this.createSocket()
-    this.msgScroller = new IScroll('#msg-scroller')
-    this.msgScroller.on('scrollEnd', () => {
-      if (this.msgScroller.y >= 0) {
-          this.fetchHistoryMsg()
-      }
+    this.createChatRoom()
+      .then((ws) => {
+        this.fetchHistoryMsg()
+        this.createContactsScroller()
+      })
+
+
+    this.msgScroller = new IScroll('#msg-scroller', {
+      probeType: 3,
+      mouseWheel: true
     })
+    let scrollHandler = () => {
+      if (!this.state.isHasHistoryMsgData) {
+        this.msgScroller.off('scroll', scrollHandler)
+      }
+      let scroller = this.msgScroller
+      if (scroller.y  > -50) {
+        this.ensureWsIsOpened()
+          .then((ws) => {
+            this.fetchHistoryMsg()
+          })
+
+      }
+    };
+
+    this.msgScroller.on('scroll', scrollHandler);
+
   };
 
   /*
@@ -430,7 +514,11 @@ class IM extends React.Component {
                 }
               </div>
             </div>
-            <Input isHiddenMediaWraper={this.state.isHiddenMediaWraper} ref="input-wraper" />
+            <Input
+              isHiddenMediaWraper={this.state.isHiddenMediaWraper}
+              ref="input-wraper"
+              hideMediaWraper={this.hideMediaWraper}
+            />
           </div>
           {
             this.state.isHiddenScrollingSpin?

@@ -28,6 +28,7 @@ class Input extends React.Component {
     if (textarea.value) {
       this.refs['btn-post'].style.display = 'block'
       this.refs['icon-add'].style.display = 'none'
+      this.props.hideMediaWraper();
     } else {
       this.refs['btn-post'].style.display = 'none'
       this.refs['icon-add'].style.display = 'block'
