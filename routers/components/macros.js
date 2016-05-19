@@ -248,6 +248,10 @@ export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
 export let PUT_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant')
 export let PUT_NO_AUTH_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant_weixin')
 
-
-
-export let WS_URL = 'ws://192.168.1.45:8765'
+let WS_URL
+if (__DEBUG__) {
+  WS_URL = 'ws://192.168.1.45:8765'
+} else {
+  WS_URL = 'ws://www.mielseno.com/:8765'
+}
+export {WS_URL}
