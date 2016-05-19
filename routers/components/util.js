@@ -38,7 +38,12 @@ export function getTimeLabel(currentTime, withTime) {
       m = prefixedZero(oCurrentDate.getMinutes()),
       s = prefixedZero(oCurrentDate.getMinutes()),
       w = oCurrentDate.getDay()? oCurrentDate.getDay() : 7,
-      lastWeekend =  new Date(Math.floor((now.getTime() - w * ONE_DAY)/ ONE_DAY ))//oCurrentDate 的上一个礼拜天
+      _w = now.getDay()? now.getDay() : 7
+  // if (D == 17) {
+  //   debugger;
+  // }
+  //let  lastWeekend =  new Date(Math.floor(now.getTime() / ONE_DAY) * ONE_DAY - w * ONE_DAY)//oCurrentDate 的上一个礼拜天
+  let  lastWeekend =  new Date(now.getFullYear(), now.getMonth(), now.getDate() - _w)//oCurrentDate 的上一个礼拜天
 
   let isSameYear = (one, another) => {
     return one.getFullYear() == another.getFullYear()
@@ -52,16 +57,46 @@ export function getTimeLabel(currentTime, withTime) {
            one.getDate() == another.getDate()
   }
   let getIntervalDays = (one, another) => {
-    one = Math.floor(one.getTime() / ONE_DAY)
-    another = Math.floor(another.getTime() / ONE_DAY)
-    return another - one
+    // one = Math.floor(one.getTime() / ONE_DAY)
+    // another = Math.floor(another.getTime() / ONE_DAY)
+    one = Date.UTC(one.getFullYear(), one.getMonth(), one.getDate())
+    another = Date.UTC(another.getFullYear(), another.getMonth(), another.getDate())
+    let days = (another - one) / ONE_DAY
+    return days
   }
 
   let isToday = (dTime) => {
     return getIntervalDays(dTime, now) == 0
   }
   let isYesterday = (dTime) => {
-    getIntervalDays(dTime, now) == 1
+    return getIntervalDays(dTime, now) == 1
+  }
+  /**
+  凌晨：0-5
+  早上：5-11
+  中午：11-13
+  下午：13-17
+  傍晚：17-19
+  晚上：19-24
+  */
+  let getTimeExtendLabel = (h) => {
+    let label = ''
+
+    if (h < 5) {
+      label = '凌晨'
+    } else if (h < 11) {
+      label = '早上'
+    } else if (h < 13) {
+      label = '中午'
+    } else if (h < 17) {
+      label = '下午'
+    } else if (h < 19) {
+      label = '傍晚'
+    } else if (h < 24) {
+      label = '晚上'
+    }
+
+    return label
   }
 
   if (isToday(oCurrentDate)) {
@@ -77,7 +112,7 @@ export function getTimeLabel(currentTime, withTime) {
   }
 
   if (withTime || !label) {
-    label += ' ' + (h < 12? '上午' : '下午') + `${_h}:${m}`
+    label += ' ' + getTimeExtendLabel(h) + `${_h}:${m}`
   }
   return label
 };

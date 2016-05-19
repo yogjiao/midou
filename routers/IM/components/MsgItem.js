@@ -1,10 +1,4 @@
 import React from 'react'
-import {
-  FETCH_INDEX_DATA,
-  FETCH_STATUS_NO_MORE_PRODUCT,
-  FETCH_SUCCESS,
-  BASE_STATIC_DIR
-} from 'macros.js'
 import {getTimeLabel} from 'util.js'
 
 import './MsgItem.less'

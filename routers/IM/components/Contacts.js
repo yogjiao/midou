@@ -1,21 +1,5 @@
 import React from 'react'
-import PageSpin from 'PageSpin/PageSpin.js'
-import Prompt from 'Prompt/Prompt.js'
-import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
-import {
-  FETCH_INDEX_DATA,
-  FETCH_STATUS_NO_MORE_PRODUCT,
-  FETCH_SUCCESS,
-  BASE_STATIC_DIR
-} from 'macros.js'
-import {fetchable} from 'fetch.js'
-import errors from  'errors.js'
-let update = require('react-addons-update')
 import ContactsItem from 'ContactsItem.js'
-import {getUserInfoFromApp} from 'webviewInterface.js'
-
-import IScroll from 'IScroll/build/iscroll-infinite.js'
-
 import './Contacts.less'
 class Contacts extends React.Component {
   constructor(props, context) {

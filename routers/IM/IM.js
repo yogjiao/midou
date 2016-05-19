@@ -6,7 +6,7 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 
 import errors from  'errors.js'
 
-import {getUserInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
+import {getselfInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
 import MsgItem from 'MsgItem.js'
 import Input from 'Input.js'
 import Contacts from 'Contacts.js'
@@ -44,16 +44,11 @@ class IM extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      pageIndex: 0,
-      pageSize: 6,
       isHiddenPageSpin: true,
-      isHiddenScrollingSpin: true,
-      isFetching: false,
-      isHaveGoods: true,
       msgList: [],
       msgCached: {},
-      isExpect: false,
 
+      selfInfo: {},
       usersInfo: {},
       lastMsgId: 0,
       isHasHistoryMsgData: true,
@@ -109,9 +104,10 @@ class IM extends React.Component {
                 ws.onmessage = (e) => {
                   let data = JSON.parse(e.data)
                   if (data.id == '5002') {
-                    this.state.userInfo = data.user // the user is logined currently
+                    this.state.selfInfo = data.user // the user is logined currently
+                    this.state.usersInfo[data.user.id] = data.user
                     this.state.isSupport = data.user.role == '1'? true : false
-                    this.state.isSelf = this.state.isSupport && this.state.friendId == this.state.userInfo.id
+                    this.state.isSelf = this.state.isSupport && this.state.friendId == this.state.selfInfo.id
                     if (this.state.isSelf) {
                       this.setState({isHiddenContactsPanel: false})
                     }
@@ -245,8 +241,6 @@ class IM extends React.Component {
           this.contactsScroller.options.startX = this.contactsScroller.x;
           this.contactsScroller.refresh();
         })
-        // this.contactsScroller.updateCache(this.contactStart, data.chats)
-        // this.contactsScroller.reorderInfinite()
 
         break;
       case '5009': //push msg from server
@@ -377,7 +371,7 @@ class IM extends React.Component {
           ws.send(JSON.stringify(msg))
 
           delete msg.id
-          msg.sender = this.state.userInfo.id
+          msg.sender = this.state.selfInfo.id
           nextState = update(this.state, {msgList: {$push: [msg]}})
           this.setState(nextState, () => {
             this.refs['input-wraper'].textareaChangeHandler()
@@ -397,7 +391,7 @@ class IM extends React.Component {
           ws.send(JSON.stringify(msg))
 
           delete msg.id
-          msg.sender = this.state.userInfo.id
+          msg.sender = this.state.selfInfo.id
           nextState = update(this.state, {msgList: {$push: [msg]}})
           this.setState(nextState, (e) => {
             this.refreshMsgScrollerToEnd();
@@ -415,7 +409,7 @@ class IM extends React.Component {
               ws.send(JSON.stringify(msg))
 
               delete msg.id
-              msg.sender = this.state.userInfo.id
+              msg.sender = this.state.selfInfo.id
 
               this.setState({isHiddenMediaWraper: true})
               this.state.msgCached[msg.client_msgid] = msg
@@ -475,7 +469,7 @@ class IM extends React.Component {
 
                   this.state.msgList.map((item, index, msgs) => {
                   //  debugger;
-                    let userInfo = this.state.usersInfo[item.sender]
+                    let selfInfo = this.state.usersInfo[item.sender]
                     let lastTime = index == 0? '0' : msgs[index - 1].ts
 
                     if (item.msgType == 4) {
@@ -483,13 +477,13 @@ class IM extends React.Component {
                         <MsgItem
                           source={item}
                           lastTime={lastTime}
-                          userInfo={userInfo}
+                          selfInfo={selfInfo}
                           key={item.id || item.client_msgid}
                         />
                       )
                     }
                     // role handle
-                    if (item.sender == this.state.userInfo.id) {
+                    if (item.sender == this.state.selfInfo.id) {
                       item.roleType = 1
                     } else {
                       item.roleType = 2
@@ -506,7 +500,7 @@ class IM extends React.Component {
                       <MsgItem
                         source={item}
                         lastTime={lastTime}
-                        userInfo={userInfo}
+                        userInfo={selfInfo}
                         key={item.id || item.client_msgid}
                       />
                     )
@@ -537,7 +531,7 @@ class IM extends React.Component {
             source={this.state.contactList}
           />
           <PageSpin isHidden={this.state.isHiddenPageSpin}/>
-          <Prompt msg={this.state.promptMsg} refs="prompt"/>
+          <Prompt msg={this.state.promptMsg} ref="prompt"/>
         </div>
     )
   }
