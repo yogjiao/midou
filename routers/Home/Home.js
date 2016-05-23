@@ -6,7 +6,9 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import {
   FETCH_INDEX_DATA,
   FETCH_STATUS_NO_MORE_PRODUCT,
-  FETCH_SUCCESS, BASE_STATIC_DIR
+  FETCH_SUCCESS,
+  BASE_STATIC_DIR,
+  BASE_PAGE_DIR
 } from 'macros.js'
 import {fetchable} from 'fetch.js'
 import errors from  'errors.js'
@@ -21,7 +23,7 @@ class Home extends React.Component {
     super(props, context);
     this.state = {
       pageIndex: 0,
-      pageSize: 2,
+      pageSize: 6,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isFetching: false,
@@ -48,6 +50,8 @@ class Home extends React.Component {
           this.state.isHaveGoods = false
           if (this.state.pageIndex == 0) {
             this.setState({isExpect: true})
+          } else {
+            this.setState({isHiddenScrollingSpin: true})
           }
         } else if (data.rea == FETCH_SUCCESS) {
           let nextState = update(this.state, {
@@ -66,7 +70,7 @@ class Home extends React.Component {
         this.setState({
           isFetching: false,
           isHiddenPageSpin: true,
-          isHiddenScrollingSpin: true
+          //isHiddenScrollingSpin: true
         })
       })
   };
@@ -74,7 +78,7 @@ class Home extends React.Component {
     let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
     let sHeight = window.innerHeight;//可视窗大小
     var pageHeight = document.documentElement.scrollHeight;
-    if (scrollTop + sHeight > pageHeight - 50) {
+    if (scrollTop + sHeight > pageHeight - sHeight ) {
       if (this.state.isHaveGoods && !this.state.isFetching){
         this.setState({isHiddenScrollingSpin: false})
         this.state.pageIndex++
@@ -102,6 +106,7 @@ class Home extends React.Component {
   render() {
     return (
         <div className="home-container">
+
           {
             this.state.isExpect?
             (<HomeNoResult />):

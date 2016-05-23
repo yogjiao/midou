@@ -14,7 +14,7 @@ import {
 } from 'macros.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchable, fetchAuth} from 'fetch.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 import {getParentByClass} from 'util.js'
 import ShareToSocialMedia from 'ShareToSocialMedia/ShareToSocialMedia.js'
 import Prompt from 'Prompt/Prompt.js'
@@ -155,6 +155,11 @@ class Collocation extends React.Component {
   };
   componentDidMount = () => {
     this.fetchData()
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '2') {
+        this.refs['share'].show()
+      }
+    })
   };
   render() {
     let h = window.innerHeight;
@@ -164,10 +169,16 @@ class Collocation extends React.Component {
     }
     return (
         <div className="collocation-container" onClick={this.thisHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <div className="iconfont icon-arrow-left"></div>
-          <div className="iconfont icon-share"></div>
-        </PageHeader>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <div className="iconfont icon-arrow-left"></div>
+              <div className="iconfont icon-share"></div>
+            </PageHeader>
+          )
+        }
         <div className="collocation-wrap" style={style}>
           <div className="overlayer">
             <div className="swiper-container">

@@ -4,6 +4,7 @@ import {
   BASE_PAGE_DIR
 } from 'macros.js'
 import {backToNativePage} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 import Swiper from 'Swiper'
 
 import './BoxService.less'
@@ -25,14 +26,18 @@ class BoxService extends React.Component {
     let h = window.innerHeight
     return (
       <div className="box-servie-container">
-        <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+        {
+          ua.isApp()?
+          '':
+          (<i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>)
+        }
         <div className="swiper-container" style={{height: h}}>
           <div className="swiper-wrapper">
               <div className="swiper-slide">
                 <div className="box-service-wrap">
                   <h2>免费试衣</h2>
                   <div className="img-wrap">
-                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-1.png)`}}/>
+                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-3.png)`}}/>
                   </div>
                   <h6>购买1件送达2件</h6>
                   <p className="tips-wrap">
@@ -58,7 +63,7 @@ class BoxService extends React.Component {
                 <div className="box-service-wrap">
                   <h2>诚信得好礼</h2>
                   <div className="img-wrap">
-                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-3.png)`}}/>
+                    <div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/box-1.png)`}}/>
                   </div>
                   <h6>升级盒子</h6>
                   <p className="tips-wrap">

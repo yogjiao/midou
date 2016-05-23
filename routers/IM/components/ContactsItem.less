@@ -1,0 +1,74 @@
+@import "~variables.less";
+.contacts-wraper{
+	display: flex;
+	border-bottom: 1px solid @border-color-light;
+
+	.avater{
+		height: 1rem;
+		width: 1rem;
+		margin: .15rem .3rem;
+		box-sizing: border-box;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+	.other-wraper{
+		display: flex;
+		flex-wrap: wrap;
+		flex-basis: 100%;
+		.user-name{
+			margin-top: .25rem;
+			flex-basis: 70%;
+			flex-shrink: 0;
+			box-sizing: border-box;
+		}
+		.date-wraper{
+			box-sizing: border-box;
+			color: @font-color-light;
+			font-size: .24rem;
+			flex-basis: 30%;
+			flex-shrink: 0;
+			margin-top: .25rem;
+			padding-right: .3rem;
+			text-align: right;
+
+		}
+		.newest-msg{
+			box-sizing: border-box;
+			padding-right: .3rem;
+			color: @font-color-light;
+			flex-basis: 100%;
+			flex-shrink: 0;
+			font-size: .26rem;
+			margin-top: -.1rem;
+			height: .45rem;
+			line-height: .45rem;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			position: relative;
+			p{
+				position: absolute;
+				width: 80%;
+				height: .45rem;
+				line-height: .45rem;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			.unread-num{
+				position: absolute;
+				right: .35rem;
+				border-radius: 50%;
+				width: .4rem;
+				line-height: .4rem;
+				text-align: center;
+				background-color: #ff685e;
+				color: #fff;
+				font-size: .24rem;
+			}
+		}
+	}
+
+}

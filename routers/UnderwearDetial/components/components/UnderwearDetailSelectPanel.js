@@ -185,6 +185,7 @@ class UnderwearDetailSelectPanel extends React.Component {
             {boxesEl}
           </div>
           <div className="iconfont close-select-panel">&#xe602;</div>
+          
           <div className="btn-post">确定</div>
         </div>
       </div>

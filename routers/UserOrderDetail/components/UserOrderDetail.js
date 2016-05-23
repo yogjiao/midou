@@ -20,12 +20,12 @@ import {
 } from 'macros.js'
 import orderState from 'orderState.js'
 import errors from 'errors.js'
-import {notifyAppToCheckout, backToNativePage} from 'webviewInterface.js'
+import {notifyAppToCheckout, backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 import provinces from 'provinces'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import UserOrderDetailGroup from 'UserOrderDetailGroup.js'
 import FillPrice from './FillPrice.js'
-
+import ua from 'uaParser.js'
 
 import './UserOrderDetail.less'
 class UserOrderDetail extends React.Component {
@@ -179,31 +179,45 @@ class UserOrderDetail extends React.Component {
 
 
       <div className="order-detail-container min-screen-height" onClick={this.thisHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
-          {
-            this.state.order[0].order_state < '12'?
-            (<div className="btn-delete-order">删除订单</div>):
-            ''
-          }
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+              {
+                this.state.order[0].order_state < '12'?
+                (<div className="btn-delete-order">删除订单</div>):
+                ''
+              }
+            </PageHeader>
+          )
+        }
 
-        </PageHeader>
         <div className="status-container" style={{backgroundImage: bg}}>
           <div className="status-wrap">
-            <i>订单状态：</i><span>{orderState[Math.min(this.state.order[0].order_state, 22)]}</span>
+            <i>订单状态：</i><span>{orderState[this.state.order[0].order_state]}</span>
           </div>
           <div className="order-id-wrap">
             <i>订单号：</i><span>{this.state.order[0].id}</span>
           </div>
-          <div className="order-tips">
-            请在2小时内完成付款逾期订单将自动取消
-          </div>
+          {
+            this.state.order[0].order_state == '10'?
+            (
+              <div className="order-tips">
+                请在2小时内完成付款逾期订单将自动取消
+              </div>
+            ):''
+          }
+
+
         </div>
         {
            this.state.order[0].goods.map((item, index) => {
             return (<UserOrderDetailGroup
                       key={index}
                       source={item}
+                      orderState={this.state.order[0].order_state}
                     />)
           })
         }

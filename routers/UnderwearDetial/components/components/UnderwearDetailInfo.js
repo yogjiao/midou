@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router'
 
 import {BASE_PAGE_DIR} from 'macros.js'
-
+import AdditionalTips from 'AdditionalTips.js'
 import 'UnderweardetailInfo.less'
 class UnderweardetailInfo extends React.Component {
   render() {
@@ -12,10 +12,15 @@ class UnderweardetailInfo extends React.Component {
         <div className="pro-name">{this.props.name}</div>
         <div className="pro-price">&yen; {this.props.price}</div>
         <div className="detail-item-list">
+        {
+          /*
           <div className="detail-item-wrap">
             <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />商品介绍</h6>
             <div className="detail-content" dangerouslySetInnerHTML={{__html: this.props.match_intro}}></div>
           </div>
+          */
+        }
+
           <div className="detail-item-wrap">
             <h6 className="item-title"><i className="iconfont icon-triangle-left-top" />盒子服务</h6>
             <div className="detail-content box-service-info">
@@ -51,7 +56,7 @@ class UnderweardetailInfo extends React.Component {
                           <a href={`${BASE_PAGE_DIR}/underwear/${item.id}`}>
                             <div className="img-wrap"><img src={item.thumb_img} /></div>
                             <div className="pro-name">{item.name}</div>
-                            <div className="pro-price">&yen; {item.price}</div>
+                            <div className="seperate-line" />
                           </a>
                         </div>
                       </div>
@@ -63,6 +68,7 @@ class UnderweardetailInfo extends React.Component {
             ''
           }
         </div>
+        <AdditionalTips />
       </div>
     )
   }

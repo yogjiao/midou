@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>Key-Value Storage</title>
+<script type="text/javascript">
+var sizeMenu
+var colorMenu
+
+function init() {
+    sizeMenu = document.getElementById("sizeMenu");
+    colorMenu = document.getElementById("colorMenu");
+    if (localStorage.shirtSize)
+        sizeMenu.value = localStorage.shirtSize;
+    if (localStorage.shirtColor)
+        colorMenu.value = localStorage.shirtColor;
+}
+
+function saveChoice() {
+    localStorage.shirtSize=sizeMenu.value;
+    localStorage.shirtColor=colorMenu.value;
+    console.log(localStorage.shirtSize + ", " + localStorage.shirtColor);
+}
+
+window.addEventListener('storage', myStorage_handler, false);
+function myStorage_handler(evt)
+{
+    // alert('The modified key was '+evt.key);
+    // alert('The original value was '+evt.oldValue);
+    // alert('The new value is '+evt.newValue);
+    // alert('The URL of the page that made the change was '+evt.url);
+    // alert('The window where the change was made was '+evt.source);
+    init()
+}
+
+setInterval(function(){
+  alert(localStorage.getItem('shirtSize') + '-' + localStorage.getItem('shirtColor'))
+}, 5000)
+
+</script>
+</head>
+
+<body onload="init()">
+<h2>Local Storage</h2>
+
+<p> Shirt size:
+<select id="sizeMenu" onchange="saveChoice()">
+    <option value="small">Small</option>
+    <option value="medium">Medium</option>
+    <option value="large">Large</option>
+</select>
+</p>
+
+<p> Shirt color:
+<select id="colorMenu" onchange="saveChoice()">
+    <option value="red">Red</option>
+    <option value="white">White</option>
+    <option value="blue">Blue</option>
+    <option value="tiedye">Tie-Dyed</option>
+</select>
+</p>
+</body>
+</html>

@@ -40,8 +40,7 @@ const rootRoute = {
       require('./UserOrderList'),
       require('./ReceiverInfo').add,
       require('./ReceiverInfo').edit,
-      require('./Receivers').scan,
-      require('./Receivers').edit,
+      require('./Receivers'),
       require('./ExpressOrder'),
       require('./UnderwearAssistant'),
 
@@ -49,7 +48,7 @@ const rootRoute = {
       require('./CustomerService'),
       require('./Collections'),
       require('./BusinessModel'),
-
+      require('./IM'),
       require('./404')
       ]
   } ],

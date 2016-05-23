@@ -1,8 +1,36 @@
 @import "~variables.less";
 .receivers-container{
-
+  background-color: @page-background-color;
+  min-height: 100vh;
   .list-wrap{
+    margin-top: .3rem;
+  }
+  .add-receiver-wrap{
+    display: flex;
+    margin-top: .3rem;
+    text-align: center;
+    width: 100%;
     background-color: #fff;
-    overflow: hidden;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid @border-color-light;
+    padding: .2rem 0;
+    .iconfont{
+      height: .4rem;
+      line-height: .36rem;
+      width: .4rem;
+      text-align: center;
+      background-color: @light-slate-blue;
+      border-radius: 50%;
+      color: #fff;
+      font-size: .3rem;
+      margin-left: .3rem;
+    }
+    span{
+      display: inline-block;
+      background-color: #fff;
+      margin-left: .27rem;
+    }
+
   }
 }

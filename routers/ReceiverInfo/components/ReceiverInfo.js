@@ -4,11 +4,13 @@ import { Link } from 'react-router'
 
 import PageHeader from 'PageHeader/PageHeader.js'
 import {
-    ROUTER_RECIEVER_INFO_ADD,
-    ROUTER_RECIEVER_INFO_EDIT,
+    CREATE,
+    UPDATE,
     FETCH_RECEIVER_INFO,
     PUT_RECEIVER_INFO,
-    FETCH_SUCCESS
+    FETCH_SUCCESS,
+    LS_RECEIVER,
+    LS_IS_FRESH_RECEIVERS
   } from 'macros.js'
 import {getParentByClass, pick} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
@@ -17,8 +19,9 @@ import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
-import {backToNativePage} from 'webviewInterface.js'
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
 let update = require('react-addons-update')
+import ua from 'uaParser.js'
 
 import './ReceiverInfo.less'
 class ReceiverInfo extends React.Component {
@@ -31,12 +34,14 @@ class ReceiverInfo extends React.Component {
       name: '',
       phone:'',
       province: '',
+
       city: '',
       detail: ''
     }
 
-    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+    if (this.props.params.actionModel == CREATE) {
       this.state.province = 1
+      this.state.provinceName = '北京'
     }
   }
   fetchReceiverInfo = () => {
@@ -65,12 +70,28 @@ class ReceiverInfo extends React.Component {
     this.setState({detail: event.target.value.substr(0, 100)});
   };
   backHandler = () => {
-    this.props.history.goBack()
-    backToNativePage()
+    if (ua.isApp()) {
+      backToNativePage()
+    } else {
+      this.props.history.goBack()
+    }
   };
-  addressChangeHandler = (provinceId, cityId) => {
-    this.state.province = provinceId
-    this.state.city = cityId
+  addressChangeHandler = (data) => {
+    this.state.province = data.provinceId
+    this.state.provinceName = data.provinceName
+    this.state.city = data.cityId
+    this.state.cityName = data.cityName
+  };
+  cachedReceiver = (receiver) => {
+    if (this.props.params.actionModel == UPDATE) {
+      let persistenceReceiver
+      try {
+        persistenceReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
+        if (persistenceReceiver && persistenceReceiver.id == receiver.id) {
+          localStorage.setItem(LS_RECEIVER, JSON.stringify(receiver))
+        }
+      } catch (e) {}
+    }
   };
   saveHanler = () => {
     let url = `${PUT_RECEIVER_INFO}/${this.state.id}`
@@ -79,16 +100,30 @@ class ReceiverInfo extends React.Component {
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
           let nextState = {}
-          if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+          if (this.props.params.actionModel == CREATE) {
             nextState = {promptMsg: '收货人信息添加成功', isHiddenPrompt: false}
           } else {
             nextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
+            let cacheData = {
+              id: this.state.id,
+              name: this.state.name,
+              phone: this.state.phone,
+              province: this.state.province,
+              provinceName: this.state.provinceName,
+              city: this.state.city,
+              cityName: this.state.cityName,
+              detail: this.state.detail
+            }
+            this.cachedReceiver(cacheData)
           }
+
+          localStorage.setItem(LS_IS_FRESH_RECEIVERS, "1")//Math.random()
+
           this.setState(nextState)
           this.refs['prompt'].show()
 
           setTimeout(()=>{
-            this.props.history.goBack()
+            this.backHandler()
           }, 1500)
 
         } else {
@@ -105,19 +140,24 @@ class ReceiverInfo extends React.Component {
       })
   };
   componentWillMount = () => {
-    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_ADD) {
+    if (this.props.params.actionModel == CREATE) {
       this.state.isHiddenPageSpin = true
-      this.state.headerName = '添加收货人信息'
+      this.state.headerName = '收货人信息'
     } else {
-      this.state.headerName = '编辑收货人信息'
+      this.state.headerName = '收货人信息'
       this.state.id = this.props.params.receiverInfoId
     }
   };
   componentDidMount = () => {
-    if (this.props.params.actionModel == ROUTER_RECIEVER_INFO_EDIT) {
+    if (this.props.params.actionModel == UPDATE) {
       this.fetchReceiverInfo()
     }
 
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '8') {
+        this.saveHanler()
+      }
+    })
   };
   componentWillReceiveProps = (props) => {
   };
@@ -127,10 +167,17 @@ class ReceiverInfo extends React.Component {
   render() {
     return (
       <div className="reciever-info-container" onClick={this.editHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
-          <div className="btn-save" onClick={this.saveHanler}>保存</div>
-        </PageHeader>
+      {
+        ua.isApp()?
+        '':
+        (
+          <PageHeader headerName={this.state.headerName}>
+            <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+            <div className="btn-save" onClick={this.saveHanler}>保存</div>
+          </PageHeader>
+        )
+      }
+
         <div className="receiver-item">
           <input placeholder="收货人姓名" value={this.state.name} onChange={this.nameChangeHanler}/>
         </div>

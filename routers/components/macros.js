@@ -1,11 +1,11 @@
 /********************************url**********************************/
 export let EXPRESS = 'http://m.kuaidi100.com/index_all.html'
 
-// export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
-// export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
+export let BASE_PAGE_DIR = '/nicein' //'/app-page/' + __VERSION__;
+export let BASE_ROUTER_DIR = '/nicein(/*.*.*)'
 
-export let BASE_PAGE_DIR = '/app-page/' + __VERSION__; //app-page/' + __VERSION__;
-export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
+// export let BASE_PAGE_DIR = '/app-page/' + __VERSION__; //app-page/' + __VERSION__;
+// export let BASE_ROUTER_DIR = '/app-page/(*.*.*/)'
 //export let BASE_PAGE_DIR = '/app-page/*.*.*/';
 
 export let BASE_STATIC_DIR = '/app-static'
@@ -22,6 +22,27 @@ export let MIDOU_TOKEN_NAME = 'x-midou-token'
 
 export let FETCH_STATUS_NO_MORE_PRODUCT = '2001'
 export let FETCH_SUCCESS = '0'
+// for router
+export let ROUTER_SHOPPING_CART_SCAN = 'scan'
+export let ROUTER_SHOPPING_CART_EDIT = 'edit'
+export let ROUTER_RECIEVER_INFO_ADD = 'add'
+export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
+export let RECEIVERS_EDIT = 'edit'
+
+export let EDIT = 'edit'
+export let SCAN = 'scan'
+
+export let CREATE = 'create'
+export let READ = 'read'
+export let UPDATE = 'update'
+export let DELETE = 'delete'
+export let SELECT = 'select'
+
+/*********localStorage key**********/
+export let LS_RECEIVER = 'receiver'
+export let LS_PAY_WAY = 'payway'
+
+export let LS_IS_FRESH_RECEIVERS = 'isfreshReceivers'
 /******** callHandler - js call bc *******/
 
 
@@ -52,13 +73,10 @@ export let CALL_HANDLER_GET_APP_VERSION = 'getAppVersionCallback'
 
 export let IOS_APP_STORE_URL = 'https://itunes.apple.com/cn/app/nei-xin/id1091167426?mt=8'
 
-// for router
-export let ROUTER_SHOPPING_CART_SCAN = 'scan'
-export let ROUTER_SHOPPING_CART_EDIT = 'edit'
-export let ROUTER_RECIEVER_INFO_ADD = 'add'
-export let ROUTER_RECIEVER_INFO_EDIT = 'edit'
-export let RECEIVERS_EDIT = 'edit'
-export let EDIT = 'edit'
+
+
+
+
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 // export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 // export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
@@ -176,7 +194,10 @@ export let CHEST_FEATRUES_7 = [
     {value: "3", text:  "轻薄性感"}
 ]
 
-
+function prefixAjaxBaseUrl(url) {
+  url = ('/' + url).replace(/\/\//ig, '/')
+  return FETCH_BASE_URL + url
+}
 
 // fetch scenes data for index page
 export let FETCH_INDEX_DATA = FETCH_BASE_URL + '/get_scene_goods'
@@ -212,7 +233,6 @@ export let EDIT_CART_GOODS = FETCH_BASE_URL + '/edit_cart'
 export let EDIT_CART_GOODS_BY_IDS = FETCH_BASE_URL + '/get_cart'
 
 export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
-
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'
 export let PUT_TO_ORDER = FETCH_BASE_URL + '/add_to_order'
 
@@ -225,6 +245,13 @@ export let FETCH_ORDERS = FETCH_BASE_URL + '/get_order_page'
 export let PUT_EXPRESS_ORDER = FETCH_BASE_URL + '/fill_express'
 
 
-export let PUT_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant'
+export let PUT_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant')
+export let PUT_NO_AUTH_ASSISTANT_INFO = prefixAjaxBaseUrl('size_assistant_weixin')
 
-export let PUT_NO_AUTH_ASSISTANT_INFO = FETCH_BASE_URL + '/size_assistant_weixin'
+let WS_URL
+if (__DEBUG__) {
+  WS_URL = 'ws://192.168.1.45:8765'
+} else {
+  WS_URL = 'ws://www.mielseno.com:8765'
+}
+export {WS_URL}

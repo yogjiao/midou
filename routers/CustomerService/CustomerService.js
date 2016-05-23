@@ -4,6 +4,7 @@ import {
 } from 'macros.js'
 
 import {backToNativePage} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 
 import './CustomerService.less'
 class CustomerService extends React.Component {
@@ -17,7 +18,13 @@ class CustomerService extends React.Component {
   render = () => {
     return (
       <div className="customer-servie-container">
-        <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+        {
+          ua.isApp()?
+          '':
+          (
+            <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+          )
+        }
         <h2>联系客服</h2>
         <div className="img-wrap weixin-logo">
           <img src={`${BASE_STATIC_DIR}/img/logo-wx.png`} />

@@ -234,6 +234,8 @@ class Step extends React.Component {
     let nextState
     if (target = getParentByClass(e.target, 'select-item-wrap')) {
       nextState = this.getNextStateForSelectedData(target)
+    } else if (target = getParentByClass(e.target, 'select-over-layer')) {
+      nextState = {isHiddenSelection: true}
     }
 
     nextState && this.setState(nextState)
@@ -428,7 +430,7 @@ class Step extends React.Component {
     }
     let isSelectedTheValue = this.isSelectedValue()
     let linkTo = isSelectedTheValue? `${BASE_PAGE_DIR}/assistant/step/${nextStep}` : 'javascript:void(0)'
-
+  
     return (
       <div>
         {
@@ -439,7 +441,7 @@ class Step extends React.Component {
           (
             <div className="step-container" onClick={this.thisHandler}>
               {
-                ua.isApp() || this.props.params.stepId != '1'?
+                !ua.isApp() && this.props.params.stepId != '1'?
                 (<div className="icon-arrow-left iconfont" onClick={this.backHandler}></div>):
                 ''
               }

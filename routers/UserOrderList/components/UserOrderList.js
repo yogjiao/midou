@@ -14,7 +14,7 @@ import {
   } from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
-
+import ua from 'uaParser.js'
 import {backToNativePage} from 'webviewInterface.js'
 import UserOrderListGroup from 'UserOrderListGroup.js'
 import OrdersNoResult from 'OrdersNoResult.js'
@@ -94,9 +94,15 @@ class UserOrderList extends React.Component {
   render() {
     return (
       <div className="order-detail-container user-order-list">
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
-        </PageHeader>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <i className="iconfont icon-arrow-left" onClick={this.backHandler}></i>
+            </PageHeader>
+          )
+        }
         <div className="order-list-wrap">
         {
           this.state.isNull?

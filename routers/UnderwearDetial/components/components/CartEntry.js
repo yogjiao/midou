@@ -55,7 +55,11 @@ class CartEntry extends React.Component {
       href = 'javascript:void(0)'
     }
     return (
-      <a className="cart-entry-container" href={href} onClick={this.thisHandler}>
+      <a
+        className={ua.isApp()? 'cart-entry-container is-app' : 'cart-entry-container'}
+        href={href}
+        onClick={this.thisHandler}
+      >
         <i className="iconfont icon-cart">
         {
           this.state.isEmpty == '0'? (<span></span>) : ''

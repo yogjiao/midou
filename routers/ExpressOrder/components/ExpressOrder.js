@@ -13,8 +13,8 @@ import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
-import {backToNativePage} from 'webviewInterface.js'
-
+import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import ua from 'uaParser.js'
 let update = require('react-addons-update')
 
 import './ExpressOrder.less'
@@ -81,15 +81,26 @@ class ExpressOrder extends React.Component {
     if (this.props.params.isTry == '0') {
       this.setState({isHiddenServiceLayer: false})
     }
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '7') {
+        this.saveHanler()
+      }
+    })
   };
 
   render() {
     return (
       <div className="express-order-container" onClick={this.editHandler}>
-        <PageHeader headerName={this.state.headerName}>
-          <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
-          <div className="btn-save" onClick={this.saveHanler}>保存</div>
-        </PageHeader>
+        {
+          ua.isApp()?
+          '':
+          (
+            <PageHeader headerName={this.state.headerName}>
+              <i className="iconfont" onClick={this.backHandler}>&#xe609;</i>
+              <div className="btn-save" onClick={this.saveHanler}>保存</div>
+            </PageHeader>
+          )
+        }
         <div className="tips-wrap">
             收到货物后<br />我们将会在两个工作日内处理您的订单
             <img src="/app-static/img/car.png" />

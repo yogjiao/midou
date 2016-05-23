@@ -9,6 +9,7 @@ import {fetchable, fetchAuth} from 'fetch.js'
 import {backToNativePage} from 'webviewInterface.js'
 // import fetch from '../../components/fetch.js'
 import Swiper from 'Swiper'
+import ua from 'uaParser.js'
 
 import './BusinessModel.less'
 class BusinessModel extends React.Component {
@@ -32,7 +33,14 @@ class BusinessModel extends React.Component {
   render() {
     return (
       <div className="business-model-container ">
-        <div className="iconfont icon-arrow-left" onClick={this.backHandler}/>
+        {
+          ua.isApp()?
+          '':
+          (
+            <div className="iconfont icon-arrow-left" onClick={this.backHandler}/>
+          )
+        }
+
         <div className="swiper-container bg-neixin" >
           <div className="swiper-wrapper">
               <div className="swiper-slide">
