@@ -36,12 +36,9 @@ export function getTimeLabel(currentTime, withTime) {
       h = oCurrentDate.getHours(),
       _h = prefixedZero(h),
       m = prefixedZero(oCurrentDate.getMinutes()),
-      s = prefixedZero(oCurrentDate.getMinutes()),
+      s = prefixedZero(oCurrentDate.getSeconds()),
       w = oCurrentDate.getDay()? oCurrentDate.getDay() : 7,
       _w = now.getDay()? now.getDay() : 7
-  // if (D == 17) {
-  //   debugger;
-  // }
   //let  lastWeekend =  new Date(Math.floor(now.getTime() / ONE_DAY) * ONE_DAY - w * ONE_DAY)//oCurrentDate 的上一个礼拜天
   let  lastWeekend =  new Date(now.getFullYear(), now.getMonth(), now.getDate() - _w)//oCurrentDate 的上一个礼拜天
 

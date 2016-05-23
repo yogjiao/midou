@@ -93,36 +93,37 @@ class IM extends React.Component {
   };
   createChatRoom = () => {
     return this.createSocket()
-            .then((ws) => {// for login to create chat room
-              let params = {}
-              params.id = 5001
-              params.token = getMiDouToken() //|| TEST_TOKE
-              params = JSON.stringify(params)
-              ws.send(params)
+      .then((ws) => {// for login to create chat room
+        let params = {}
+        params.id = 5001
+        params.token = getMiDouToken() //|| TEST_TOKE
+        params = JSON.stringify(params)
+        ws.send(params)
 
-              return new Promise((resolve, reject) => {
-                ws.onmessage = (e) => {
-                  let data = JSON.parse(e.data)
-                  if (data.id == '5002') {
-                    this.state.selfInfo = data.user // the user is logined currently
-                    this.state.usersInfo[data.user.id] = data.user
-                    this.state.isSupport = data.user.role == '1'? true : false
-                    this.state.isSelf = this.state.isSupport && this.state.friendId == this.state.selfInfo.id
-                    if (this.state.isSelf) {
-                      this.setState({isHiddenContactsPanel: false})
-                    }
-                    resolve(ws)
-                  }
-                };
-              })
-            })
-            .then((ws) => {
-              ws.onmessage = (e) => {
-                let data = JSON.parse(e.data)
-                this.msgHandler(data)
+        return new Promise((resolve, reject) => {
+          ws.onmessage = (e) => {
+            let data = JSON.parse(e.data)
+            if (data.id == '5002') {
+              this.state.selfInfo = data.user // the user is logined currently
+              this.state.usersInfo[data.user.id] = data.user
+              this.state.isSupport = data.user.role == '1'? true : false
+              this.state.isSelf = this.state.isSupport &&
+                this.state.friendId == this.state.selfInfo.id
+              if (this.state.isSelf) {
+                this.setState({isHiddenContactsPanel: false})
               }
-              return ws
-            })
+              resolve(ws)
+            }
+          };
+        })
+      })
+      .then((ws) => {
+        ws.onmessage = (e) => {
+          let data = JSON.parse(e.data)
+          this.msgHandler(data)
+        }
+        return ws
+      })
   };
   ensureWsIsOpened = () => {
     let connect
@@ -282,7 +283,8 @@ class IM extends React.Component {
         msg.img = data.goods.main_img
         msg.name = data.goods.name
         msg.price = data.goods.price
-        msg.link = `${window.location.origin}${BASE_PAGE_DIR}/underwear/${this.props.location.query.productId}`
+        msg.link = `${window.location.origin}
+          ${BASE_PAGE_DIR}/underwear/${this.props.location.query.productId}`
         msg.ts = Math.floor(Date.now() / 1000)
         msg.client_msgid = this.uniqueId()
         let nextState = update(this.state, {msgList: {$push: [msg]}})

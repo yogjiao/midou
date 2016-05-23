@@ -252,6 +252,6 @@ let WS_URL
 if (__DEBUG__) {
   WS_URL = 'ws://192.168.1.45:8765'
 } else {
-  WS_URL = 'ws://www.mielseno.com/:8765'
+  WS_URL = 'ws://www.mielseno.com:8765'
 }
 export {WS_URL}
