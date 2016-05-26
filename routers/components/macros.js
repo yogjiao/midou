@@ -211,8 +211,14 @@ export let DELETE_COLLECTION = FETCH_BASE_URL + '/delete_collection'
 export let PUT_COLLECTION = FETCH_BASE_URL + '/collect_goods'
 
 //fetch good's detail
-export let FETCH_GOOD = FETCH_BASE_URL + '/get_goods_detail'
+export let FETCH_GOOD = prefixAjaxBaseUrl('get_goods_detail')
 
+export let FETCH_USER_SHOW_USER = prefixAjaxBaseUrl('get_show_user')
+export let FETCH_USER_SHOW_IMG = prefixAjaxBaseUrl('get_show_image')
+export let DELETE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_show_image')
+export let POST_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('like_show_image')
+export let DELET_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_like_show_image')
+export let POST_SHOW_IMG = prefixAjaxBaseUrl('upload_show_image')
 // fetch cities by province id
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
 
