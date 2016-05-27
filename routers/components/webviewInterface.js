@@ -15,6 +15,7 @@ import {
 
 import {getMiDouToken} from 'commonApp.js'
 import ua from 'uaParser.js'
+
 function setupWebViewJavascriptBridge(callback) {
     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
     if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
@@ -68,6 +69,24 @@ export let sendNotificationsToApp = function(data, callback){
       callback(response)
     })
 }
+
+/**************communication between pages by oc****************/
+export let sendSignalToOtherPagesByOc = function(data){
+  let params = {means: `RECIEVE_SIGNAL_FROM_OTHER_PAGE_BY_OC(${JSON.stringify(data)})`}
+  callHandler('receiveWebBridge', params, function(response) {
+      //callback(response)
+    })
+}
+
+// reginster the method to recieve the signal sending from other page
+
+export let recievePageToPageSignal = function (callback) {
+  window.RECIEVE_SIGNAL_FROM_OTHER_PAGE_BY_OC = function(params) {//{signal: 1}
+    callback(params)
+  }
+
+}
+
 
 /*************callHandler******************/
 
