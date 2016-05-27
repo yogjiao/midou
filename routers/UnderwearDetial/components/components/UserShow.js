@@ -28,9 +28,10 @@ class UserShow extends React.Component {
       userNumPerPage: 12 * 2,
       userList: [],
       isHaveUserInfo: true,
-      images: {},
-      selectedUser: 0,
+      userSelected: 0,//保存各个用户的图片是否加载完
 
+      imgNumPerPage: 5,
+      imagesCached: {},//缓存所有加载过的图片  {imgs: [], isComplete: false, pageIndex: 0}
     }
   }
   fetchUserShowUser = () => {
@@ -48,7 +49,7 @@ class UserShow extends React.Component {
   };
   fetchUserShowImg = (userId) => {
     let url = `${FETCH_USER_SHOW_IMG}/${userId}/${this.context.productId}/` +
-      `${this.state.userPageIndex}/${this.state.userNumPerPage}`
+      `${this.state.imagesCached[userId]}/${this.state.imgNumPerPage}`
     fetchable(url)
       .then((data) => {
         if (data.rea == FETCH_SUCCESS) {
