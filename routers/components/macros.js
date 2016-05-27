@@ -42,7 +42,6 @@ export let SELECT = 'select'
 export let LS_RECEIVER = 'receiver'
 export let LS_PAY_WAY = 'payway'
 
-export let LS_IS_FRESH_RECEIVERS = 'isfreshReceivers'
 /******** callHandler - js call bc *******/
 
 
@@ -75,6 +74,12 @@ export let IOS_APP_STORE_URL = 'https://itunes.apple.com/cn/app/nei-xin/id109116
 
 
 
+export let PAGE_TO_PAGE_SIGNAL = {
+  UPDATE_ADDRESS: 0,
+  DELETE_ADDRESS: 1,
+  ADD_ADDRESS: 2,
+  SELECT_ADDRESS: 3,
+}
 
 
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
