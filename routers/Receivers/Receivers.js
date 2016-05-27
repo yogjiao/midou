@@ -16,13 +16,17 @@ import {
   CREATE,
   SELECT,
   RECEIVERS_EDIT,
-  LS_RECEIVER,
-  LS_IS_FRESH_RECEIVERS
+  PAGE_TO_PAGE_SIGNAL,
 } from 'macros.js'
 import {fetchAuth} from 'fetch.js'
 import provinces from 'provinces.js'
 import {getParentByClass} from 'util.js'
-import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import {
+  backToNativePage,
+  receiveNotificationsFromApp,
+  sendSignalToOtherPagesByOc,
+  recievePageToPageSignal
+} from 'webviewInterface.js'
 let update = require('react-addons-update')
 import ua from 'uaParser.js'
 import Hammer from 'hammerjs'
@@ -69,14 +73,11 @@ class Receivers extends React.Component {
           })
           this.setState(nextState)
           this.refs['prompt'].show();
-
-          let persistenceReceiver
-          try {
-            persistenceReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
-            if (persistenceReceiver.id == receiverId) {
-              localStorage.removeItem(LS_RECEIVER)
-            }
-          } catch (e) {}
+          let signal = {
+            signal: PAGE_TO_PAGE_SIGNAL.DELETE_ADDRESS,
+            id: receiverId
+          }
+          sendSignalToOtherPagesByOc(signal)
 
         }
       })
@@ -96,24 +97,7 @@ class Receivers extends React.Component {
     this.initState()
     return this.fetchListData()
   };
-  freshWhenDetectingSignal = () => {
-    clearTimeout(this.timer)
-    try {
-      if (localStorage.getItem(LS_IS_FRESH_RECEIVERS) == '1') {
-        localStorage.removeItem(LS_IS_FRESH_RECEIVERS)
-        this
-          .fresh()
-          .then(() => {
-          })
-      }
-    } catch (e) {
 
-    } finally {
-      this.timer = setTimeout(() => {
-        this.freshWhenDetectingSignal()
-      }, 2000)
-    }
-  };
   fetchListData = (isScrollLoading) => {
     this.state.isFetching = true
     let url = `${FETCH_RECEIVERS}/${this.state.lastReceiver}/${this.state.pageSize}`
@@ -186,17 +170,30 @@ class Receivers extends React.Component {
       this.dataId = target.getAttribute('data-id')
       this.dataIndex = target.getAttribute('data-index')
       this.deleteReceiverHandler()
+
       //this.setState({isHiddenConfirm: false})
     } else if (target = getParentByClass(e.target, 'receiver-select')){
       if (this.props.params.actionModel == SELECT){
-        let receiver = target.getAttribute('data-source')
-        localStorage.setItem(LS_RECEIVER, receiver)
+        let receiver = JSON.parse(target.getAttribute('data-source'))
+        //localStorage.setItem(LS_RECEIVER, receiver)
+        receiver.signal = PAGE_TO_PAGE_SIGNAL.SELECT_ADDRESS
+        sendSignalToOtherPagesByOc(receiver)
         this.backHandler()
       }
 
     }
   };
   componentDidMount = () => {
+    recievePageToPageSignal((data) => {
+      if (data.signal == PAGE_TO_PAGE_SIGNAL.UPDATE_ADDRESS ||
+          data.signal == PAGE_TO_PAGE_SIGNAL.ADD_ADDRESS) {
+        this.fresh()
+      }
+    })
+
+    //sendSignalToOtherPagesByOc({signal: 1})
+
+
     this.fetchListData()
     document.addEventListener('scroll', this.handleScroll);
 
@@ -253,11 +250,8 @@ class Receivers extends React.Component {
     //   }
     // }, false);
 
-    this.freshWhenDetectingSignal()
 
-   receiveNotificationsFromApp(function(data){
-     alert(JSON.stringify(data))
-   })
+
 
   };
   componentWillUnmount = () => {

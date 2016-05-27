@@ -9,8 +9,7 @@ import {
     FETCH_RECEIVER_INFO,
     PUT_RECEIVER_INFO,
     FETCH_SUCCESS,
-    LS_RECEIVER,
-    LS_IS_FRESH_RECEIVERS
+    PAGE_TO_PAGE_SIGNAL
   } from 'macros.js'
 import {getParentByClass, pick} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
@@ -19,7 +18,11 @@ import ProvinceSelection from 'ProvinceSelection/ProvinceSelection.js'
 import provinces from 'provinces.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import {fetchAuth} from 'fetch.js'
-import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import {
+  backToNativePage,
+  receiveNotificationsFromApp,
+  sendSignalToOtherPagesByOc
+} from 'webviewInterface.js'
 let update = require('react-addons-update')
 import ua from 'uaParser.js'
 
@@ -82,17 +85,7 @@ class ReceiverInfo extends React.Component {
     this.state.city = data.cityId
     this.state.cityName = data.cityName
   };
-  cachedReceiver = (receiver) => {
-    if (this.props.params.actionModel == UPDATE) {
-      let persistenceReceiver
-      try {
-        persistenceReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
-        if (persistenceReceiver && persistenceReceiver.id == receiver.id) {
-          localStorage.setItem(LS_RECEIVER, JSON.stringify(receiver))
-        }
-      } catch (e) {}
-    }
-  };
+
   saveHanler = () => {
     let url = `${PUT_RECEIVER_INFO}/${this.state.id}`
     let data = pick(this.state, 'id','name','phone','province','city','detail')
@@ -101,9 +94,13 @@ class ReceiverInfo extends React.Component {
         if (data.rea == FETCH_SUCCESS) {
           let nextState = {}
           if (this.props.params.actionModel == CREATE) {
-            nextState = {promptMsg: '收货人信息添加成功', isHiddenPrompt: false}
+            nextState = {promptMsg: '收货人信息添加成功'}
+            let signal = {
+              signal: PAGE_TO_PAGE_SIGNAL.ADD_ADDRESS
+            }
+            sendSignalToOtherPagesByOc(signal)
           } else {
-            nextState = {promptMsg: '收货人信息修改成功', isHiddenPrompt: false}
+             nextState = {promptMsg: '收货人信息修改成功'}
             let cacheData = {
               id: this.state.id,
               name: this.state.name,
@@ -114,10 +111,10 @@ class ReceiverInfo extends React.Component {
               cityName: this.state.cityName,
               detail: this.state.detail
             }
-            this.cachedReceiver(cacheData)
+            cacheData.signal = PAGE_TO_PAGE_SIGNAL.UPDATE_ADDRESS
+            sendSignalToOtherPagesByOc(cacheData)
           }
 
-          localStorage.setItem(LS_IS_FRESH_RECEIVERS, "1")//Math.random()
 
           this.setState(nextState)
           this.refs['prompt'].show()

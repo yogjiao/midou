@@ -15,10 +15,16 @@ import {
   FETCH_COUPONS,
   PUT_TO_ORDER,
   SELECT,
+  PAGE_TO_PAGE_SIGNAL,
   LS_PAY_WAY,
   LS_RECEIVER
 } from 'macros.js'
-import {notifyAppToCheckout, backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import {
+  notifyAppToCheckout,
+  backToNativePage,
+  receiveNotificationsFromApp,
+  recievePageToPageSignal
+} from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
 import errors from 'errors.js'
@@ -215,28 +221,36 @@ class UserOrderCreated extends React.Component {
 
   };
   isNeedFreshReceiver = (r) => {
-    return ['id', 'name', 'phone', 'province', 'city', 'detail'].some((item, index) => {
-      return r[item] != this.state.receiver[item]
-    })
-  };
-  freshReceiverFromLS = () => {
-    try {
-      let selectReceiver = JSON.parse(localStorage.getItem(LS_RECEIVER))
-      if (this.isNeedFreshReceiver(selectReceiver)) {
-        this.setState({receiver: selectReceiver})
-      }
-    } catch (e) {
-      this.setState({receiver: {}})
+    if (this.state.receiver.id) {
+      return ['id', 'name', 'phone', 'province', 'city', 'detail'].some((item, index) => {
+        return r[item] != this.state.receiver[item]
+      })
+    } else {
+      return false;
     }
-    clearTimeout(this.timer)
-    this.timer = setTimeout(() => {
-      this.freshReceiverFromLS()
-    }, 1000)
-
   };
   componentDidMount = () => {
     this.fetchData()
+    recievePageToPageSignal((data) => {
+      if (data.signal == PAGE_TO_PAGE_SIGNAL.SELECT_ADDRESS) {
+          delete data.signal
+          localStorage.setItem(LS_RECEIVER, JSON.stringify(data))
+          this.setState({receiver: data})
+      } else if (data.signal == PAGE_TO_PAGE_SIGNAL.UPDATE_ADDRESS) {
+        if (this.isNeedFreshReceiver(data)) {
+          delete data.signal
+          localStorage.setItem(LS_RECEIVER, JSON.stringify(data))
+          this.setState({receiver: data})
+        }
+      } else if (data.signal == PAGE_TO_PAGE_SIGNAL.DELETE_ADDRESS) {
+          if (data.id == this.state.receiver.id) {
+            this.setState({receiver: {}})
+            localStorage.removeItem(LS_RECEIVER)
 
+          }
+
+      }
+    })
     // window.addEventListener('storage', (e) => {
     //   alert(e.key)
     //   if (e.key == LS_RECEIVER) {
@@ -246,14 +260,15 @@ class UserOrderCreated extends React.Component {
     //   }
     // }, false);
 
-    this.freshReceiverFromLS()
+    // receiveNotificationsFromApp(function(data){
+    //   alert(JSON.stringify(data))
+    // })
 
-    receiveNotificationsFromApp(function(data){
-      alert(JSON.stringify(data))
-    })
+
+
   };
   componentWillUnmount = () => {
-    clearInterval(this.timer)
+
   };
   componentWillReceiveProps = (props) => {
 
