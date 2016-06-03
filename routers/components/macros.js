@@ -14,6 +14,17 @@ export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
 
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
+/*
+id: 56
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NSIsImlhdCI6MTQ2MDA4NDgwMiwiZXhwIjoxNzc1NDQ0ODAyfQ.XOPXw1Dz-xviJLvjFOoJRU3PsN5n2Is5BlraLX09Lg0;'
++ 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+*/
+
+/* 客服
+id: 85
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjg1LCJpYXQiOjE0NjIzMjY1NDMsImV4cCI6MTc3NzY4NjU0M30.ngEkSoKJyEUkNQ2VrvVVOzMmg5WdQHnEyLqE1_8h8eY;'
++ 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+*/
 // test Cookie token
 //18520805758
 //666666

@@ -191,3 +191,11 @@ export let calloutNativePhoto = function() {
       })
   });
 }
+
+export let calloutNativeMorePhoto = function() {
+  return new Promise((resolve, reject) => {
+    callHandler('calloutMorePhoto', {}, function(response) {
+        resolve(response)
+      })
+  });
+}
