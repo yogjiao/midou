@@ -14,6 +14,17 @@ export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
 
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
+/*
+id: 56
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NSIsImlhdCI6MTQ2MDA4NDgwMiwiZXhwIjoxNzc1NDQ0ODAyfQ.XOPXw1Dz-xviJLvjFOoJRU3PsN5n2Is5BlraLX09Lg0;'
++ 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+*/
+
+/* 客服
+id: 85
+token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjg1LCJpYXQiOjE0NjIzMjY1NDMsImV4cCI6MTc3NzY4NjU0M30.ngEkSoKJyEUkNQ2VrvVVOzMmg5WdQHnEyLqE1_8h8eY;'
++ 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+*/
 // test Cookie token
 //18520805758
 //666666
@@ -216,8 +227,14 @@ export let DELETE_COLLECTION = FETCH_BASE_URL + '/delete_collection'
 export let PUT_COLLECTION = FETCH_BASE_URL + '/collect_goods'
 
 //fetch good's detail
-export let FETCH_GOOD = FETCH_BASE_URL + '/get_goods_detail'
+export let FETCH_GOOD = prefixAjaxBaseUrl('get_goods_detail')
 
+export let FETCH_USER_SHOW_USER = prefixAjaxBaseUrl('get_show_user')
+export let FETCH_USER_SHOW_IMG = prefixAjaxBaseUrl('get_show_image')
+export let DELETE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_show_image')
+export let POST_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('like_show_image')
+export let DELET_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_like_show_image')
+export let POST_SHOW_IMG = prefixAjaxBaseUrl('upload_show_image')
 // fetch cities by province id
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
 

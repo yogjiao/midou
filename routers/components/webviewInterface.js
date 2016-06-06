@@ -99,8 +99,9 @@ export let getUserInfoFromApp = function() {
         resolve({loginToken: midouToken})
       } else {
         callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-            resolve({loginToken: response.token, userName: response.userName})
-          })
+          document.cookie = 'midouToken=' + response.token + ';' + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+          resolve({loginToken: response.token, userName: response.userName})
+        })
       }
     } else if(ua.getOS().name = 'iOS' && ua.isWeixin()) {
       window.location.href = DOWNLOAD_APP_URL
@@ -187,6 +188,14 @@ export let getAppVerison = function(data) {
 export let calloutNativePhoto = function() {
   return new Promise((resolve, reject) => {
     callHandler('calloutPhoto', {}, function(response) {
+        resolve(response)
+      })
+  });
+}
+
+export let calloutNativeMorePhoto = function() {
+  return new Promise((resolve, reject) => {
+    callHandler('calloutMorePhoto', {}, function(response) {
         resolve(response)
       })
   });

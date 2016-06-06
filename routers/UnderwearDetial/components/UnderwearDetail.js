@@ -55,6 +55,11 @@ class Underweardetail extends React.Component {
     };
 
   }
+  getChildContext = () => {
+    return {
+      productId: this.props.params.productId
+    }
+  };
   rebuildInventory = (goodsInventory, category) => {
     let inventoryInfo = {}
     let allBase = inventoryInfo.allBase = {}
@@ -469,6 +474,10 @@ class Underweardetail extends React.Component {
       </div>
     )
   }
+}
+
+Underweardetail.childContextTypes = {
+  productId: React.PropTypes.string.isRequired
 }
 
 module.exports = Underweardetail

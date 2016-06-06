@@ -4,6 +4,8 @@ import {Link} from 'react-router'
 
 import {BASE_PAGE_DIR} from 'macros.js'
 import AdditionalTips from 'AdditionalTips.js'
+import UserShow from 'UserShow.js'
+
 import 'UnderweardetailInfo.less'
 class UnderweardetailInfo extends React.Component {
   render() {
@@ -68,6 +70,7 @@ class UnderweardetailInfo extends React.Component {
             ''
           }
         </div>
+        <UserShow />
         <AdditionalTips />
       </div>
     )

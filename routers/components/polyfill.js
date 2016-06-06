@@ -1,4 +1,9 @@
 
+if (!Array.isArray) {
+  Array.isArray = function(arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]';
+  };
+}
 // for iphone 5 and safari 7
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
