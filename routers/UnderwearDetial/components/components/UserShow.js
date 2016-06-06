@@ -173,10 +173,10 @@ class UserShow extends React.Component {
       }
 
     } else if (target = getParentByClass(e.target, 'like-myself')) {
-      if (this.state.isFetchingLike) {
-        return
-      }
-      this.state.isFetchingLike = true
+      // if (this.state.isFetchingLike) {
+      //   return
+      // }
+      //this.state.isFetchingLike = true
 
       let islike = target.getAttribute('data-like')
       let img  = this.state.userList[this.state.userSelectedIndex]
@@ -185,53 +185,64 @@ class UserShow extends React.Component {
         fetchAuth(`${POST_LIKE_USER_SHOW_IMG}/${img.id}`)
           .then( (data) => {
             if (data.rea == FETCH_SUCCESS) {
-              ++img.like_count
+              img.like_count = data.like_count
               img.is_liked = 1
               this.forceUpdate()
             }
-            this.state.isFetchingLike = false
+            //this.state.isFetchingLike = false
           })
       } else {
         fetchAuth(`${DELET_LIKE_USER_SHOW_IMG}/${img.id}`)
           .then( (data) => {
             if (data.rea == FETCH_SUCCESS) {
-              --img.like_count
+              img.like_count = data.like_count
               img.is_liked = 0
               this.forceUpdate()
             }
-            this.state.isFetchingLike = false
+            //this.state.isFetchingLike = false
           })
       }
     } else if (target = getParentByClass(e.target, 'show-me')) {
-      calloutNativeMorePhoto()
-      .then((data) => {//data.img
-      //  alert(data.img)
+    //  alert('cookie-' + getMiDouToken())
+      // if (!getMiDouToken()) {
+      //
+      //   getUserInfoFromApp()
+      //   return
+      // }
+      getUserInfoFromApp()
+        .then((data) => {//.loginToken
+          //alert(data.loginToken)
+          calloutNativeMorePhoto()
+            .then((data) => {//data.img
+            //  alert(data.img)
 
-        let url = `${POST_SHOW_IMG}/${this.context.productId}`
-        fetchAuth(url, {method: 'post', body: JSON.stringify({img: data.img})})
-          .then((resp) => {
-            if (resp.rea == FETCH_SUCCESS) {
-              //this.setState({promptMsg: '图片正在审核中'})
-              //this.refs['prompt'].show()
-                if (!this.uploadimages) {
-                  this.uploadimages = []
-                }
-                Array.prototype.unshift.apply(this.uploadimages, resp.images)
-                this.state.userSelectedIndex = 0
-                if (this.state.userList.length == 0) {
-                  this.state.isZeroUser = false
-                  this.state.userList.push(resp.user)
-                }
-                delete this.state.userList[0].imgPageIndex
-                this.state.userList[0].images = this.uploadimages
-                this.fetchUserShowImg(true)
+              let url = `${POST_SHOW_IMG}/${this.context.productId}`
+              fetchAuth(url, {method: 'post', body: JSON.stringify({img: data.img})})
+                .then((resp) => {
+                  if (resp.rea == FETCH_SUCCESS) {
+                    //this.setState({promptMsg: '图片正在审核中'})
+                    //this.refs['prompt'].show()
+                      if (!this.uploadimages) {
+                        this.uploadimages = []
+                      }
+                      Array.prototype.unshift.apply(this.uploadimages, resp.images)
+                      this.state.userSelectedIndex = 0
+                      if (this.state.userList.length == 0) {
+                        this.state.isZeroUser = false
+                        this.state.userList.push(resp.user)
+                      }
+                      delete this.state.userList[0].imgPageIndex
+                      this.state.userList[0].images = this.uploadimages
+                      this.fetchUserShowImg(true)
 
-              //this.forceUpdate();
-            } else {
-              alert(errors[resp.rea])
-            }
-          })
-      })
+                    //this.forceUpdate();
+                  } else {
+                    alert(errors[resp.rea])
+                  }
+                })
+            })
+        })
+
     }
   };
   // getLoadingAvatarsNum = () => {
