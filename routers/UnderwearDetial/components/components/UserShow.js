@@ -274,6 +274,8 @@ class UserShow extends React.Component {
       })
 
     /********init show slider***********/
+    let squareNode = document.querySelector('#square')
+    squareNode.style.height = squareNode.offsetWidth + 'px'
     this.showSlider = new Swiper('#show-img-window', {
         //paginationClickable: true,
         spaceBetween: 0
@@ -444,7 +446,7 @@ class UserShow extends React.Component {
         <div className="show-wraper" style={showWraperStyle}>
   				<div className="show-img-window" id="show-img-window">
             <div className="num-nav">{numNav}</div>
-            <div className="swiper-wrapper">
+            <div className="swiper-wrapper" id="square">
               {showEls}
             </div>
           </div>
