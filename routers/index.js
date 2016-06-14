@@ -49,6 +49,7 @@ const rootRoute = {
       require('./Collections'),
       require('./BusinessModel'),
       require('./IM'),
+      require('./ShowSelf'),
       require('./404')
       ]
   } ],

@@ -58,6 +58,8 @@ export let callHandler = handler('callHandler');
   7：'保存物流信息'
   8：'保存收货人信息',
   9: '选择收货人信息'
+  10：'编辑用户秀照片'
+  11: '完成编辑用户秀照片'
 }
 */
 export let receiveNotificationsFromApp = function(callback){
@@ -99,16 +101,21 @@ export let getUserInfoFromApp = function() {
         resolve({loginToken: midouToken})
       } else {
         callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
-          document.cookie = 'midouToken=' + response.token + ';' + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
-          resolve({loginToken: response.token, userName: response.userName})
+          if (response.token) {
+            document.cookie = 'midouToken=' + response.token + ';' + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
+            resolve({loginToken: response.token, userName: response.userName})
+          } else {
+            reject({rea: 1001})
+          }
         })
       }
     } else if(ua.getOS().name = 'iOS' && ua.isWeixin()) {
+      reject({rea: 1001})
       window.location.href = DOWNLOAD_APP_URL
-      reject(new Error('not login'))
     } else {
+      reject({rea: 1001})
       window.location.href = IOS_APP_STORE_URL
-      reject(new Error('not login'))
+
     }
 
   })

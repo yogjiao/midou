@@ -192,15 +192,13 @@ class Underweardetail extends React.Component {
             this.setState({promptMsg: '商品已添加到购物车'})
           }
 
-        } else if (data.rea == '2003'){
-          this.setState({promptMsg: '你选择的型号没有库存了'})
         } else {
           this.setState({promptMsg: errors[data.rea]})
         }
 
       })
       .catch((e) => {
-
+        this.setState({promptMsg: errors[e.rea]})
       })
       .then(() => {
         this.refs['prompt'].show();
