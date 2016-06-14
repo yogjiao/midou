@@ -283,8 +283,8 @@ class IM extends React.Component {
         msg.img = data.goods.main_img
         msg.name = data.goods.name
         msg.price = data.goods.price
-        msg.link = `${window.location.origin}
-          ${BASE_PAGE_DIR}/underwear/${this.props.location.query.productId}`
+        msg.link = `${window.location.origin}` +
+          `${BASE_PAGE_DIR}/underwear/${this.props.location.query.productId}`
         msg.ts = Math.floor(Date.now() / 1000)
         msg.client_msgid = this.uniqueId()
         let nextState = update(this.state, {msgList: {$push: [msg]}})
