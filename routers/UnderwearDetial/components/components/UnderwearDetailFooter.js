@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {BASE_PAGE_DIR} from 'macros.js'
+import {
+  BASE_PAGE_DIR,
+  CUSTMER_SERVICE_ID
+} from 'macros.js'
 
 import 'UnderweardetailFooter.less'
 class UnderweardetailFooter extends React.Component {
@@ -11,7 +14,7 @@ class UnderweardetailFooter extends React.Component {
     return (
       <div className="footer-wrap" onClick={this.props.buyHandler}>
         <div className="fixed-stack">
-          <a className="con-server" href={`${BASE_PAGE_DIR}/im/85?productId=${this.props.id}`}>
+          <a className="con-server" href={`${BASE_PAGE_DIR}/im/${CUSTMER_SERVICE_ID}?productId=${this.props.id}`}>
             <i className="iconfont">&#xe604;</i>
             <div className="lable">客服</div>
           </a>

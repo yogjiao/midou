@@ -6,7 +6,8 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import {
     PUT_EXPRESS_ORDER,
     FETCH_SUCCESS,
-    BASE_PAGE_DIR
+    BASE_PAGE_DIR,
+    CUSTMER_SERVICE_ID
   } from 'macros.js'
 import {getParentByClass, pick} from 'util.js'
 import Confirm from 'Confirm/Confirm.js'
@@ -119,7 +120,7 @@ class ExpressOrder extends React.Component {
         <div className="service-layer" style={{display: this.state.isHiddenServiceLayer? 'none' : 'block'}}>
           <div className="service-wrap">
             进行申请退换货操作时<br />请先联系客服
-            <a href={`${BASE_PAGE_DIR}/customer-service`} className="btn-sure">确定</a>
+            <a href={`${BASE_PAGE_DIR}/im/${CUSTMER_SERVICE_ID}`} className="btn-sure">确定</a>
           </div>
         </div>
       </div>

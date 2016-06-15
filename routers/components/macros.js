@@ -92,7 +92,7 @@ export let PAGE_TO_PAGE_SIGNAL = {
   SELECT_ADDRESS: 3,
 }
 
-
+export let CUSTMER_SERVICE_ID = 85
 // export let UNDERWEAR_BRA_SIZE = ['A', 'B', 'C', 'D']
 // export let UNDERWEAR_BASE_SIZE = ['70', '75', '80', '85']
 // export let UNDERWEAR_SIZE = ['S', 'M', 'L', 'XL']
