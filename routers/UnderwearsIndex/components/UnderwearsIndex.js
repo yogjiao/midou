@@ -22,7 +22,7 @@ class UnderwearsIndex extends React.Component {
     //this.state.tagsIndex[0] = 0
   }
   componentDidMount = () => {
-    
+
     var swiper = new Swiper('.swiper-container', {
       pagination: '.swiper-pagination',
       paginationClickable: true,
@@ -66,7 +66,7 @@ class UnderwearsIndex extends React.Component {
             <h6>情趣</h6>
           </a>
           <a href={`${BASE_PAGE_DIR}/search/0/0/0`}>
-            <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-6.png)`}} /></div>
+              <div className="img-wrap"><div style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/uw-topic-6.png)`}} /></div>
             <h6>全部单品</h6>
           </a>
         </div>
