@@ -15,13 +15,15 @@ import {
 import {fetchAuth, fetchable} from 'fetch.js'
 import {
   getUserInfoFromApp,
-  calloutNativeMorePhoto
+  calloutNativeMorePhoto,
+  calloutNativeCameraAndPhoto
 } from 'webviewInterface.js'
-import {getMiDouToken} from 'commonApp.js'
+import {getMiDouToken, getAppVerison, compareVersion} from 'commonApp.js'
 import ua from 'uaParser.js'
 import Swiper from 'Swiper'
 let update = require('react-addons-update')
 import {getParentByClass, pick} from 'util.js'
+
 import Prompt from 'Prompt/Prompt.js'
 import errors from 'errors.js'
 //http://humyang.github.io/2015/cimgh4xfl004ky9jd4h31xa0u/   //getChildContext
@@ -209,10 +211,14 @@ class UserShow extends React.Component {
       //   getUserInfoFromApp()
       //   return
       // }
+      let  getNativeMediaMethod = calloutNativeMorePhoto
+      if (compareVersion(getAppVerison(), '1.3.0') > 0) {
+        getNativeMediaMethod = calloutNativeCameraAndPhoto
+      }
       getUserInfoFromApp()
         .then((data) => {//.loginToken
           //alert(data.loginToken)
-          calloutNativeMorePhoto()
+          getNativeMediaMethod()
             .then((data) => {//data.img
             //  alert(data.img)
 
@@ -240,6 +246,10 @@ class UserShow extends React.Component {
                     alert(errors[resp.rea])
                   }
                 })
+            })
+            .catch(() => {
+              this.setState({promptMsg: '图片上传失败'})
+              this.refs['prompt'].show()
             })
         })
 
