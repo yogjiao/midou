@@ -207,3 +207,15 @@ export let calloutNativeMorePhoto = function() {
       })
   });
 }
+
+export let calloutNativeCameraAndPhoto = function() {
+  return new Promise((resolve, reject) => {
+    callHandler('calloutCameraAndPhotoSelector', {}, function(response) {
+        if (response.result == 0) {
+          reject()
+        } else {
+          resolve(response)
+        }
+      })
+  });
+}
