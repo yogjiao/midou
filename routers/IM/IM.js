@@ -6,7 +6,7 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 
 import errors from  'errors.js'
 
-import {getselfInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
+import {getUserInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
 import MsgItem from 'MsgItem.js'
 import Input from 'Input.js'
 import Contacts from 'Contacts.js'
@@ -92,11 +92,15 @@ class IM extends React.Component {
     })
   };
   createChatRoom = () => {
-    return this.createSocket()
+    return getUserInfoFromApp()
+      .then((data) => {
+        this.token = data.loginToken
+        return this.createSocket()
+      })
       .then((ws) => {// for login to create chat room
         let params = {}
         params.id = 5001
-        params.token = getMiDouToken() //|| TEST_TOKE
+        params.token = this.token //|| TEST_TOKE
         params = JSON.stringify(params)
         ws.send(params)
 
@@ -157,6 +161,7 @@ class IM extends React.Component {
           .then((ws) => {
             this.fetchContacts()
           })
+          .catch(this.errorHandler)
 
       }
     };
@@ -362,6 +367,10 @@ class IM extends React.Component {
 
     this.ws.send(JSON.stringify(msg))
   };
+  errorHandler = (error) => {
+    this.setState({isHiddenScrollingSpin: true, promptMsg: errors[error.rea]})
+    this.refs['prompt'].show()
+  };
   thisHandler = (e) => {//icon-add
     let target
     if (target = getParentByClass(e.target, 'btn-post')) {
@@ -381,6 +390,7 @@ class IM extends React.Component {
           })
           this.state.msgCached[msg.client_msgid] = msg
         })
+        .catch(this.errorHandler)
     } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
       this.setState({isHiddenMediaWraper: false}, () => {
         this.refreshMsgScrollerToEnd()
@@ -400,6 +410,7 @@ class IM extends React.Component {
           })
           this.state.msgCached[msg.client_msgid] = msg
         })
+        .catch(this.errorHandler)
 
     } else if (target = getParentByClass(e.target, 'media-item')) {
       calloutNativePhoto()
@@ -431,7 +442,7 @@ class IM extends React.Component {
         this.fetchHistoryMsg()
         this.createContactsScroller()
       })
-
+      .catch(this.errorHandler)
 
     this.msgScroller = new IScroll('#msg-scroller', {
       probeType: 3,

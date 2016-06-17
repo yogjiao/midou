@@ -95,6 +95,9 @@ export let recievePageToPageSignal = function (callback) {
 // cached  user login info
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
+    // if (__DEBUG__) {
+    //   resolve({loginToken: getMiDouToken()})
+    // }
     if (ua.isApp()) {
       let midouToken = getMiDouToken()
       if (midouToken) {
