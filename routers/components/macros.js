@@ -62,9 +62,6 @@ export let LS_PAY_WAY = 'payway'
 // get user info from app
 export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 
-// call out login panel
-export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'calloutLogin'
-
 export let CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL = 'redirectToHome'
 export let CALL_HANDLER_REDIRECT_TO_NEXT = 'redirectToNext'
 
@@ -90,6 +87,8 @@ export let PAGE_TO_PAGE_SIGNAL = {
   DELETE_ADDRESS: 1,
   ADD_ADDRESS: 2,
   SELECT_ADDRESS: 3,
+
+  UPDATE_CART: 4
 }
 
 export let CUSTMER_SERVICE_ID = 85

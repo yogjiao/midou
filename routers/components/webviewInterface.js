@@ -136,13 +136,6 @@ export let calloutNewWebview = function(param) {
   });
 }
 
-export let callOutLoginPanel = function() {
-  return new Promise((resolve, reject) => {
-    callHandler(CALL_HANDLER_CALL_OUT_LOGIN_PANEL, {}, function(response) {
-        resolve(response)
-      })
-  });
-}
 export let notifyAppToCheckout = function(data) {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_CHECKOUT, data, function(response) {

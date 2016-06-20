@@ -16,7 +16,8 @@ import {
     PUT_BOX_SERVICE,
     DELETE_BOX_SERVICE,
     EDIT_CART_GOODS,
-    DELETE_CART_GOODS
+    DELETE_CART_GOODS,
+    PAGE_TO_PAGE_SIGNAL
   } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
@@ -27,7 +28,11 @@ import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
 let update = require('react-addons-update');
 import ua from 'uaParser.js'
-import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import {
+  backToNativePage,
+  receiveNotificationsFromApp,
+  recievePageToPageSignal
+} from 'webviewInterface.js'
 
 import './ShoppingCart.less'
 class ShoppingCart extends React.Component {
@@ -540,9 +545,18 @@ class ShoppingCart extends React.Component {
     document.removeEventListener('scroll', this.handleScroll);
   };
   componentDidMount = () => {
+
+
     this.fetchCartData()
     document.addEventListener('scroll', this.handleScroll);
 
+    recievePageToPageSignal((data) => {
+      if (data.signal == PAGE_TO_PAGE_SIGNAL.UPDATE_CART) {
+        this.initState()
+        this.fetchCartData()
+      }
+    })
+    
     receiveNotificationsFromApp((data, callback) => {
       if (data.type == '3') {
         this.setState({actionModel: EDIT})

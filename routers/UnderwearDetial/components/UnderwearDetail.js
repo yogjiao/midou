@@ -17,6 +17,7 @@ import {
   PUT_COLLECTION,
   DELETE_COLLECTION,
   FETCH_COLLECTIONS_STATE,
+  CUSTMER_SERVICE_ID
 } from 'macros.js'
 import errors from 'errors.js'
 import {fetchable, fetchAuth} from 'fetch.js'
@@ -26,7 +27,12 @@ import UnderweardetailBanner from 'UnderweardetailBanner.js'
 import UnderweardetailInfo from 'UnderweardetailInfo.js'
 import UnderweardetailFooter from 'UnderweardetailFooter.js'
 import UnderwearDetailSelectPanel from 'UnderwearDetailSelectPanel.js'
-import {backToNativePage, receiveNotificationsFromApp, calloutNewWebview} from 'webviewInterface.js'
+import {
+  backToNativePage,
+  receiveNotificationsFromApp,
+  getUserInfoFromApp,
+  calloutNewWebview
+} from 'webviewInterface.js'
 import CartEntry from 'CartEntry.js'
 import ua from 'uaParser.js'
 
@@ -385,8 +391,16 @@ class Underweardetail extends React.Component {
   buyHandler = (e) => {
     let target,
         nextState
-
-    if (target = getParentByClass(e.target, 'push-to-cart')) {
+    if (target = getParentByClass(e.target, 'con-server')) {
+      getUserInfoFromApp()
+        .then((data) => {
+          calloutNewWebview({url:`${window.location.origin}${BASE_PAGE_DIR}/im/${CUSTMER_SERVICE_ID}?productId=${this.props.params.productId}`})
+        })
+        .catch((error) => {
+          this.setState({promptMsg: errors[error.rea]})
+          this.refs['prompt'].show()
+        })
+    } else if (target = getParentByClass(e.target, 'push-to-cart')) {
       nextState = update(this.state, {
         isHiddenSelectPanel: {$set: false},
         buyActionModel: {$set: 0}

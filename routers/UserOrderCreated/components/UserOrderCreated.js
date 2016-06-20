@@ -23,7 +23,8 @@ import {
   notifyAppToCheckout,
   backToNativePage,
   receiveNotificationsFromApp,
-  recievePageToPageSignal
+  recievePageToPageSignal,
+  sendSignalToOtherPagesByOc
 } from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
@@ -153,6 +154,7 @@ class UserOrderCreated extends React.Component {
        nextState = {isHiddenSelection: true}
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
        this.checkoutHandler()
+
     }
 
     nextState && this.setState(nextState)
@@ -191,7 +193,12 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-        return notifyAppToCheckout({oid: data.oid})
+          let signal = {
+            signal: PAGE_TO_PAGE_SIGNAL.UPDATE_CART
+          }
+          sendSignalToOtherPagesByOc(signal)
+          
+          return notifyAppToCheckout({oid: data.oid})
             .then((dataFromApp) => {
               this.setState({
                 isHiddenCheckoutWaitingLayer: false,
