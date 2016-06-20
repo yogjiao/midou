@@ -115,10 +115,11 @@ export let getUserInfoFromApp = function() {
     } else if(ua.getOS().name = 'iOS' && ua.isWeixin()) {
       reject({rea: 1001})
       window.location.href = DOWNLOAD_APP_URL
+    } else if(getMiDouToken()) {
+      resolve({loginToken: getMiDouToken()})
     } else {
       reject({rea: 1001})
       window.location.href = IOS_APP_STORE_URL
-
     }
 
   })
@@ -212,6 +213,14 @@ export let calloutNativeCameraAndPhoto = function() {
         } else {
           resolve(response)
         }
+      })
+  });
+}
+
+export let setNativeTitle = function(params) {
+  return new Promise((resolve, reject) => {
+    callHandler('setPageTitle', params, function(response) {
+        resolve(response)
       })
   });
 }

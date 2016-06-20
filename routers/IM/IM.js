@@ -6,7 +6,7 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 
 import errors from  'errors.js'
 
-import {getUserInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
+import {getUserInfoFromApp, calloutNativePhoto, setNativeTitle} from 'webviewInterface.js'
 import MsgItem from 'MsgItem.js'
 import Input from 'Input.js'
 import Contacts from 'Contacts.js'
@@ -23,7 +23,8 @@ import {
   BASE_STATIC_DIR,
   WS_URL,
   TEST_TOKEN,
-  FETCH_GOOD
+  FETCH_GOOD,
+  CUSTMER_SERVICE_ID
 } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
@@ -201,6 +202,21 @@ class IM extends React.Component {
           this.setState({isHiddenScrollingSpin: true})
           return
         } else if (data.r == '1') {
+          if (this.state.lastMsgId == 0) {
+            let name
+            if (this.state.friendId == CUSTMER_SERVICE_ID) {
+              name = 'Nice in客服'
+            } else {
+              try {
+                name = data.users[this.state.friendId].name
+              } catch (e) {
+                name = ''
+              }
+            }
+
+            setNativeTitle({title: name})
+          }
+
           this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
           this.state.lastMsgId = data.chats[0].id
           this.state.isFetchingHistoryMsg = false
