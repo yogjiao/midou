@@ -1,21 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
-import {ROUTER_SHOPPING_CART_SCAN, ROUTER_SHOPPING_CART_EDIT} from 'macros.js'
+import {SCAN, EDIT} from 'macros.js'
 
 
 import ShoppingCartItemScan from './ShoppingCartItemScan.js'
 import ShoppingCartItemEdit from './ShoppingCartItemEdit.js'
 
 let update = require('react-addons-update');
-import {countBoxes} from 'commonApp.js'
+import {countBoxes} from 'mixins/underwearDetail.js'
 
 import './ShoppingCartGroup.less'
 class ShoppingCartGroup extends React.Component {
   render() {
     let elements = []
     switch (this.props.actionModel) {
-      case ROUTER_SHOPPING_CART_SCAN:
+      case SCAN:
         let isHaveLine = this.props.source.length > 1? true : false
         elements = this.props.source.map( (item, index) => {
          let params = {
@@ -35,7 +35,7 @@ class ShoppingCartGroup extends React.Component {
         })
 
         break;
-      case ROUTER_SHOPPING_CART_EDIT:
+      case EDIT:
         let category = this.props.source[0].category
         let params = {
           key: 0,

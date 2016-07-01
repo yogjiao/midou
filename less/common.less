@@ -104,11 +104,11 @@
   font-size: 12px;
 }
 
-
-.check-out-wrap,
+.check-out-wrap{
+  display: flex;
+  font-size: .36rem;
+}
 .check-out-justify-wrap{
-  height: .86rem;
-  line-height: .86rem;
   width:  100%;
   max-width: @max-width;
 }
@@ -123,8 +123,10 @@
 .check-out-wrap{
   .select-all{
 
-    flex-basis: 20%;
+    flex-basis: 25%;
     text-align: center;
+    display: flex;
+    align-items: center;
     .iconfont{
        margin-left: .37rem;
        font-size: .4rem;
@@ -141,16 +143,27 @@
   .total-price{
     flex-basis: 40%;
     text-align: center;
+    box-sizing: border-box;
+    padding: .2rem 0;
+    padding-right: .5rem;
+    text-align: right;
     span{
       font-family: arial;
       color: @purple;
     }
+    p{
+      font-size: .2rem;
+      color: @font-color-lighter;
+    }
   }
   .btn-check-out{
-    flex-basis: 40%;
+    flex-basis: 35%;
     background-color: @purple;
     color: #fff;
     text-align: center;
     font-size: .36rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

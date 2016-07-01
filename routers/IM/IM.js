@@ -197,6 +197,8 @@ class IM extends React.Component {
         delete this.state.msgCached[data.chat.client_msgid]
         break;
       case '5006': // get history record
+
+
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHasHistoryMsgData = false
           this.setState({isHiddenScrollingSpin: true})
@@ -204,6 +206,7 @@ class IM extends React.Component {
         } else if (data.r == '1') {
           if (this.state.lastMsgId == 0) {
             let name
+
             if (this.state.friendId == CUSTMER_SERVICE_ID) {
               name = 'Nice in客服'
             } else {
@@ -453,6 +456,7 @@ class IM extends React.Component {
 
 
   componentDidMount = () => {
+
     this.createChatRoom()
       .then((ws) => {
         this.fetchHistoryMsg()

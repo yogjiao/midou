@@ -72,9 +72,12 @@ class UserOrderCreated extends React.Component {
 
     try {
       price -= nextState.coupon[nextState.couponSelectedIndex].price || 0
-    } catch (e) {
+    } catch (e) {}
 
-    }
+    try {
+      price -= nextState.match_buy_coupon.price || 0
+    } catch (e) {}
+
     price =  new Number(price).toFixed(2)
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
@@ -105,16 +108,25 @@ class UserOrderCreated extends React.Component {
       })
   };
   fetchCouponSource = () => {
-    let url = `${FETCH_COUPONS}`
+    let cartIds = this.state.goodList.map( (item, index) => {
+      return item.id;
+    })
+    let url = `${FETCH_COUPONS}/${cartIds.join()}`
     this.setState({isHiddenPageSpin: false})
     return fetchAuth(url)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
-          this.setState({
-            couponItemName: `${data.coupon[0].name}  <span class="color-purple arial">-${data.coupon[0].price}</span>`,
-            couponSelectedIndex: 0,
-            coupon: data.coupon
-          })
+          let nextState = {}
+          if (data.coupon.length != 0) {
+            nextState.couponItemName = `${data.coupon[0].name}  <span class="color-purple arial">-${data.coupon[0].price}</span>`,
+            nextState.couponSelectedIndex= 0
+            nextState.coupon = data.coupon
+          }
+          if (data.match_buy_coupon) {
+            nextState.match_buy_coupon = data.match_buy_coupon
+          }
+          this.setState(nextState)
+
         }
       })
       .catch(error => {
@@ -193,29 +205,41 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
+
+          // return
+          notifyAppToCheckout({oid: data.oid})
+            .then((dataFromApp) => {
+              // this.setState({
+              //   isHiddenCheckoutWaitingLayer: false,
+              //   orderId: data.oid
+              // });
+            })
+
           let signal = {
             signal: PAGE_TO_PAGE_SIGNAL.UPDATE_CART
           }
           sendSignalToOtherPagesByOc(signal)
-          
-          return notifyAppToCheckout({oid: data.oid})
-            .then((dataFromApp) => {
-              this.setState({
-                isHiddenCheckoutWaitingLayer: false,
-                orderId: data.oid
-              });
-            })
+
+          this.setState({
+            isHiddenPageSpin: true,
+            isHiddenCheckoutWaitingLayer: false,
+            orderId: data.oid
+          })
 
         } else {
           throw new Error(errors[data.rea])
         }
       })
       .catch(e => {
-        this.setState({promptMsg: e.message || errors[data.rea]})
+        this.setState({
+          promptMsg: e.message || errors[data.rea],
+          isHiddenPageSpin: true,
+          isHiddenCheckoutWaitingLayer: true
+        })
         this.refs['prompt'].show()
       })
       .then(() => {
-        this.setState({isHiddenPageSpin: true})
+        //this.setState({isHiddenPageSpin: true})
       })
   };
   backHandler = () => {
@@ -284,6 +308,10 @@ class UserOrderCreated extends React.Component {
     let total = this.calculateTotal(nextState)
     nextState.totalPrice = total.price;
     nextState.totalCount = total.count;
+
+    let checkout = document.querySelector('.check-out-justify-wrap')
+
+    checkout.parentNode.style.height = checkout.offsetHeight + 'px'
   };
   render() {
     return (
@@ -297,99 +325,112 @@ class UserOrderCreated extends React.Component {
             </PageHeader>
           )
         }
-        {
-           this.state.goodList.map((item, index) => {
-            return (<UserOrderCreatedGroup
-                      key={index}
-                      source={item}
-                    />)
-          })
-        }
-        <dl className="input-group">
-          <dt className="ff-Medium">收货人信息</dt>
-          <dd>
-            {
-              this.state.receiver.id?
-              (
-                <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
-                  <div>
-                    <div className="receiver-info-wrap">{this.state.receiver.name}</div>
-                    <div className="receiver-info-wrap">{this.state.receiver.phone}</div>
-                    <div className="receiver-info-wrap">
-                      {`${this.state.receiver.provinceName} ${this.state.receiver.cityName} ${this.state.receiver.detail}`}
+        <div className="goods-wrap">
+          {
+             this.state.goodList.map((item, index) => {
+              return (<UserOrderCreatedGroup
+                        key={index}
+                        source={item}
+                      />)
+            })
+          }
+        </div>
+        <div className="input-group-wrap">
+          <dl className="input-group">
+            <dt className="ff-Medium">收货人信息</dt>
+            <dd>
+              {
+                this.state.receiver.id?
+                (
+                  <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
+                    <div>
+                      <div className="receiver-info-wrap">{this.state.receiver.name}</div>
+                      <div className="receiver-info-wrap">{this.state.receiver.phone}</div>
+                      <div className="receiver-info-wrap">
+                        {`${this.state.receiver.provinceName} ${this.state.receiver.cityName} ${this.state.receiver.detail}`}
+                      </div>
                     </div>
-                  </div>
-                  <i className="iconfont icon-gt" />
-                </a>
-              ):
+                    <i className="iconfont icon-gt" />
+                  </a>
+                ):
+                (
+                  <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
+                    <div className="info-wrap">
+                       添加收货人信息
+                    </div>
+                    <i className="iconfont icon-gt" />
+                  </a>
+                )
+              }
+            </dd>
+          </dl>
+          <dl className="input-group">
+            <dt className="ff-Medium">选择支付方式</dt>
+            <dd
+              className={
+                this.state.payWay == 'zfb'?
+                'dd-wrap pay-way-wrap font-gray on':
+                'dd-wrap pay-way-wrap font-gray'
+              }
+              data-pay-way="zfb"
+            >
+               <div className="info-wrap">
+                  <i className="iconfont icon-zhifubao" />
+                  支付宝支付
+               </div>
+               {
+                 this.state.payWay == 'zfb'?
+                  (<i className="iconfont">&#xe611;</i>):
+                  (<i className="iconfont">&#xe610;</i>)
+
+               }
+
+            </dd>
+            <dd
+              className={
+                this.state.payWay == 'wx'?
+                'dd-wrap pay-way-wrap font-gray on':
+                'dd-wrap pay-way-wrap font-gray'
+              }
+              data-pay-way="wx"
+            >
+
+               <div className="info-wrap">
+                  <i className="iconfont icon-weixin" />
+                  微信支付
+               </div>
+               {
+                 this.state.payWay == 'wx'?
+                  (<i className="iconfont">&#xe611;</i>):
+                  (<i className="iconfont">&#xe610;</i>)
+               }
+            </dd>
+          </dl>
+          <dl className="input-group">
+            <dt className="ff-Medium">选择优惠方式</dt>
+            <dd
+              className={this.state.couponSelectedIndex > -1?
+                'dd-wrap coupon-wrap font-gray on':
+                'dd-wrap coupon-wrap font-gray'
+              }
+            >
+               <div className="info-wrap"
+                 dangerouslySetInnerHTML={{__html: this.state.couponItemName}}
+               >
+               </div>
+               <i className="iconfont icon-gt"></i>
+            </dd>
+            {
+              this.state.match_buy_coupon ?
               (
-                <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
-                  <div className="info-wrap">
-                     添加收货人信息
-                  </div>
-                  <i className="iconfont icon-gt" />
-                </a>
-              )
+                <dd className="dd-wrap discount-wrap">
+                  <em>{this.state.match_buy_coupon.name}</em><span>-{this.state.match_buy_coupon.price}元</span>
+                </dd>
+              ) : ''
             }
-          </dd>
-        </dl>
-        <dl className="input-group">
-          <dt className="ff-Medium">选择支付方式</dt>
-          <dd
-            className={
-              this.state.payWay == 'zfb'?
-              'dd-wrap pay-way-wrap font-gray on':
-              'dd-wrap pay-way-wrap font-gray'
-            }
-            data-pay-way="zfb"
-          >
-             <div className="info-wrap">
-                <i className="iconfont icon-zfb" />
-                支付宝支付
-             </div>
-             {
-               this.state.payWay == 'zfb'?
-                (<i className="iconfont">&#xe611;</i>):
-                (<i className="iconfont">&#xe610;</i>)
 
-             }
-
-          </dd>
-          <dd
-            className={
-              this.state.payWay == 'wx'?
-              'dd-wrap pay-way-wrap font-gray on':
-              'dd-wrap pay-way-wrap font-gray'
-            }
-            data-pay-way="wx"
-          >
-
-             <div className="info-wrap">
-                <i className="iconfont icon-wx" />
-                微信支付
-             </div>
-             {
-               this.state.payWay == 'wx'?
-                (<i className="iconfont">&#xe611;</i>):
-                (<i className="iconfont">&#xe610;</i>)
-             }
-          </dd>
-        </dl>
-        <dl className="input-group">
-          <dt className="ff-Medium">选择优惠方式</dt>
-          <dd
-            className={this.state.couponSelectedIndex > -1?
-              'dd-wrap coupon-wrap font-gray on':
-              'dd-wrap coupon-wrap font-gray'
-            }
-          >
-             <div className="info-wrap"
-               dangerouslySetInnerHTML={{__html: this.state.couponItemName}}
-             >
-             </div>
-             <i className="iconfont icon-gt"></i>
-          </dd>
-        </dl>
+          </dl>
+        </div>
         <div className="check-out-wrap">
           <div className="check-out-justify-wrap">
             <div className="select-all">

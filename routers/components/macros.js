@@ -252,6 +252,7 @@ export let PUT_BOX_SERVICE = FETCH_BASE_URL + '/add_try_cart'
 export let DELETE_BOX_SERVICE = FETCH_BASE_URL + '/delete_try_cart'
 export let EDIT_CART_GOODS = FETCH_BASE_URL + '/edit_cart'
 export let EDIT_CART_GOODS_BY_IDS = FETCH_BASE_URL + '/get_cart'
+export let FETCH_CART_UNDERPANTS_RECOMMEND = prefixAjaxBaseUrl('get_cart_recommend')
 
 export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'

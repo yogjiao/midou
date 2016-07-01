@@ -141,12 +141,10 @@ class UserOrderDetail extends React.Component {
   componentWillReceiveProps = (props) => {
   };
   render() {
-    let coupon, address
+    let address
     try {
-      coupon = this.state.coupon[0] || {}
       address = this.state.address[0] || {}
     } catch (err) {
-      coupon = {}
       address = {}
     }
 
@@ -175,6 +173,16 @@ class UserOrderDetail extends React.Component {
     })
 
     let bg = `url(${BASE_STATIC_DIR}/img/od-bg.png)`
+
+    // let totalPrice = (() => {
+    //
+    //   let price = this.state.order[0].total_price
+    //
+    //   this.state.coupon.forEach((item, index) => {
+    //     price = price - item.price
+    //   })
+    //   return new Number(price).toFixed(2)
+    // })()
     return (
 
 
@@ -253,18 +261,31 @@ class UserOrderDetail extends React.Component {
                </div>
             </div>
             {
-              coupon.id?
-              (
-                <div className="dd-warp">
-                   <div className="info-wrap font-gray">
-                      优惠方式
-                   </div>
-                   <div className="info-wrap font-gray">
-                      <div className="arial discount-price">{`-${coupon.price}元`}</div>
-                      <div className="discount-name">{`${coupon.name}`}</div>
-                   </div>
-                </div>
-              ) : ''
+              this.state.coupon.map((item, index) => {
+                if (index == 0) {
+                  return (
+                    <div className="dd-warp">
+                       <div className="info-wrap font-gray">
+                          优惠方式
+                       </div>
+                       <div className="info-wrap font-gray">
+                          <div className="arial discount-price">{`-${item.price}元`}</div>
+                          <div className="discount-name">{`${item.name}`}</div>
+                       </div>
+                    </div>)
+                } else {
+                  return (
+                    <div className="dd-warp">
+                       <div className="info-wrap font-gray">
+                       </div>
+                       <div className="info-wrap font-gray">
+                          <div className="arial discount-price">{`-${item.price}元`}</div>
+                          <div className="discount-name">{`${item.name}`}</div>
+                       </div>
+                    </div>
+                  )
+                }
+              })
             }
 
             <div className="dd-warp">
@@ -273,11 +294,7 @@ class UserOrderDetail extends React.Component {
                </div>
                <div className="info-wrap font-gray">
                  <div className="arial">
-                   {
-                      this.state.order[0].total_price && coupon.id ?
-                      new Number(this.state.order[0].total_price - coupon.price).toFixed(2) :
-                      this.state.order[0].total_price
-                   }
+                   {this.state.order[0].total_price}
                  </div>
                </div>
             </div>
