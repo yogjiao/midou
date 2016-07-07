@@ -13,7 +13,10 @@ import {
   DOWNLOAD_APP_URL
 } from 'macros.js'
 
-import {getMiDouToken} from 'commonApp.js'
+import {
+  getMiDouToken,
+  getUserIdFromMidouToken
+} from 'commonApp.js'
 import ua from 'uaParser.js'
 
 function setupWebViewJavascriptBridge(callback) {
@@ -101,12 +104,12 @@ export let getUserInfoFromApp = function() {
     if (ua.isApp()) {
       let midouToken = getMiDouToken()
       if (midouToken) {
-        resolve({loginToken: midouToken})
+        resolve({loginToken: midouToken, userId: getUserIdFromMidouToken(midouToken)})
       } else {
         callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
           if (response.token) {
             document.cookie = 'midouToken=' + response.token + ';' + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
-            resolve({loginToken: response.token, userName: response.userName})
+            resolve({loginToken: response.token, userName: response.userName, userId: getUserIdFromMidouToken(response.token)})
           } else {
             reject({rea: 1001})
           }
@@ -116,7 +119,7 @@ export let getUserInfoFromApp = function() {
       reject({rea: 1001})
       window.location.href = DOWNLOAD_APP_URL
     } else if(getMiDouToken()) {
-      resolve({loginToken: getMiDouToken()})
+      resolve({loginToken: getMiDouToken(), userId: getUserIdFromMidouToken(getMiDouToken())})
     } else {
       reject({rea: 1001})
       window.location.href = IOS_APP_STORE_URL

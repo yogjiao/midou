@@ -12,10 +12,33 @@ import {
   pick
 } from 'util.js'
 
+import {
+  readSafeJSONString,
+  b64utos
+} from 'jwt.js'
 
 
 export function getMiDouToken() {
   return getCookie('midouToken')
+}
+
+export function getUserIdFromMidouToken(token) {
+  let sub = ''
+  try {
+    var a = token.split(".");
+    var uHeader = b64utos(a[0]);
+    var uClaim = b64utos(a[1]);
+
+   // var pHeader = readSafeJSONString(uHeader);
+     sub = readSafeJSONString(uClaim).sub;
+  } catch (e) {
+
+  }
+
+
+
+
+   return sub
 }
 /*
 user-agent:

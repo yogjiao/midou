@@ -30,9 +30,10 @@ import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
-import UnderpantsRecommendation from 'UnderpantsRecommendation.js'
+import UnderpantsRecommendation from 'UnderpantsRecommendation/UnderpantsRecommendation.js'
 let update = require('react-addons-update');
 import ua from 'uaParser.js'
+import MatchDiscount from 'MatchDiscount/MatchDiscount.js'
 import {
   backToNativePage,
   receiveNotificationsFromApp,
@@ -197,16 +198,22 @@ class ShoppingCart extends React.Component {
     let isHasCategoryTowOrThree = false
     let isDiscountFive = false
     goodList = goodList || this.state.goodList
+    /*
+      1：文胸，2:底裤，3:情趣
 
+      搭配购的优惠组合是：
+      内衣＋底裤
+      情趣＋底裤
+    */
     goodList.forEach((item, index) => {
       let isSelected = item.goods[0].isSelected
       if (!isSelected) {
         return
       }
-      if (item.goods[0].category == 1) {
+      if (item.goods[0].category == 2) {
         isHasCategoryOne = true
       }
-      if (item.goods[0].category == 2 || item.goods[0].category == 3) {
+      if (item.goods[0].category == 1 || item.goods[0].category == 3) {
         isHasCategoryTowOrThree = true
       }
       item.goods.forEach((item, index) => {
@@ -300,7 +307,7 @@ class ShoppingCart extends React.Component {
 
        })
        .catch((error) => {
-         debugger;
+        // debugger;
        })
        .then(() => {
          this.setState({
@@ -738,11 +745,7 @@ class ShoppingCart extends React.Component {
                 {
                   this.state.actionModel == SCAN ?
                   (
-                    <div className="tips-discount">
-                      <i className="iconfont icon-exclamation-mark"/>
-                      <em>搭配内衣买内裤 每件</em>
-                      <span>立减5元~</span>！
-                    </div>
+                    <MatchDiscount />
                   ) :
                   ""
                 }

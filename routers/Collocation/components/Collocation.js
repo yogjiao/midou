@@ -201,7 +201,7 @@ class Collocation extends React.Component {
                             </a>
                             <div className="mix-intro">
                               <div className="mix-adjust">
-                                <p>{item.intro}</p>
+                                <p dangerouslySetInnerHTML={{__html: item.intro}}></p>
                               </div>
                             </div>
                             <div

@@ -17,7 +17,8 @@ import {
   SELECT,
   PAGE_TO_PAGE_SIGNAL,
   LS_PAY_WAY,
-  LS_RECEIVER
+  LS_RECEIVER,
+  PUT_TO_CART
 } from 'macros.js'
 import {
   notifyAppToCheckout,
@@ -32,6 +33,11 @@ import errors from 'errors.js'
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import ua from 'uaParser.js'
+let  reactMixin = require('react-mixin')
+import * as detailMixins from 'mixins/underwearDetail.js'
+import UnderwearSelectPanel from 'UnderwearSelectPanel/UnderwearSelectPanel.js'
+import UnderpantsRecommendation from 'UnderpantsRecommendation/UnderpantsRecommendation.js'
+import MatchDiscount from 'MatchDiscount/MatchDiscount.js'
 
 import './UserOrderCreated.less'
 class UserOrderCreated extends React.Component {
@@ -52,12 +58,31 @@ class UserOrderCreated extends React.Component {
       isHiddenSelection: true,
       isLoadedCouponSource: false,
       totalPrice: 0,
-      totalCount: 0
+      totalCount: 0,
+
+      // for recommend underpants, it's the same to underwareDetail
+      isHiddenSelectPanel: true,
+      size: 0,
+      allBase: [],
+      braSize: 0, // bra
+      baseSize: 0, // bra
+      category: 1, // 1：文胸，2:底裤，3:情趣
+      boxes: [], // tags
+      count: 1,
+
+      goods: {inventoryInfo:{allBase:[], allSize: [], inventory:{}}},
     }
   }
+  getChildContext = () => {
+    return {
+      goodsIds: this.props.params.goodsIds,
+      buyActionModel: this.props.params.buyActionModel
+    }
+  };
   calculateTotal = (nextState) => {
+    nextState = nextState || this.state
     let price = 0, count = 0
-    let goodList = this.state.goodList
+    let goodList = nextState.goodList
     goodList.forEach((item, index) => {
       item.goods.forEach((item, index) => {
           if (index == 0) {
@@ -133,7 +158,7 @@ class UserOrderCreated extends React.Component {
         //this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
-        this.setState({isLoadedCouponSource:true})
+        this.setState({isLoadedCouponSource:true, isHiddenPageSpin: true})
       })
   };
   thisHandler = (e) => {
@@ -167,9 +192,65 @@ class UserOrderCreated extends React.Component {
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
        this.checkoutHandler()
 
+    } else if (target = getParentByClass(e.target, 'ur-card')) {
+      let index = target.getAttribute('data-index')
+      let goods = this.refs.recommend.state.recommends[index]
+      goods.inventoryInfo =
+        this.rebuildInventory(goods.inventory, goods.category)
+
+      let schema = {
+        category: {$set: goods.category},
+        goods: {$set: goods},
+        isHiddenSelectPanel: {$set: false}
+      }
+
+      if (goods.category == '1') {
+        let keys = Object.keys(goods.inventoryInfo.allBase)
+        schema.allBase = {$set: keys}
+        schema.baseSize = {$set: keys[0]}
+        schema.braSize = {$set: goods.inventoryInfo.allBase[keys[0]][0]}
+        //nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
+      } else {
+        let keys = Object.keys(goods.inventoryInfo.inventory)
+        schema.allSize = {$set: keys}
+        schema.size = {$set: keys[0]}
+      }
+      nextState = update(this.state, schema)
+    //  this.setState(nextState)
     }
 
     nextState && this.setState(nextState)
+  };
+  postDataToCartHandler = () => {
+    let data = this.getPostToCartData()
+    let url = `${PUT_TO_CART}/1`
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let index = -1
+          index = this.state.goodList.findIndex((item, index) => {
+            return item.id == data.cart[0].id
+          })
+
+          let range
+          if (index == -1) {
+            range = [0, 0].concat(data.cart)
+          } else {
+            range = [index, 1].concat(data.cart)
+          }
+
+          let nextState = update(this.state, {goodList: {$splice: [range]}})
+          this.setState(nextState)
+          this.fetchCouponSource()
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+        }
+
+      })
+      .catch((e) => {
+        this.setState({promptMsg: errors[e.rea]})
+      })
+
   };
   checkoutHandler = () => {
     let url = `${PUT_TO_ORDER}`
@@ -190,11 +271,16 @@ class UserOrderCreated extends React.Component {
       this.refs['prompt'].show()
       return
     }
-    try{
-      data.coupon_id = this.state.coupon[this.state.couponSelectedIndex].id
-    }catch(er) {
-      data.coupon_id = 0
+
+    data.coupon_id = []
+    if (this.state.couponSelectedIndex > -1) {
+      data.coupon_id.push(this.state.coupon[this.state.couponSelectedIndex].id)
     }
+    if (this.state.match_buy_coupon) {
+      data.coupon_id.push(this.state.match_buy_coupon.id)
+    }
+    data.coupon_id = data.coupon_id.join()
+
 
     data.cart_id = this.state.goodList.map( (item, index) => {
       return item.id;
@@ -305,6 +391,7 @@ class UserOrderCreated extends React.Component {
 
   };
   componentWillUpdate = (nextProps, nextState) => {
+
     let total = this.calculateTotal(nextState)
     nextState.totalPrice = total.price;
     nextState.totalCount = total.count;
@@ -325,6 +412,17 @@ class UserOrderCreated extends React.Component {
             </PageHeader>
           )
         }
+        {
+          this.props.params.buyActionModel == 1?
+            (
+              <div>
+                <MatchDiscount />
+                <UnderpantsRecommendation ref='recommend'/>
+              </div>
+            ) : ''
+        }
+
+
         <div className="goods-wrap">
           {
              this.state.goodList.map((item, index) => {
@@ -461,9 +559,24 @@ class UserOrderCreated extends React.Component {
           orderId={this.state.orderId}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
         />
+
+        <UnderwearSelectPanel
+          isHidden={this.state.isHiddenSelectPanel}
+          category={this.state.category}
+          allSize={this.state.allSize}
+          size={this.state.size}
+          count={this.state.count}
+          selectHandler={this.selectHandler.bind(this)}
+          source={this.state.goods}
+        />
       </div>
     )
   }
 }
+UserOrderCreated.childContextTypes = {
+  goodsIds: React.PropTypes.string,
+  buyActionModel:  React.PropTypes.string
+}
 
+reactMixin(UserOrderCreated.prototype, detailMixins)
 module.exports = UserOrderCreated
