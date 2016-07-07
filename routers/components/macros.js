@@ -14,6 +14,17 @@ export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
 
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
+
+/*
+账号：
+88888888001
+88888888002
+88888888003
+
+密码：888888
+*/
+
+//18004263453		888888
 /*
 id: 56
 token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NSIsImlhdCI6MTQ2MDA4NDgwMiwiZXhwIjoxNzc1NDQ0ODAyfQ.XOPXw1Dz-xviJLvjFOoJRU3PsN5n2Is5BlraLX09Lg0;'

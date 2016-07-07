@@ -21,9 +21,16 @@ class UnderpantsRecommendation extends React.Component {
 			pageIndex: 0,
 			countPerPage: 20,
     }
+
   };
 	fetchRecommendData = () => {
-		let url = `${FETCH_CART_UNDERPANTS_RECOMMEND}/${this.state.pageIndex}/${this.state.countPerPage}`
+		let url
+		if (this.context.buyActionModel == 1) {
+			url = `${FETCH_CART_UNDERPANTS_RECOMMEND}/${this.state.pageIndex}/${this.state.countPerPage}/${this.context.goodsIds}`
+		} else {
+			url = `${FETCH_CART_UNDERPANTS_RECOMMEND}/${this.state.pageIndex}/${this.state.countPerPage}`
+		}
+
 		fetchAuth(url)
 			.then((data) => {
 				if (data.rea == 0) {
@@ -55,7 +62,11 @@ class UnderpantsRecommendation extends React.Component {
 								{
 									this.state.recommends.map((item, index) => {
 										return (
-											<div className="ur-card swiper-slide" data-index={index}>
+											<div
+												className="ur-card swiper-slide"
+												data-index={index}
+												key={item.id}
+											>
 												<div className="img-wrapper" >
 													<div className="bg-wrapper" style={{backgroundImage: `url(${item.main_img})`}}/>
 												</div>
@@ -64,7 +75,7 @@ class UnderpantsRecommendation extends React.Component {
 										)
 									})
 								}
-								<div className="ur-card swiper-slide">
+								<div className="ur-card swiper-slide" id="0">
 									<div className="img-wrapper">
 										<div className="bg-wrapper">
 											<div className="more-wrapper">
@@ -83,5 +94,8 @@ class UnderpantsRecommendation extends React.Component {
     )
   }
 }
-
+UnderpantsRecommendation.contextTypes = {
+  goodsIds: React.PropTypes.string,
+	buyActionModel: React.PropTypes.string
+}
 export default UnderpantsRecommendation

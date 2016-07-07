@@ -1,4 +1,4 @@
-
+import * as dd from 'jwt.js'
 /**
  * find the parent node of some node by className include node self exclude untilNode
  */

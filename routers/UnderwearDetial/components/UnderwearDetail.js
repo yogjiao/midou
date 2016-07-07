@@ -134,7 +134,12 @@ class Underweardetail extends React.Component {
           if (this.state.buyActionModel == 1) {
             // this.props.history.push()
             // this.props.history.goForward()
-            calloutNewWebview({url:`${window.location.origin}${BASE_PAGE_DIR}/order-created/${data.cid}`})
+            if (ua.isApp()) {
+              calloutNewWebview({url:`${window.location.origin}${BASE_PAGE_DIR}/order-created/${data.cid}/${this.state.buyActionModel}`})
+            } else {
+              window.location.href = `${window.location.origin}${BASE_PAGE_DIR}/order-created/${data.cid}/${this.state.buyActionModel}`
+            }
+
           } else {
             this.setState({promptMsg: '商品已添加到购物车'})
           }

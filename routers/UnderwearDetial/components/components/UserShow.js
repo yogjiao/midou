@@ -18,7 +18,12 @@ import {
   calloutNativeMorePhoto,
   calloutNativeCameraAndPhoto
 } from 'webviewInterface.js'
-import {getMiDouToken, getAppVerison, compareVersion} from 'commonApp.js'
+import {
+  getMiDouToken,
+  getAppVerison,
+  compareVersion,
+  getUserIdFromMidouToken
+} from 'commonApp.js'
 import ua from 'uaParser.js'
 import Swiper from 'Swiper'
 let update = require('react-addons-update')
@@ -51,7 +56,10 @@ class UserShow extends React.Component {
       //imagesCached: {0:{imgs: [{img:`${BASE_STATIC_DIR}/img/neixin.png`}]}},//缓存所有加载过的图片  {imgs: [], isHaveShowImg: false, pageIndex: 0}
 
       isFetchingLike: false,
+
+      uploadimages: []
     }
+
   }
   formatTime = (ts) => {
     ts = ts && ts * 1000 || Date.now()
@@ -125,11 +133,14 @@ class UserShow extends React.Component {
           if (data.images.length < this.state.imgNumPerPage) {
             this.state.userList[userSelectedIndex].isHaveShowImg = false
           }
+          /*
           if (getMiDouToken()
             && userSelectedIndex == 0
-            && Array.isArray(this.uploadimages)) {
+            && Array.isArray(this.state.uploadimages))
+          */
+          if (getUserIdFromMidouToken(getMiDouToken()) == userId) {
             data.images = data.images.filter((item, index) =>　{
-              return !this.uploadimages.some((img, index) => {
+              return !this.state.uploadimages.some((img, index) => {
                 return item.id == img.id
               })
             })
@@ -156,6 +167,10 @@ class UserShow extends React.Component {
         }
         this.state.isLoadingMoreShowImg = false
       })
+      .catch((e) => {
+        alert(e.message)
+      })
+
   };
   thisHandler = (e) => {
     let target
@@ -216,7 +231,7 @@ class UserShow extends React.Component {
         getNativeMediaMethod = calloutNativeCameraAndPhoto
       }
       getUserInfoFromApp()
-        .then((data) => {//.loginToken
+        .then((userData) => {//.loginToken
           //alert(data.loginToken)
           getNativeMediaMethod()
             .then((data) => {//data.img
@@ -228,17 +243,26 @@ class UserShow extends React.Component {
                   if (resp.rea == FETCH_SUCCESS) {
                     //this.setState({promptMsg: '图片正在审核中'})
                     //this.refs['prompt'].show()
-                      if (!this.uploadimages) {
-                        this.uploadimages = []
-                      }
-                      Array.prototype.unshift.apply(this.uploadimages, resp.images)
+                      Array.prototype.unshift.apply(this.state.uploadimages, resp.images)
                       this.state.userSelectedIndex = 0
                       if (this.state.userList.length == 0) {
                         this.state.isZeroUser = false
-                        this.state.userList.push(resp.user)
                       }
+
+                      this.state.userList = this.state.userList.filter((item, index) => {
+                        return item.id != userData.userId
+                      })
+                    
+                      this.state.userList.unshift(resp.user)
+
+                      // if (userIndex < 0) {
+                      //   Array.prototype.splice.apply(this.state.userList, [0, 0, resp.user])
+                      // } else {
+                      //   Array.prototype.splice.apply(this.state.userList, [userIndex, 1, resp.user])
+                      // }
+
+                      this.state.userList[0].images = this.state.uploadimages
                       delete this.state.userList[0].imgPageIndex
-                      this.state.userList[0].images = this.uploadimages
                       this.fetchUserShowImg(true)
 
                     //this.forceUpdate();
@@ -302,68 +326,7 @@ class UserShow extends React.Component {
       this.forceUpdate()
     })
 
-    // setTimeout(() => {
-    //   let resp = {
-    //     user: {"id":"85","headimg":"http://mielseno.com/view/photo/head/72df795a1889a5d742db34d2639ca0ee22732.jpeg"},
-    //     images: [{"id":"253","img":"http://www.mielseno.com/view/photo/show//c551dba9904cfe23529a6e3312f05f3098424.jpeg","username":"test","ts":"1464863769","like":"0","is_liked":"0"}]
-    //   }
-    //   if (!this.uploadimages) {
-    //     this.uploadimages = []
-    //   }
-    //   Array.prototype.unshift.apply(this.uploadimages, resp.images)
-    //   this.state.userSelectedIndex = 0
-    //   if (this.state.userList.length == 0) {
-    //     this.state.isZeroUser = false
-    //     this.state.userList.push(resp.user)
-    //   }
-    //   delete this.state.userList[0].imgPageIndex
-    //   this.state.userList[0].images = this.uploadimages
-    //   this.fetchUserShowImg()
-    //
-    //
-    // }, 6000)
 
-    // this.showSlider.on('transitionStart', (slider) => {
-    //
-    // })
-    // this.showSlider.on('sliderMove', (slider) => {
-    //   if (this.state.isTriggerNewAlbum) {
-    //     return
-    //   }
-    //
-    //
-    //   if (slider.isBeginning && slider.translate > 10) {
-    //     this.state.isTriggerNewAlbum = true
-    //     this.setState({userSelectedIndex: --this.state.userSelectedIndex})
-    //     try {
-    //       if (!this.state.userList[this.state.userSelectedIndex].images) {
-    //         this.fetchUserShowImg()
-    //           .then(() => {
-    //             this.state.isTriggerNewAlbum = false
-    //             this.showSlider.updateProgress()
-    //           })
-    //       }
-    //     } catch (e) {
-    //
-    //     }
-    //
-    //
-    //   } else if (slider.isEnd && slider.translate < slider.activeIndex * slider.size) {
-    //     this.state.isTriggerNewAlbum = true
-    //     this.setState({userSelectedIndex: ++this.state.userSelectedIndex})
-    //     try {
-    //       if (!this.state.userList[this.state.userSelectedIndex].images) {
-    //         this.fetchUserShowImg()
-    //           .then(() => {
-    //             this.state.isTriggerNewAlbum = false
-    //             this.showSlider.updateProgress()
-    //           })
-    //       }
-    //     } catch (e) {
-    //
-    //     }
-    //   }
-    // })
 
   };
   render() {
