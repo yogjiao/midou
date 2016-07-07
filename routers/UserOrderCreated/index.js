@@ -1,5 +1,5 @@
 module.exports = {
-  path: 'order-created/:goodsIds',
+  path: 'order-created/:goodsIds(/:buyActionModel)',
   getComponent(location, cb) {
     require.ensure([], (require) => {
       cb(null, require('UserOrderCreated.js'))

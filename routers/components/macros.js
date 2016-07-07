@@ -14,6 +14,17 @@ export let DOWNLOAD_APP_URL = BASE_STATIC_DIR + '/html/download-app.html'
 
 // ajax base directory
 export let FETCH_BASE_URL = '/app'
+
+/*
+账号：
+88888888001
+88888888002
+88888888003
+
+密码：888888
+*/
+
+//18004263453		888888
 /*
 id: 56
 token: 'midouToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NSIsImlhdCI6MTQ2MDA4NDgwMiwiZXhwIjoxNzc1NDQ0ODAyfQ.XOPXw1Dz-xviJLvjFOoJRU3PsN5n2Is5BlraLX09Lg0;'
@@ -62,9 +73,6 @@ export let LS_PAY_WAY = 'payway'
 // get user info from app
 export let CALL_HANDLER_GET_USER_INFO = 'userInfoCallback'
 
-// call out login panel
-export let CALL_HANDLER_CALL_OUT_LOGIN_PANEL = 'calloutLogin'
-
 export let CALL_HANDLER_CALL_OUT_NATIVE_HOME_PANEL = 'redirectToHome'
 export let CALL_HANDLER_REDIRECT_TO_NEXT = 'redirectToNext'
 
@@ -90,6 +98,8 @@ export let PAGE_TO_PAGE_SIGNAL = {
   DELETE_ADDRESS: 1,
   ADD_ADDRESS: 2,
   SELECT_ADDRESS: 3,
+
+  UPDATE_CART: 4
 }
 
 export let CUSTMER_SERVICE_ID = 85
@@ -253,6 +263,7 @@ export let PUT_BOX_SERVICE = FETCH_BASE_URL + '/add_try_cart'
 export let DELETE_BOX_SERVICE = FETCH_BASE_URL + '/delete_try_cart'
 export let EDIT_CART_GOODS = FETCH_BASE_URL + '/edit_cart'
 export let EDIT_CART_GOODS_BY_IDS = FETCH_BASE_URL + '/get_cart'
+export let FETCH_CART_UNDERPANTS_RECOMMEND = prefixAjaxBaseUrl('get_cart_recommend')
 
 export let DELETE_CART_GOODS = FETCH_BASE_URL + '/delete_cart'
 export let FETCH_COUPONS = FETCH_BASE_URL + '/get_coupon'

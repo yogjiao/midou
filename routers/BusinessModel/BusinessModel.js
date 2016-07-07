@@ -102,20 +102,6 @@ class BusinessModel extends React.Component {
                 <div
                   className="img-wrap"
                   href={`${BASE_PAGE_DIR}/box-service`}
-                  style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/C2M-5.png)`}}>
-                </div>
-                <div className="text-wrap">
-                  <h6 className="clearfix">一价体系</h6>
-                  <div className="text-content">
-                    平台所有内衣品类统一定价<span className="arial">¥128</span>单件，<br />
-对应商场<span className="arial">¥400＋</span>品质的内衣。
-                  </div>
-                </div>
-              </div>
-              <div className="swiper-slide">
-                <div
-                  className="img-wrap"
-                  href={`${BASE_PAGE_DIR}/box-service`}
                   style={{backgroundImage: `url(${BASE_STATIC_DIR}/img/C2M-6.png)`}}>
                 </div>
                 <div className="text-wrap">

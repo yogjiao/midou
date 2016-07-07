@@ -13,8 +13,8 @@ import {
 let update = require('react-addons-update')
 
 
-import 'UnderwearDetailSelectPanel.less'
-class UnderwearDetailSelectPanel extends React.Component {
+import './UnderwearSelectPanel.less'
+class UnderwearSelectPanel extends React.Component {
   // constructor(props) {
   //   super(props)
   //   this.state = {
@@ -27,26 +27,30 @@ class UnderwearDetailSelectPanel extends React.Component {
   //   }
   //   this.test = 0;
   // }
-  show = () => {
-    let selectModel = ReactDOM.findDOMNode(this)
-    selectModel.style.display="block"
-    setTimeout(function(){
-      selectModel.classList.add('on')
-    }, 0)
-  };
-  hide = () => {
-    ReactDOM.findDOMNode(this).classList.remove('on')
-    setTimeout(function(){
-      ReactDOM.findDOMNode(this).style.display="none"
-    }.bind(this), 1000)
-  };
+  // show = () => {
+  //   let selectModel = ReactDOM.findDOMNode(this)
+  //   selectModel.style.display="block"
+  //   setTimeout(function(){
+  //     selectModel.classList.add('on')
+  //   }, 0)
+  // };
+  // hide = () => {
+  //   ReactDOM.findDOMNode(this).classList.remove('on')
+  //   setTimeout(function(){
+  //     ReactDOM.findDOMNode(this).style.display="none"
+  //   }.bind(this), 1000)
+  // };
   componentDidMount = () => {
   };
   render() {
     let boxesEl,
         braEl,
         baseEl,
-        sizeEl;
+        sizeEl,
+
+        proEl;
+
+
     switch (this.props.category) {
       case '1':
         baseEl = (
@@ -143,7 +147,13 @@ class UnderwearDetailSelectPanel extends React.Component {
             <dd>
               {
                 this.props.allSize.map((val, index) => {
-                  return (<div key={index} data-value={val} className={val == this.props.size? 'char-circle no-bra-size  on' : 'char-circle no-bra-size'}>{val}</div>)
+                  return (<div
+                      key={index}
+                      data-value={val}
+                      className={val == this.props.size?
+                        'char-circle no-bra-size  on' :
+                        'char-circle no-bra-size'}
+                    >{val}</div>)
                 })
               }
             </dd>
@@ -151,6 +161,23 @@ class UnderwearDetailSelectPanel extends React.Component {
         )
         break;
     }
+    let source = this.props.source
+    if (source) {
+      proEl = (
+        <div className="pro-wraper">
+          <div className="pro-adjust">
+            <div className="img-wraper">
+              <div style={{backgroundImage: `url(${source.main_img})`}}></div>
+            </div>
+            <ul className="info-wraper">
+              <li className="arial">&#165;&nbsp;{source.price}</li>
+              <li>已选: <span className="arial">{this.props.size}</span></li>
+            </ul>
+          </div>
+        </div>
+      )
+    }
+
     return (
 
       <div
@@ -160,37 +187,40 @@ class UnderwearDetailSelectPanel extends React.Component {
         onClick={this.props.selectHandler}
       >
         <div className="bg-blur"></div>
-        <div className="select-panel">
-          <div className="select-panel-adjust">
-            <div>{baseEl}</div>
-            <div>{braEl}</div>
+        <div className="position-wraper">
+          {proEl}
+          <div className="select-panel">
+            <div className="select-panel-adjust">
+              <div>{baseEl}</div>
+              <div>{braEl}</div>
 
-            {sizeEl}
-            <dl className="num-wrap">
-              <dt>
-                <i className="iconfont icon-triangle-left-top" />
-                <span className="label-name">请选择数量</span>
-              </dt>
-              <dd>
-                <div className="select-num-wrap clearfix">
-                  <div className="select-num">
-                    <div className="btn-minus"><i className="iconfont icon-minus" /></div>
-                    <div className="nums">{this.props.count}</div>
-                    <div className="btn-add"><i className="iconfont icon-add" /></div>
+              {sizeEl}
+              <dl className="num-wrap">
+                <dt>
+                  <i className="iconfont icon-triangle-left-top" />
+                  <span className="label-name">请选择数量</span>
+                </dt>
+                <dd>
+                  <div className="select-num-wrap clearfix">
+                    <div className="select-num">
+                      <div className="btn-minus"><i className="iconfont icon-minus" /></div>
+                      <div className="nums">{this.props.count}</div>
+                      <div className="btn-add"><i className="iconfont icon-add" /></div>
+                    </div>
                   </div>
-                </div>
-              </dd>
-            </dl>
+                </dd>
+              </dl>
 
-            {boxesEl}
-          </div>
+              {boxesEl}
+            </div>
           <div className="iconfont close-select-panel">&#xe602;</div>
-          
+
           <div className="btn-post">确定</div>
+          </div>
         </div>
       </div>
     )
   }
 }
 
-export default UnderwearDetailSelectPanel
+export default UnderwearSelectPanel

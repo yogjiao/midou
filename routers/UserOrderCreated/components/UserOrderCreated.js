@@ -17,13 +17,15 @@ import {
   SELECT,
   PAGE_TO_PAGE_SIGNAL,
   LS_PAY_WAY,
-  LS_RECEIVER
+  LS_RECEIVER,
+  PUT_TO_CART
 } from 'macros.js'
 import {
   notifyAppToCheckout,
   backToNativePage,
   receiveNotificationsFromApp,
-  recievePageToPageSignal
+  recievePageToPageSignal,
+  sendSignalToOtherPagesByOc
 } from 'webviewInterface.js'
 import {fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
@@ -31,6 +33,11 @@ import errors from 'errors.js'
 import UserOrderCreatedGroup from 'UserOrderCreatedGroup.js'
 import CheckoutWaitingLayer from 'CheckoutWaitingLayer/CheckoutWaitingLayer.js'
 import ua from 'uaParser.js'
+let  reactMixin = require('react-mixin')
+import * as detailMixins from 'mixins/underwearDetail.js'
+import UnderwearSelectPanel from 'UnderwearSelectPanel/UnderwearSelectPanel.js'
+import UnderpantsRecommendation from 'UnderpantsRecommendation/UnderpantsRecommendation.js'
+import MatchDiscount from 'MatchDiscount/MatchDiscount.js'
 
 import './UserOrderCreated.less'
 class UserOrderCreated extends React.Component {
@@ -51,12 +58,31 @@ class UserOrderCreated extends React.Component {
       isHiddenSelection: true,
       isLoadedCouponSource: false,
       totalPrice: 0,
-      totalCount: 0
+      totalCount: 0,
+
+      // for recommend underpants, it's the same to underwareDetail
+      isHiddenSelectPanel: true,
+      size: 0,
+      allBase: [],
+      braSize: 0, // bra
+      baseSize: 0, // bra
+      category: 1, // 1：文胸，2:底裤，3:情趣
+      boxes: [], // tags
+      count: 1,
+
+      goods: {inventoryInfo:{allBase:[], allSize: [], inventory:{}}},
     }
   }
+  getChildContext = () => {
+    return {
+      goodsIds: this.props.params.goodsIds,
+      buyActionModel: this.props.params.buyActionModel
+    }
+  };
   calculateTotal = (nextState) => {
+    nextState = nextState || this.state
     let price = 0, count = 0
-    let goodList = this.state.goodList
+    let goodList = nextState.goodList
     goodList.forEach((item, index) => {
       item.goods.forEach((item, index) => {
           if (index == 0) {
@@ -71,9 +97,12 @@ class UserOrderCreated extends React.Component {
 
     try {
       price -= nextState.coupon[nextState.couponSelectedIndex].price || 0
-    } catch (e) {
+    } catch (e) {}
 
-    }
+    try {
+      price -= nextState.match_buy_coupon.price || 0
+    } catch (e) {}
+
     price =  new Number(price).toFixed(2)
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
@@ -104,23 +133,32 @@ class UserOrderCreated extends React.Component {
       })
   };
   fetchCouponSource = () => {
-    let url = `${FETCH_COUPONS}`
+    let cartIds = this.state.goodList.map( (item, index) => {
+      return item.id;
+    })
+    let url = `${FETCH_COUPONS}/${cartIds.join()}`
     this.setState({isHiddenPageSpin: false})
     return fetchAuth(url)
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {
-          this.setState({
-            couponItemName: `${data.coupon[0].name}  <span class="color-purple arial">-${data.coupon[0].price}</span>`,
-            couponSelectedIndex: 0,
-            coupon: data.coupon
-          })
+          let nextState = {}
+          if (data.coupon.length != 0) {
+            nextState.couponItemName = `${data.coupon[0].name}  <span class="color-purple arial">-${data.coupon[0].price}</span>`,
+            nextState.couponSelectedIndex= 0
+            nextState.coupon = data.coupon
+          }
+          if (data.match_buy_coupon) {
+            nextState.match_buy_coupon = data.match_buy_coupon
+          }
+          this.setState(nextState)
+
         }
       })
       .catch(error => {
         //this.setState({isHiddenPageSpin: true})
       })
       .then(() => {
-        this.setState({isLoadedCouponSource:true})
+        this.setState({isLoadedCouponSource:true, isHiddenPageSpin: true})
       })
   };
   thisHandler = (e) => {
@@ -153,9 +191,66 @@ class UserOrderCreated extends React.Component {
        nextState = {isHiddenSelection: true}
     } else if (target = getParentByClass(e.target, 'btn-check-out')) {
        this.checkoutHandler()
+
+    } else if (target = getParentByClass(e.target, 'ur-card')) {
+      let index = target.getAttribute('data-index')
+      let goods = this.refs.recommend.state.recommends[index]
+      goods.inventoryInfo =
+        this.rebuildInventory(goods.inventory, goods.category)
+
+      let schema = {
+        category: {$set: goods.category},
+        goods: {$set: goods},
+        isHiddenSelectPanel: {$set: false}
+      }
+
+      if (goods.category == '1') {
+        let keys = Object.keys(goods.inventoryInfo.allBase)
+        schema.allBase = {$set: keys}
+        schema.baseSize = {$set: keys[0]}
+        schema.braSize = {$set: goods.inventoryInfo.allBase[keys[0]][0]}
+        //nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
+      } else {
+        let keys = Object.keys(goods.inventoryInfo.inventory)
+        schema.allSize = {$set: keys}
+        schema.size = {$set: keys[0]}
+      }
+      nextState = update(this.state, schema)
+    //  this.setState(nextState)
     }
 
     nextState && this.setState(nextState)
+  };
+  postDataToCartHandler = () => {
+    let data = this.getPostToCartData()
+    let url = `${PUT_TO_CART}/1`
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let index = -1
+          index = this.state.goodList.findIndex((item, index) => {
+            return item.id == data.cart[0].id
+          })
+
+          let range
+          if (index == -1) {
+            range = [0, 0].concat(data.cart)
+          } else {
+            range = [index, 1].concat(data.cart)
+          }
+
+          let nextState = update(this.state, {goodList: {$splice: [range]}})
+          this.setState(nextState)
+          this.fetchCouponSource()
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+        }
+
+      })
+      .catch((e) => {
+        this.setState({promptMsg: errors[e.rea]})
+      })
+
   };
   checkoutHandler = () => {
     let url = `${PUT_TO_ORDER}`
@@ -176,11 +271,16 @@ class UserOrderCreated extends React.Component {
       this.refs['prompt'].show()
       return
     }
-    try{
-      data.coupon_id = this.state.coupon[this.state.couponSelectedIndex].id
-    }catch(er) {
-      data.coupon_id = 0
+
+    data.coupon_id = []
+    if (this.state.couponSelectedIndex > -1) {
+      data.coupon_id.push(this.state.coupon[this.state.couponSelectedIndex].id)
     }
+    if (this.state.match_buy_coupon) {
+      data.coupon_id.push(this.state.match_buy_coupon.id)
+    }
+    data.coupon_id = data.coupon_id.join()
+
 
     data.cart_id = this.state.goodList.map( (item, index) => {
       return item.id;
@@ -191,24 +291,41 @@ class UserOrderCreated extends React.Component {
       .then(data => {
         if (data.rea == FETCH_SUCCESS) {//oid
           //this.refs['prompt'].show()
-        return notifyAppToCheckout({oid: data.oid})
+
+          // return
+          notifyAppToCheckout({oid: data.oid})
             .then((dataFromApp) => {
-              this.setState({
-                isHiddenCheckoutWaitingLayer: false,
-                orderId: data.oid
-              });
+              // this.setState({
+              //   isHiddenCheckoutWaitingLayer: false,
+              //   orderId: data.oid
+              // });
             })
+
+          let signal = {
+            signal: PAGE_TO_PAGE_SIGNAL.UPDATE_CART
+          }
+          sendSignalToOtherPagesByOc(signal)
+
+          this.setState({
+            isHiddenPageSpin: true,
+            isHiddenCheckoutWaitingLayer: false,
+            orderId: data.oid
+          })
 
         } else {
           throw new Error(errors[data.rea])
         }
       })
       .catch(e => {
-        this.setState({promptMsg: e.message || errors[data.rea]})
+        this.setState({
+          promptMsg: e.message || errors[data.rea],
+          isHiddenPageSpin: true,
+          isHiddenCheckoutWaitingLayer: true
+        })
         this.refs['prompt'].show()
       })
       .then(() => {
-        this.setState({isHiddenPageSpin: true})
+        //this.setState({isHiddenPageSpin: true})
       })
   };
   backHandler = () => {
@@ -274,9 +391,14 @@ class UserOrderCreated extends React.Component {
 
   };
   componentWillUpdate = (nextProps, nextState) => {
+
     let total = this.calculateTotal(nextState)
     nextState.totalPrice = total.price;
     nextState.totalCount = total.count;
+
+    let checkout = document.querySelector('.check-out-justify-wrap')
+
+    checkout.parentNode.style.height = checkout.offsetHeight + 'px'
   };
   render() {
     return (
@@ -291,98 +413,122 @@ class UserOrderCreated extends React.Component {
           )
         }
         {
-           this.state.goodList.map((item, index) => {
-            return (<UserOrderCreatedGroup
-                      key={index}
-                      source={item}
-                    />)
-          })
+          this.props.params.buyActionModel == 1?
+            (
+              <div>
+                <MatchDiscount />
+                <UnderpantsRecommendation ref='recommend'/>
+              </div>
+            ) : ''
         }
-        <dl className="input-group">
-          <dt className="ff-Medium">收货人信息</dt>
-          <dd>
-            {
-              this.state.receiver.id?
-              (
-                <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
-                  <div>
-                    <div className="receiver-info-wrap">{this.state.receiver.name}</div>
-                    <div className="receiver-info-wrap">{this.state.receiver.phone}</div>
-                    <div className="receiver-info-wrap">
-                      {`${this.state.receiver.provinceName} ${this.state.receiver.cityName} ${this.state.receiver.detail}`}
+
+
+        <div className="goods-wrap">
+          {
+             this.state.goodList.map((item, index) => {
+              return (<UserOrderCreatedGroup
+                        key={index}
+                        source={item}
+                      />)
+            })
+          }
+        </div>
+        <div className="input-group-wrap">
+          <dl className="input-group">
+            <dt className="ff-Medium">收货人信息</dt>
+            <dd>
+              {
+                this.state.receiver.id?
+                (
+                  <a className="dd-wrap font-gray on" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
+                    <div>
+                      <div className="receiver-info-wrap">{this.state.receiver.name}</div>
+                      <div className="receiver-info-wrap">{this.state.receiver.phone}</div>
+                      <div className="receiver-info-wrap">
+                        {`${this.state.receiver.provinceName} ${this.state.receiver.cityName} ${this.state.receiver.detail}`}
+                      </div>
                     </div>
-                  </div>
-                  <i className="iconfont icon-gt" />
-                </a>
-              ):
+                    <i className="iconfont icon-gt" />
+                  </a>
+                ):
+                (
+                  <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
+                    <div className="info-wrap">
+                       添加收货人信息
+                    </div>
+                    <i className="iconfont icon-gt" />
+                  </a>
+                )
+              }
+            </dd>
+          </dl>
+          <dl className="input-group">
+            <dt className="ff-Medium">选择支付方式</dt>
+            <dd
+              className={
+                this.state.payWay == 'zfb'?
+                'dd-wrap pay-way-wrap font-gray on':
+                'dd-wrap pay-way-wrap font-gray'
+              }
+              data-pay-way="zfb"
+            >
+               <div className="info-wrap">
+                  <i className="iconfont icon-zhifubao" />
+                  支付宝支付
+               </div>
+               {
+                 this.state.payWay == 'zfb'?
+                  (<i className="iconfont">&#xe611;</i>):
+                  (<i className="iconfont">&#xe610;</i>)
+
+               }
+
+            </dd>
+            <dd
+              className={
+                this.state.payWay == 'wx'?
+                'dd-wrap pay-way-wrap font-gray on':
+                'dd-wrap pay-way-wrap font-gray'
+              }
+              data-pay-way="wx"
+            >
+
+               <div className="info-wrap">
+                  <i className="iconfont icon-weixin" />
+                  微信支付
+               </div>
+               {
+                 this.state.payWay == 'wx'?
+                  (<i className="iconfont">&#xe611;</i>):
+                  (<i className="iconfont">&#xe610;</i>)
+               }
+            </dd>
+          </dl>
+          <dl className="input-group">
+            <dt className="ff-Medium">选择优惠方式</dt>
+            <dd
+              className={this.state.couponSelectedIndex > -1?
+                'dd-wrap coupon-wrap font-gray on':
+                'dd-wrap coupon-wrap font-gray'
+              }
+            >
+               <div className="info-wrap"
+                 dangerouslySetInnerHTML={{__html: this.state.couponItemName}}
+               >
+               </div>
+               <i className="iconfont icon-gt"></i>
+            </dd>
+            {
+              this.state.match_buy_coupon ?
               (
-                <a className="dd-wrap font-gray" href={`${BASE_PAGE_DIR}/receivers/${SELECT}`}>
-                  <div className="info-wrap">
-                     添加收货人信息
-                  </div>
-                  <i className="iconfont icon-gt" />
-                </a>
-              )
+                <dd className="dd-wrap discount-wrap">
+                  <em>{this.state.match_buy_coupon.name}</em><span>-{this.state.match_buy_coupon.price}元</span>
+                </dd>
+              ) : ''
             }
-          </dd>
-        </dl>
-        <dl className="input-group">
-          <dt className="ff-Medium">选择支付方式</dt>
-          <dd
-            className={
-              this.state.payWay == 'zfb'?
-              'dd-wrap pay-way-wrap font-gray on':
-              'dd-wrap pay-way-wrap font-gray'
-            }
-            data-pay-way="zfb"
-          >
-             <div className="info-wrap">
-                <i className="iconfont icon-zfb" />
-                支付宝支付
-             </div>
-             {
-               this.state.payWay == 'zfb'?
-                (<i className="iconfont">&#xe611;</i>):
-                (<i className="iconfont">&#xe610;</i>)
 
-             }
-
-          </dd>
-          <dd
-            className={
-              this.state.payWay == 'wx'?
-              'dd-wrap pay-way-wrap font-gray on':
-              'dd-wrap pay-way-wrap font-gray'
-            }
-            data-pay-way="wx"
-          >
-
-             <div className="info-wrap">
-                <i className="iconfont icon-wx" />
-                微信支付
-             </div>
-             {
-               this.state.payWay == 'wx'?
-                (<i className="iconfont">&#xe611;</i>):
-                (<i className="iconfont">&#xe610;</i>)
-             }
-          </dd>
-        </dl>
-        <dl className="input-group">
-          <dt className="ff-Medium">选择优惠方式</dt>
-          <dd
-            className={this.state.couponSelectedIndex > -1?
-              'dd-wrap coupon-wrap font-gray on':
-              'dd-wrap coupon-wrap font-gray'
-            }
-          >
-             <div className="info-wrap"
-               dangerouslySetInnerHTML={{__html: this.state.couponItemName}}
-             >
-             </div>
-             <i className="iconfont icon-gt"></i>
-          </dd>
-        </dl>
+          </dl>
+        </div>
         <div className="check-out-wrap">
           <div className="check-out-justify-wrap">
             <div className="select-all">
@@ -413,9 +559,24 @@ class UserOrderCreated extends React.Component {
           orderId={this.state.orderId}
           isHidden={this.state.isHiddenCheckoutWaitingLayer}
         />
+
+        <UnderwearSelectPanel
+          isHidden={this.state.isHiddenSelectPanel}
+          category={this.state.category}
+          allSize={this.state.allSize}
+          size={this.state.size}
+          count={this.state.count}
+          selectHandler={this.selectHandler.bind(this)}
+          source={this.state.goods}
+        />
       </div>
     )
   }
 }
+UserOrderCreated.childContextTypes = {
+  goodsIds: React.PropTypes.string,
+  buyActionModel:  React.PropTypes.string
+}
 
+reactMixin(UserOrderCreated.prototype, detailMixins)
 module.exports = UserOrderCreated

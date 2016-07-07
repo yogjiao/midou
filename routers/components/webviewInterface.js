@@ -13,7 +13,10 @@ import {
   DOWNLOAD_APP_URL
 } from 'macros.js'
 
-import {getMiDouToken} from 'commonApp.js'
+import {
+  getMiDouToken,
+  getUserIdFromMidouToken
+} from 'commonApp.js'
 import ua from 'uaParser.js'
 
 function setupWebViewJavascriptBridge(callback) {
@@ -95,15 +98,18 @@ export let recievePageToPageSignal = function (callback) {
 // cached  user login info
 export let getUserInfoFromApp = function() {
   return new Promise((resolve, reject) => {
+    // if (__DEBUG__) {
+    //   resolve({loginToken: getMiDouToken()})
+    // }
     if (ua.isApp()) {
       let midouToken = getMiDouToken()
       if (midouToken) {
-        resolve({loginToken: midouToken})
+        resolve({loginToken: midouToken, userId: getUserIdFromMidouToken(midouToken)})
       } else {
         callHandler(CALL_HANDLER_GET_USER_INFO, {}, function(response) {
           if (response.token) {
             document.cookie = 'midouToken=' + response.token + ';' + 'expires=' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toGMTString();
-            resolve({loginToken: response.token, userName: response.userName})
+            resolve({loginToken: response.token, userName: response.userName, userId: getUserIdFromMidouToken(response.token)})
           } else {
             reject({rea: 1001})
           }
@@ -112,10 +118,11 @@ export let getUserInfoFromApp = function() {
     } else if(ua.getOS().name = 'iOS' && ua.isWeixin()) {
       reject({rea: 1001})
       window.location.href = DOWNLOAD_APP_URL
+    } else if(getMiDouToken()) {
+      resolve({loginToken: getMiDouToken(), userId: getUserIdFromMidouToken(getMiDouToken())})
     } else {
       reject({rea: 1001})
       window.location.href = IOS_APP_STORE_URL
-
     }
 
   })
@@ -133,13 +140,6 @@ export let calloutNewWebview = function(param) {
   });
 }
 
-export let callOutLoginPanel = function() {
-  return new Promise((resolve, reject) => {
-    callHandler(CALL_HANDLER_CALL_OUT_LOGIN_PANEL, {}, function(response) {
-        resolve(response)
-      })
-  });
-}
 export let notifyAppToCheckout = function(data) {
   return new Promise((resolve, reject) => {
     callHandler(CALL_HANDLER_CHECKOUT, data, function(response) {
@@ -216,6 +216,14 @@ export let calloutNativeCameraAndPhoto = function() {
         } else {
           resolve(response)
         }
+      })
+  });
+}
+
+export let setNativeTitle = function(params) {
+  return new Promise((resolve, reject) => {
+    callHandler('setPageTitle', params, function(response) {
+        resolve(response)
       })
   });
 }

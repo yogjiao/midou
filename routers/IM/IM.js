@@ -6,7 +6,7 @@ import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 
 import errors from  'errors.js'
 
-import {getselfInfoFromApp, calloutNativePhoto} from 'webviewInterface.js'
+import {getUserInfoFromApp, calloutNativePhoto, setNativeTitle} from 'webviewInterface.js'
 import MsgItem from 'MsgItem.js'
 import Input from 'Input.js'
 import Contacts from 'Contacts.js'
@@ -23,7 +23,8 @@ import {
   BASE_STATIC_DIR,
   WS_URL,
   TEST_TOKEN,
-  FETCH_GOOD
+  FETCH_GOOD,
+  CUSTMER_SERVICE_ID
 } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 let update = require('react-addons-update')
@@ -92,11 +93,15 @@ class IM extends React.Component {
     })
   };
   createChatRoom = () => {
-    return this.createSocket()
+    return getUserInfoFromApp()
+      .then((data) => {
+        this.token = data.loginToken
+        return this.createSocket()
+      })
       .then((ws) => {// for login to create chat room
         let params = {}
         params.id = 5001
-        params.token = getMiDouToken() //|| TEST_TOKE
+        params.token = this.token //|| TEST_TOKE
         params = JSON.stringify(params)
         ws.send(params)
 
@@ -157,6 +162,7 @@ class IM extends React.Component {
           .then((ws) => {
             this.fetchContacts()
           })
+          .catch(this.errorHandler)
 
       }
     };
@@ -191,11 +197,29 @@ class IM extends React.Component {
         delete this.state.msgCached[data.chat.client_msgid]
         break;
       case '5006': // get history record
+
+
         if (data.rea == FETCH_STATUS_NO_MORE_PRODUCT) {
           this.state.isHasHistoryMsgData = false
           this.setState({isHiddenScrollingSpin: true})
           return
         } else if (data.r == '1') {
+          if (this.state.lastMsgId == 0) {
+            let name
+
+            if (this.state.friendId == CUSTMER_SERVICE_ID) {
+              name = 'Nice in客服'
+            } else {
+              try {
+                name = data.users[this.state.friendId].name
+              } catch (e) {
+                name = ''
+              }
+            }
+
+            setNativeTitle({title: name})
+          }
+
           this.state.usersInfo = Object.assign(this.state.usersInfo, data.users)
           this.state.lastMsgId = data.chats[0].id
           this.state.isFetchingHistoryMsg = false
@@ -362,6 +386,10 @@ class IM extends React.Component {
 
     this.ws.send(JSON.stringify(msg))
   };
+  errorHandler = (error) => {
+    this.setState({isHiddenScrollingSpin: true, promptMsg: errors[error.rea]})
+    this.refs['prompt'].show()
+  };
   thisHandler = (e) => {//icon-add
     let target
     if (target = getParentByClass(e.target, 'btn-post')) {
@@ -381,6 +409,7 @@ class IM extends React.Component {
           })
           this.state.msgCached[msg.client_msgid] = msg
         })
+        .catch(this.errorHandler)
     } else if (target = getParentByClass(e.target, 'open-media-wraper')) {
       this.setState({isHiddenMediaWraper: false}, () => {
         this.refreshMsgScrollerToEnd()
@@ -400,6 +429,7 @@ class IM extends React.Component {
           })
           this.state.msgCached[msg.client_msgid] = msg
         })
+        .catch(this.errorHandler)
 
     } else if (target = getParentByClass(e.target, 'media-item')) {
       calloutNativePhoto()
@@ -426,12 +456,13 @@ class IM extends React.Component {
 
 
   componentDidMount = () => {
+
     this.createChatRoom()
       .then((ws) => {
         this.fetchHistoryMsg()
         this.createContactsScroller()
       })
-
+      .catch(this.errorHandler)
 
     this.msgScroller = new IScroll('#msg-scroller', {
       probeType: 3,

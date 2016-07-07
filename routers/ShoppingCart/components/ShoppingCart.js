@@ -6,6 +6,7 @@ import PageHeader from 'PageHeader/PageHeader.js'
 import PageSpin from 'PageSpin/PageSpin.js'
 import ScrollingSpin from 'ScrollingSpin/ScrollingSpin.js'
 import ShoppingCartGroup from 'ShoppingCartGroup.js'
+import UnderwearSelectPanel from 'UnderwearSelectPanel/UnderwearSelectPanel.js'
 import {
     BASE_PAGE_DIR,
     SCAN,
@@ -16,18 +17,31 @@ import {
     PUT_BOX_SERVICE,
     DELETE_BOX_SERVICE,
     EDIT_CART_GOODS,
-    DELETE_CART_GOODS
+    DELETE_CART_GOODS,
+    PAGE_TO_PAGE_SIGNAL,
+    PUT_TO_CART
   } from 'macros.js'
 import {fetchable, fetchAuth} from 'fetch.js'
 import {getParentByClass} from 'util.js'
-import {countBoxes} from 'commonApp.js'
+import {
+  getMiDouToken
+} from 'commonApp.js'
 import Confirm from 'Confirm/Confirm.js'
 import Prompt from 'Prompt/Prompt.js'
 import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
+import UnderpantsRecommendation from 'UnderpantsRecommendation/UnderpantsRecommendation.js'
 let update = require('react-addons-update');
 import ua from 'uaParser.js'
-import {backToNativePage, receiveNotificationsFromApp} from 'webviewInterface.js'
+import MatchDiscount from 'MatchDiscount/MatchDiscount.js'
+import {
+  backToNativePage,
+  receiveNotificationsFromApp,
+  recievePageToPageSignal
+} from 'webviewInterface.js'
+
+let  reactMixin = require('react-mixin')
+import * as detailMixins from 'mixins/underwearDetail.js'
 
 import './ShoppingCart.less'
 class ShoppingCart extends React.Component {
@@ -41,9 +55,9 @@ class ShoppingCart extends React.Component {
   /**
    *  initial state when actionModel changed
    */
-  initState = (nextState) => {
-    let state = nextState || this.state
-    Object.assign(state, {
+  initState = (state = {}) => {
+
+    return Object.assign(this.state, {
       selectedIds: [],
       goodList: [],
       totalPrice: 0,
@@ -52,14 +66,58 @@ class ShoppingCart extends React.Component {
       promptMsg: '',
       confirmMsg: '你确定要删除该产品吗？',
       lastGoodsId: 0,
-      pageSize: 5,
+      pageSize: 10,
       isHiddenPageSpin: false,
       isHiddenScrollingSpin: true,
       isHiddenConfirm: true,
       isFetching: false,
       isHaveGoods: true,
-      isNull: false
-    })
+      isNull: false,
+
+      isDiscountFive: false,
+
+      // for recommend underpants, it's the same to underwareDetail
+      isHiddenSelectPanel: true,
+      size: 0,
+      allBase: [],
+      braSize: 0, // bra
+      baseSize: 0, // bra
+      category: 1, // 1：文胸，2:底裤，3:情趣
+      boxes: [], // tags
+      count: 1,
+
+      goods: {inventoryInfo:{allBase:[], allSize: [], inventory:{}}},
+    }, state)
+
+  };
+  postDataToCartHandler = () => {
+    let data = this.getPostToCartData()
+    let url = `${PUT_TO_CART}/0`
+    fetchAuth(url, {method: 'post', body: JSON.stringify(data)})
+      .then((data) => {
+        if (data.rea == FETCH_SUCCESS) {
+          let index = -1
+          index = this.state.goodList.findIndex((item, index) => {
+            return item.id == data.cart[0].id
+          })
+
+          let range
+          if (index == -1) {
+            range = [0, 0].concat(data.cart)
+          } else {
+            range = [index, 1].concat(data.cart)
+          }
+
+          let nextState = update(this.state, {goodList: {$splice: [range]}})
+          this.setState(nextState)
+        } else {
+          this.setState({promptMsg: errors[data.rea]})
+        }
+
+      })
+      .catch((e) => {
+        this.setState({promptMsg: errors[e.rea]})
+      })
 
   };
   /**
@@ -136,23 +194,45 @@ class ShoppingCart extends React.Component {
    */
   calculateTotalPrice = (goodList) => {
     let price = 0;
+    let isHasCategoryOne = false
+    let isHasCategoryTowOrThree = false
+    let isDiscountFive = false
     goodList = goodList || this.state.goodList
+    /*
+      1：文胸，2:底裤，3:情趣
 
+      搭配购的优惠组合是：
+      内衣＋底裤
+      情趣＋底裤
+    */
     goodList.forEach((item, index) => {
       let isSelected = item.goods[0].isSelected
+      if (!isSelected) {
+        return
+      }
+      if (item.goods[0].category == 2) {
+        isHasCategoryOne = true
+      }
+      if (item.goods[0].category == 1 || item.goods[0].category == 3) {
+        isHasCategoryTowOrThree = true
+      }
       item.goods.forEach((item, index) => {
-        if (isSelected) {
-          if (index == 0) {
-            price += item.price * item.count
-          } else {
-            price += item.deposit * item.count
-          }
+        if (index == 0) {
+          price += item.price * item.count
+        } else {
+          price += item.deposit * item.count
         }
       })
     })
     //nextState = update(this.state, {totalPrice: {$set: price}})
     //this.setState(nextState)
-    return new Number(price).toFixed(2);
+
+    if (isHasCategoryOne &&　isHasCategoryTowOrThree) {
+      price = price - 5
+      isDiscountFive = true
+    }
+
+    return {price: new Number(price).toFixed(2), isDiscountFive: isDiscountFive};
   };
   /**
    * unselect all item
@@ -227,7 +307,7 @@ class ShoppingCart extends React.Component {
 
        })
        .catch((error) => {
-
+        // debugger;
        })
        .then(() => {
          this.setState({
@@ -401,9 +481,13 @@ class ShoppingCart extends React.Component {
       return
     }
     if (target = getParentByClass(e.target, 'btn-scan-carts')) {
-      nextState = {actionModel: SCAN}
+      this.initState({actionModel: SCAN})
+      this.switchHeader()
+      this.fetchCartData()
     } else if (target = getParentByClass(e.target, 'btn-edit-carts')) {
-      nextState = {actionModel: EDIT}
+      this.initState({actionModel: EDIT})
+      this.switchHeader()
+      this.fetchCartData()
     } else if (target = getParentByClass(e.target, 'btn-add')) {
        this.assignDataPramas(target)
        if (this.itemId == '-1') {
@@ -458,6 +542,31 @@ class ShoppingCart extends React.Component {
 
         e.preventDefault()
       }
+    } else if (target = getParentByClass(e.target, 'ur-card')) {
+      let index = target.getAttribute('data-index')
+      let goods = this.refs.recommend.state.recommends[index]
+      goods.inventoryInfo =
+        this.rebuildInventory(goods.inventory, goods.category)
+
+      let schema = {
+        category: {$set: goods.category},
+        goods: {$set: goods},
+        isHiddenSelectPanel: {$set: false}
+      }
+
+      if (goods.category == '1') {
+        let keys = Object.keys(goods.inventoryInfo.allBase)
+        schema.allBase = {$set: keys}
+        schema.baseSize = {$set: keys[0]}
+        schema.braSize = {$set: goods.inventoryInfo.allBase[keys[0]][0]}
+        //nextState.boxes = this.rebuildBoxes(nextState.braSize, nextState.baseSize, nextState.goods.inventoryInfo.inventory)
+      } else {
+        let keys = Object.keys(goods.inventoryInfo.inventory)
+        schema.allSize = {$set: keys}
+        schema.size = {$set: keys[0]}
+      }
+      nextState = update(this.state, schema)
+    //  this.setState(nextState)
     }
 
     nextState && this.setState(nextState)
@@ -540,18 +649,32 @@ class ShoppingCart extends React.Component {
     document.removeEventListener('scroll', this.handleScroll);
   };
   componentDidMount = () => {
+
+
     this.fetchCartData()
     document.addEventListener('scroll', this.handleScroll);
 
-    receiveNotificationsFromApp((data, callback) => {
-      if (data.type == '3') {
-        this.setState({actionModel: EDIT})
-      } else if (data.type == '5') {
-        this.setState({actionModel: SCAN})
-      }  else if (data.type == '6') {
-        this.initState()
+    recievePageToPageSignal((data) => {
+      if (data.signal == PAGE_TO_PAGE_SIGNAL.UPDATE_CART) {
+        this.initState({actionModel: SCAN})
         this.fetchCartData()
       }
+    })
+    /*
+    3: '购物车编辑'
+    4: '删除订单'
+    5：'购物车浏览'
+    6：'刷新购物车'
+    */
+    receiveNotificationsFromApp((data, callback) => {
+      if (data.type == '3') {
+        this.initState({actionModel: EDIT})
+      } else if (data.type == '5') {
+        this.initState({actionModel: SCAN})
+      }  else if (data.type == '6') {
+        this.initState({actionModel: SCAN})
+      }
+      this.fetchCartData()
     })
   };
   // componentWillReceiveProps = (nextProps) => {
@@ -559,18 +682,27 @@ class ShoppingCart extends React.Component {
   // };
   componentWillUpdate = (nextProps, nextState) => {
     if (this.state.actionModel != nextState.actionModel) {
-      this.initState()
-      this.switchHeader(nextState)
-      this.initState(nextState)
-      this.fetchCartData()
+      //this.initState()
+      //this.switchHeader(nextState)
+
     } else {
       let ids = []
       nextState.goodList.forEach( (item, index) => {
         if (item.goods[0].isSelected) ids.push(item.id)
       })
       nextState.selectedIds = ids
-      nextState.totalPrice = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+      let calResult = this.calculateTotalPrice(nextState.goodList, nextState.isSelectedAll)
+      nextState.totalPrice = calResult.price
+      nextState.isDiscountFive = calResult.isDiscountFive
     }
+
+    try { // in case no result
+      let checkout = document.querySelector('.check-out-justify-wrap')
+      checkout.parentNode.style.height = checkout.offsetHeight + 'px'
+    } catch (e) {
+
+    }
+
 
   };
   backHandler = () => {
@@ -591,57 +723,96 @@ class ShoppingCart extends React.Component {
                 (`${BASE_PAGE_DIR}/order-created/` + this.state.selectedIds.join()):
                 "javascript:void(0);"
     return (
-      <div className="shopping-cart-container" onClick={this.thisHandler}>
-        {
-          ua.isApp()?
-          '':
-          (
-            <PageHeader
-              headerName={this.state.headerName}
-            >
-              <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
-              {this.state.menu}
-            </PageHeader>
-          )
-        }
-        {
-          this.state.isNull?
-          (<ShoppingCartNoResult />):
-          (
-            <div>
+      <div className="shopping-cart-container" >
+        <div onClick={this.thisHandler}>
+          {
+            ua.isApp()?
+            '':
+            (
+              <PageHeader
+                headerName={this.state.headerName}
+              >
+                <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+                {this.state.menu}
+              </PageHeader>
+            )
+          }
+          {
+            this.state.isNull?
+            (<ShoppingCartNoResult />):
+            (
+              <div>
                 {
-                  this.state.goodList.map((item, index) => {
-                    return (<ShoppingCartGroup
-                              groupId={index}
-                              key={index}
-                              source={item.goods}
-                              cid={item.id}
-                              actionModel={this.state.actionModel}
-                              isSelectedAll={this.state.isSelectedAll}
-                             />
-                            )
-                  })
+                  this.state.actionModel == SCAN ?
+                  (
+                    <MatchDiscount />
+                  ) :
+                  ""
                 }
-                <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-                <div className="check-out-wrap">
-                  <div className="check-out-justify-wrap">
-                    <div className="select-all">
-                      {
-                        this.state.isSelectedAll?
-                         (<i className="iconfont icon-radio-on"></i>):
-                         (<i className="iconfont icon-radio"></i>)
-                      }
-                      <span>全选</span>
+                {
+                  this.state.actionModel == SCAN ?
+                  (
+                    <UnderpantsRecommendation ref='recommend'/>
+                  ) :
+                  ''
+                }
+
+                  {
+                    this.state.goodList.map((item, index) => {
+                      return (<ShoppingCartGroup
+                                groupId={index}
+                                key={index}
+                                source={item.goods}
+                                cid={item.id}
+                                actionModel={this.state.actionModel}
+                                isSelectedAll={this.state.isSelectedAll}
+                               />
+                              )
+                    })
+                  }
+                  <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+                  <div className="check-out-wrap">
+                    <div className="check-out-justify-wrap">
+                      <div className="select-all">
+                        {
+                          this.state.isSelectedAll?
+                           (<i className="iconfont icon-radio-on"></i>):
+                           (<i className="iconfont icon-radio"></i>)
+                        }
+                        <span>全选</span>
+                      </div>
+                      <div className="total-price">
+                        <div className="price-wrapper">
+                          <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
+                        </div>
+                        {
+                          this.state.isDiscountFive?
+                          (<p>已减5元</p>) : ''
+                        }
+
+                      </div>
+                      <a href={url} className="btn-check-out">结算</a>
                     </div>
-                    <div className="total-price">
-                      <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
-                    </div>
-                    <a href={url} className="btn-check-out">结算</a>
                   </div>
-                </div>
-            </div>
-          )
+              </div>
+            )
+          }
+        </div>
+        {
+          this.state.actionModel == SCAN?
+          (
+            <UnderwearSelectPanel
+              isHidden={this.state.isHiddenSelectPanel}
+              category={this.state.category}
+              allSize={this.state.allSize}
+              size={this.state.size}
+              count={this.state.count}
+              selectHandler={this.selectHandler.bind(this)}
+              source={this.state.goods}
+            />
+        ) : ''
         }
+
         <Confirm
           confirmHandler={this.deleteProductHandler}
           isHidden={this.state.isHiddenConfirm}
@@ -650,9 +821,10 @@ class ShoppingCart extends React.Component {
         />
         <Prompt msg={this.state.promptMsg} ref="prompt"/>
         <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+
       </div>
     )
   }
 }
-
+reactMixin(ShoppingCart.prototype, detailMixins)
 module.exports = ShoppingCart

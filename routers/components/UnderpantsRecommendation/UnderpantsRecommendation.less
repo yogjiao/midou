@@ -1,0 +1,54 @@
+@import "~variables.less";
+.underpants-recommendation{
+	background-color: #fff;
+	border-bottom: 1px solid @border-color-light;
+  .ur-card{
+		box-sizing: border-box;
+		width: 3rem;
+		padding: .2rem;
+		flex-shrink: 0;
+	}
+	.img-wrapper{
+
+		border: 1px solid @border-color-light;
+
+		.bg-wrapper{
+			height: 2rem;
+			margin: .1rem;
+			background-position: center;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+	}
+	P{
+		text-align: center;
+		color: @purple;
+		line-height: .45rem;
+		font-family: arial;
+		padding: .2rem 0 0 0;
+	}
+	.swiper-container{
+		width: 100%;
+	}
+	.swiper-wrapper{
+		width: 100%;
+		display: flex;
+		flex-wrap: nowrap;
+	}
+
+	.more-wrapper{
+		text-align: center;
+		padding-top: .6rem;
+		a{
+			line-height: .4rem;
+			padding-bottom: .1rem;
+			border-bottom: 1px solid @font-color-lighter;
+		}
+		span{
+			display: block;
+			padding-top: .1rem;
+			color: @font-color-lighter;
+			text-align: center;
+		}
+	}
+}

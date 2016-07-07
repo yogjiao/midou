@@ -1,6 +1,12 @@
 @import "~variables.less";
 .order-created-container{
   background-color: @background-color;
+  .goods-wrap{
+    padding-top: .3rem;
+  }
+  .input-group-wrap{
+    padding-bottom: .3rem;
+  }
   .input-group{
     border-bottom: 1px solid @border-color-light;
     dt{
@@ -32,6 +38,12 @@
     color: @font-color-lighter;
     &.on{
       color: @font-color-light;
+      .icon-zhifubao{
+        color: #11abe5;
+      }
+      .icon-weixin{
+        color: #5fb63d;
+      }
     }
   }
   .pay-way-wrap{
@@ -44,6 +56,14 @@
     }
     .icon-wx{
       margin-right: .1rem;
+    }
+  }
+  .discount-wrap{
+    em{
+      font-style: normal;
+    }
+    span{
+      color: @purple;
     }
   }
 }

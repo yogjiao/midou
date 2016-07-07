@@ -8,25 +8,37 @@ import {
 } from 'macros.js'
 
 import {
-  getCookie
+  getCookie,
+  pick
 } from 'util.js'
 
-export function countBoxes(braSize, baseSize) {
-  baseSize = parseInt(baseSize)
-  return [
-    {
-      braSize: String.fromCharCode(Math.min(braSize.charCodeAt(0) + 1, UNDERWEAR_BRA_SIZE.slice(-1)[0].value.charCodeAt(0))),
-      baseSize: Math.max(baseSize - 5, UNDERWEAR_BASE_SIZE[1].value)
-    },
-    {
-      braSize: String.fromCharCode(Math.max(braSize.charCodeAt(0) - 1, UNDERWEAR_BRA_SIZE[1].value.charCodeAt(0))),
-      baseSize: Math.min(baseSize + 5, UNDERWEAR_BASE_SIZE.slice(-1)[0].value)
-    }
-  ]
-};
+import {
+  readSafeJSONString,
+  b64utos
+} from 'jwt.js'
+
 
 export function getMiDouToken() {
   return getCookie('midouToken')
+}
+
+export function getUserIdFromMidouToken(token) {
+  let sub = ''
+  try {
+    var a = token.split(".");
+    var uHeader = b64utos(a[0]);
+    var uClaim = b64utos(a[1]);
+
+   // var pHeader = readSafeJSONString(uHeader);
+     sub = readSafeJSONString(uClaim).sub;
+  } catch (e) {
+
+  }
+
+
+
+
+   return sub
 }
 /*
 user-agent:
