@@ -88,6 +88,16 @@ let fetchAuth = (url, options = {}) => {
           })
 }
 
+export let fetchOption = (url, options = {}) => {
+  let headers = options.headers? options.headers : options.headers = {}
+  headers[MIDOU_TOKEN_NAME] = getMiDouToken()
+  return fetch.call(null, url, options)
+            .then(checkStatus)
+            .then(function(response){
+              return response.json()
+            })
+};
+
 let fetchMock = (url, options = {}) => {
   let headers = options.headers? options.headers : options.headers = {}
   headers[MIDOU_TOKEN_NAME] = TEST_TOKEN

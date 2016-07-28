@@ -16,7 +16,6 @@ class ShareToSocialMedia extends React.Component {
           "imgUrl": "http://www.baidu.com"
 
   */
-
   constructor(props) {
     super(props);
     this.state = {

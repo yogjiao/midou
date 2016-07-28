@@ -52,6 +52,10 @@ var config = {
 
     module: {
         loaders: [
+          {
+            test: /\.css$/,
+            loader: 'style!css'
+          },
           // LESS
           {
             test: /\.less$/,//"modifyVars": '+ JSON.stringify(require('./variables.less.js'))  +',

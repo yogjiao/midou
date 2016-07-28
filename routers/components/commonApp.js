@@ -34,10 +34,6 @@ export function getUserIdFromMidouToken(token) {
   } catch (e) {
 
   }
-
-
-
-
    return sub
 }
 /*

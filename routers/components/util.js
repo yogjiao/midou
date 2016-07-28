@@ -7,6 +7,7 @@ export function getParentByClass(node, parentClassName, untilNode ) {
   while ( node != untilNode && !node.classList.contains(parentClassName) ) {
      node = node.parentNode;
   }
+
   return  node === untilNode ? null : node;
 }
 export function pick(source, ...args) {
