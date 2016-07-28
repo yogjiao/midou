@@ -59,6 +59,10 @@ var config = {
     },
     module: {
         loaders: [
+          {
+            test: /\.css$/,
+            loader: 'style!css'
+          },
           // LESS
           {
             test: /\.less$/,

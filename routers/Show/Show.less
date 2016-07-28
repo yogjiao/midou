@@ -1,0 +1,145 @@
+@import "~variables.less";
+
+.adjust-container{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	.layout-container{
+		flex: 1 1 100%;
+		overflow: hidden;
+	}
+}
+
+.show-container{
+  background-color: @page-background-color;
+
+
+  .user-wrap{
+    padding: .3rem .1rem .3rem .3rem;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    .avatar{
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: .8rem;
+      height: .8rem;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: .3rem;
+    }
+    .user-name{
+      flex: 1 1 60%;
+      height: .45rem;
+      line-height: .45rem;
+      margin-right: .3rem;
+    }
+    .icon-love{
+      font-size: .4rem;
+      float: right;
+      color: @font-color-lighter;
+    }
+    .icon-ellipsis{
+      font-size: .8rem;
+      float: right;
+      color: @font-color-lighter;
+    }
+  }
+
+  .user-comment{
+    padding: 0 .2rem .3rem .3rem;
+    line-height: .45rem;
+    background-color: #fff;
+  }
+
+  .matching-group{
+    width: 100%;
+    overflow: hidden;
+    .swiper-wrapper{
+      padding: .3rem 0;
+      display: flex;
+      padding-left: .3rem;
+      height: 1.5rem;
+    }
+    .matching-card{
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: .1rem;
+      box-sizing: border-box;
+      background-color: #fff;
+      border: 1px solid @border-color-light;
+      margin-right: .3rem;
+      &.on{
+        border-bottom: 2px solid @orange-red;
+      }
+
+    }
+    .card-bg{
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
+
+  .underwear-wrap{
+    background-color: #fff;
+    padding: .3rem .3rem;
+    .underwear-bg{
+      height: 5rem;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+    .underwear-name{
+      line-height: .45rem;
+      text-align: center;
+      padding-top: .3rem;
+      margin: 0 .3rem;
+    }
+    .underwear-price{
+      text-align: center;
+      font-family: arial;
+      padding-top: .2rem;
+      color: @orange-red;
+      font-size: .4rem;
+    }
+  }
+
+  .slide-tips{
+    position: relative;
+    clear: both;
+    overflow: hidden;
+    padding: .6rem 0;
+    .sep-line{
+      position: absolute;
+      top: .75rem;
+      width: 100%;
+      border-top: 1px solid @border-color-dark;
+    }
+    .tips-wrap{
+     position:relative;
+     float: left;
+     padding: 0 .3rem;
+     background-color: @page-background-color;
+     left: 50%;
+     transform: translateX(-50%);
+     text-align: center;
+    }
+    .icon-slide-down{
+      display: inline-block;
+      padding: .1rem 0;
+    }
+  }
+
+
+
+
+
+
+}

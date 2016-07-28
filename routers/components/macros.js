@@ -99,7 +99,9 @@ export let PAGE_TO_PAGE_SIGNAL = {
   ADD_ADDRESS: 2,
   SELECT_ADDRESS: 3,
 
-  UPDATE_CART: 4
+  UPDATE_CART: 4,
+
+  UPDATE_SHOWS: 5
 }
 
 export let CUSTMER_SERVICE_ID = 85
@@ -245,6 +247,16 @@ export let DELETE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_show_image')
 export let POST_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('like_show_image')
 export let DELET_LIKE_USER_SHOW_IMG = prefixAjaxBaseUrl('delete_like_show_image')
 export let POST_SHOW_IMG = prefixAjaxBaseUrl('upload_show_image')
+
+
+
+//fetch nice shwo list
+export let FETCH_NICE_SHOW = prefixAjaxBaseUrl('get_nice_show')
+export let FETCH_NICE_SHOWS = prefixAjaxBaseUrl('get_nice_show_page')
+export let DELETE_NICE_SHOW = prefixAjaxBaseUrl('delete_nice_show')
+export let FETCH_BUYINGS = prefixAjaxBaseUrl('get_order_goods_page')
+
+
 // fetch cities by province id
 export let FETCH_CITIES = FETCH_BASE_URL + '/get_province_city'
 

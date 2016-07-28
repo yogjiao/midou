@@ -1,6 +1,15 @@
 @import "~variables.less";
 .confirm-container{
   position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+
+}
+.confirm-box{
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -8,7 +17,6 @@
   box-sizing: border-box;
   padding: 50px 30px;
   background-color: #fff;
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.2);
   border-radius: 10px;
   .text-wrap{
     text-align: center;
@@ -30,6 +38,6 @@
 
   }
   .btn-cancel{
-    background-color: #b4b4cb;
+    background-color: @light-slate-blue;
   }
 }

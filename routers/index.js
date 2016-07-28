@@ -33,7 +33,7 @@ const rootRoute = {
       require('./Collocation'),
       require('./Underwears'),
       require('./UnderwearsIndex'),
-      require('./UnderwearDetial'),
+      require('./Underwear'),
       require('./ShoppingCart'),
       require('./UserOrderCreated'),
       require('./UserOrderDetail'),
@@ -48,8 +48,14 @@ const rootRoute = {
       require('./CustomerService'),
       require('./Collections'),
       require('./BusinessModel'),
+      require('./Patent'),
       require('./IM'),
       require('./ShowSelf'),
+
+      require('./Show'),
+      require('./Shows'),
+      require('./Buyings'),
+
       require('./404')
       ]
   } ],

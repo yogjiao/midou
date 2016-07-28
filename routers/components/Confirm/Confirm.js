@@ -10,11 +10,13 @@ class Confirm extends React.Component {
     let style = {display: 'none'}
     if (!this.props.isHidden) style.display = 'block'
     return (
-      <div className="confirm-container" style={style}>
-        <div className="text-wrap">{this.props.msg}</div>
-        <div className="btn-wrap">
-          <div className="btn-confirm" onClick={this.props.confirmHandler}>确定</div>
-          <div className="btn-cancel" onClick={this.props.cancelHandler || this.cancelHandler}>取消</div>
+      <div className="confirm-container" style={style} onClick={this.props.thisHandler}>
+        <div className="confirm-box" >
+          <div className="text-wrap">{this.props.msg}</div>
+          <div className="btn-wrap">
+            <div className="btn-cancel" onClick={this.props.cancelHandler || this.cancelHandler}>取消</div>
+            <div className="btn-confirm" onClick={this.props.confirmHandler}>确定</div>
+          </div>
         </div>
       </div>
     )
@@ -24,7 +26,8 @@ Confirm.propTypes = {
     confirmHandler: PropTypes.func
   }
 Confirm.defaultProps = {
-  msg: '你确定要删除吗？'
+  msg: '你确定要删除吗？',
+  thisHandler: function(){}
 
 }
 export default Confirm
