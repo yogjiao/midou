@@ -1,0 +1,26 @@
+@import "~variables.less";
+.nav-container{
+  display: flex;
+  height: 1rem;
+  box-shadow: 0 -2px 10px -1px rgba(0, 0, 0, .15);
+  z-index: 3;
+  background-color: #fff;
+  a{
+    flex: 1 1 25%;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    &.on{
+      color: @light-slate-blue;
+    }
+
+    i{
+      font-size: .45rem;
+      margin-top: .05rem;
+    }
+    span{
+      font-size: .2rem;
+    }
+  }
+}

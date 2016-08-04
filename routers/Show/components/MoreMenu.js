@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {BASE_STATIC_DIR, EDIT, SCAN} from 'macros.js'
+import {BASE_STATIC_DIR, EDIT, SCAN, BASE_PAGE_DIR, CUSTMER_SERVICE_ID} from 'macros.js'
 import {
   getMiDouToken,
   getUserIdFromMidouToken
@@ -13,22 +13,25 @@ class MoreMenu extends React.Component {
     return (
       <div className="more-menu" onClick={this.props.thisHandler}>
 				<div className="more-menu-container">
-					<ul className="selections">
-						<li>
+					<div className="selections">
+						<div>
 							<i className="iconfont icon-share" />
 							<span>分享</span>
-						</li>
+						</div>
             {
               getUserIdFromMidouToken(getMiDouToken()) == this.props.userId ?
                 (
-                  <li>
+                  <div>
       							<i className="iconfont icon-delete" />
       							<span>删除</span>
-      						</li>
+      						</div>
                 ) : ''
             }
-
-					</ul>
+            <a href={`${BASE_PAGE_DIR}/im/${CUSTMER_SERVICE_ID}`}>
+							<i className="iconfont icon-jubaogantanhao" />
+							<span>举报</span>
+						</a>
+					</div>
 					<div className="cancel-selection">取消</div>
 				</div>
       </div>

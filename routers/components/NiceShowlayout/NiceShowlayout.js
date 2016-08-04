@@ -211,6 +211,7 @@ class NiceShowlayout extends React.Component {
           this.state.willShowPart = 0
         }
       }
+
     })
     mc.on('panup', (e) => {
 
@@ -231,6 +232,8 @@ class NiceShowlayout extends React.Component {
         // slideControl.style.transform = `translateY(${delta}px)`
         slideControl.style.top = `${delta}px`
       }
+
+      //e.preventDefault()
     })
 
     // mc.on('pan', (e) => {

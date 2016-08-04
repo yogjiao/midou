@@ -107,15 +107,13 @@
 .check-out-wrap{
   display: flex;
   font-size: .36rem;
+  z-index: 5;
 }
 .check-out-justify-wrap{
   width:  100%;
   max-width: @max-width;
 }
 .check-out-justify-wrap{
-  position: fixed;
-  bottom: 0;
-  margin: 0 auto;
   display: flex;
   background-color: #fff;
   border-top: 1px solid @border-color;
@@ -165,5 +163,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+.scroll-container{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .scroll-wrapper{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    flex: 1 1 100%;
+    overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
   }
 }

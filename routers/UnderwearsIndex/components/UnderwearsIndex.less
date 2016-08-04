@@ -2,6 +2,8 @@
 .uw-index-container{
   background-color: @page-background-color;
   min-height: 100vh;
+  overflow: hidden;
+  touch-action: pan-y;
   .menu :nth-child(2){
     color: @font-color-light;
   }
@@ -52,6 +54,7 @@
   position: relative;
   width: 100%;
   height: 4.25rem;
+  overflow: hidden;
 }
 .swiper-wrapper{
   display: flex;

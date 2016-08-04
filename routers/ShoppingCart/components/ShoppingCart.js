@@ -32,14 +32,14 @@ import errors from 'errors.js'
 import ShoppingCartNoResult from 'ShoppingCartNoResult.js'
 import UnderpantsRecommendation from 'UnderpantsRecommendation/UnderpantsRecommendation.js'
 let update = require('react-addons-update');
-import ua from 'uaParser.js'
+import uaParser from 'uaParser.js'
 import MatchDiscount from 'MatchDiscount/MatchDiscount.js'
 import {
   backToNativePage,
   receiveNotificationsFromApp,
   recievePageToPageSignal
 } from 'webviewInterface.js'
-
+import Nav from 'Nav/Nav.js'
 let  reactMixin = require('react-mixin')
 import * as detailMixins from 'mixins/underwearDetail.js'
 
@@ -696,17 +696,17 @@ class ShoppingCart extends React.Component {
       nextState.isDiscountFive = calResult.isDiscountFive
     }
 
-    try { // in case no result
-      let checkout = document.querySelector('.check-out-justify-wrap')
-      checkout.parentNode.style.height = checkout.offsetHeight + 'px'
-    } catch (e) {
-
-    }
+    // try { // in case no result
+    //   let checkout = document.querySelector('.check-out-justify-wrap')
+    //   checkout.parentNode.style.height = checkout.offsetHeight + 'px'
+    // } catch (e) {
+    //
+    // }
 
 
   };
   backHandler = () => {
-    if (ua.isApp()) {
+    if (uaParser.isApp()) {
       backToNativePage()
         .then((data)=>{
           if (data.result == '1') {
@@ -723,79 +723,87 @@ class ShoppingCart extends React.Component {
                 (`${BASE_PAGE_DIR}/order-created/` + this.state.selectedIds.join()):
                 "javascript:void(0);"
     return (
-      <div className="shopping-cart-container" >
-        <div onClick={this.thisHandler}>
-          {
-            ua.isApp()?
-            '':
-            (
-              <PageHeader
-                headerName={this.state.headerName}
-              >
-                <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
-                {this.state.menu}
-              </PageHeader>
-            )
-          }
-          {
-            this.state.isNull?
-            (<ShoppingCartNoResult />):
-            (
-              <div>
-                {
-                  this.state.actionModel == SCAN ?
-                  (
-                    <MatchDiscount />
-                  ) :
-                  ""
-                }
-                {
-                  this.state.actionModel == SCAN ?
-                  (
-                    <UnderpantsRecommendation ref='recommend'/>
-                  ) :
-                  ''
-                }
+      <div className="shopping-cart-container" onClick={this.thisHandler}>
+        <div className="scroll-container">
+          <div className="scroll-wrapper">
+            <div >
+              {
+                uaParser.isApp()?
+                '':
+                (
+                  <PageHeader
+                    headerName={this.state.headerName}
+                  >
+                    <div className="iconfont icon-arrow-left" onClick={this.backHandler}></div>
+                    {this.state.menu}
+                  </PageHeader>
+                )
+              }
+              {
+                this.state.isNull?
+                (<ShoppingCartNoResult />):
+                (
+                  <div>
+                    {
+                      this.state.actionModel == SCAN ?
+                      (
+                        <MatchDiscount />
+                      ) :
+                      ""
+                    }
+                    {
+                      this.state.actionModel == SCAN ?
+                      (
+                        <UnderpantsRecommendation ref='recommend'/>
+                      ) :
+                      ''
+                    }
 
-                  {
-                    this.state.goodList.map((item, index) => {
-                      return (<ShoppingCartGroup
-                                groupId={index}
-                                key={index}
-                                source={item.goods}
-                                cid={item.id}
-                                actionModel={this.state.actionModel}
-                                isSelectedAll={this.state.isSelectedAll}
-                               />
-                              )
-                    })
-                  }
-                  <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-                  <div className="check-out-wrap">
-                    <div className="check-out-justify-wrap">
-                      <div className="select-all">
-                        {
-                          this.state.isSelectedAll?
-                           (<i className="iconfont icon-radio-on"></i>):
-                           (<i className="iconfont icon-radio"></i>)
-                        }
-                        <span>全选</span>
-                      </div>
-                      <div className="total-price">
-                        <div className="price-wrapper">
-                          <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
-                        </div>
-                        {
-                          this.state.isDiscountFive?
-                          (<p>已减5元</p>) : ''
-                        }
+                      {
+                        this.state.goodList.map((item, index) => {
+                          return (<ShoppingCartGroup
+                                    groupId={index}
+                                    key={index}
+                                    source={item.goods}
+                                    cid={item.id}
+                                    actionModel={this.state.actionModel}
+                                    isSelectedAll={this.state.isSelectedAll}
+                                   />
+                                  )
+                        })
+                      }
+                      <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
 
-                      </div>
-                      <a href={url} className="btn-check-out">结算</a>
-                    </div>
                   </div>
+                )
+              }
+            </div>
+          </div>
+          <div className="check-out-wrap">
+            <div className="check-out-justify-wrap">
+              <div className="select-all">
+                {
+                  this.state.isSelectedAll?
+                   (<i className="iconfont icon-radio-on"></i>):
+                   (<i className="iconfont icon-radio"></i>)
+                }
+                <span>全选</span>
               </div>
-            )
+              <div className="total-price">
+                <div className="price-wrapper">
+                  <i>合计：</i><span>&yen;{this.state.totalPrice}</span>
+                </div>
+                {
+                  this.state.isDiscountFive?
+                  (<p>已减5元</p>) : ''
+                }
+
+              </div>
+              <a href={url} className="btn-check-out">结算</a>
+            </div>
+          </div>
+          {
+            uaParser.isApp() ? '' : <Nav />
           }
         </div>
         {

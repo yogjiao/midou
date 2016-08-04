@@ -305,6 +305,7 @@ class Show extends React.Component {
 
     return (
       <div className="show-container" onClick={this.thisHandler}>
+        <i className="iconfont icon-jubao" />
         <div className="adjust-container">
           <NiceShowlayout goodsSelectedId={goodsInfo.id}>
             {
@@ -318,9 +319,7 @@ class Show extends React.Component {
 
               <i className="iconfont icon-ellipsis" />
             </div>
-            <div className="user-comment">
-                {this.state.showData.comment}
-            </div>
+            <div className="user-comment" dangerouslySetInnerHTML={{__html: this.state.showData.comment}}/>
             <div className="matching-group">
               <div className="swiper-wrapper">
                 {

@@ -13,10 +13,10 @@ import {
 import {fetchable} from 'fetch.js'
 import errors from  'errors.js'
 import HomeNoResult from 'HomeNoResult.js'
+import uaParser from 'uaParser.js'
 let update = require('react-addons-update')
-
+import Nav from 'Nav/Nav.js'
 import {getUserInfoFromApp} from 'webviewInterface.js'
-
 import './Home.less'
 class Home extends React.Component {
   constructor(props, context) {
@@ -74,10 +74,11 @@ class Home extends React.Component {
         })
       })
   };
-  handleScroll = () => {
-    let scrollTop =  document.documentElement.scrollTop || window.pageYOffset ;
-    let sHeight = window.innerHeight;//可视窗大小
-    var pageHeight = document.documentElement.scrollHeight;
+  handleScroll = (e) => {
+    let target = e.target
+    let scrollTop =  target.scrollTop || window.pageYOffset ;
+    let sHeight = this.scroller.offsetHeight;//可视窗大小
+    var pageHeight = this.scroller.scrollHeight;
     if (scrollTop + sHeight > pageHeight - sHeight ) {
       if (this.state.isHaveGoods && !this.state.isFetching){
         this.setState({isHiddenScrollingSpin: false})
@@ -88,10 +89,12 @@ class Home extends React.Component {
   };
   componentDidMount = () => {
     this.fetchListData()
-    document.addEventListener('scroll', this.handleScroll);
+
+    this.scroller = document.querySelector('.scroll-wrapper')
+    this.scroller.addEventListener('scroll', this.handleScroll);
   };
   componentWillUnmount = () => {
-    document.removeEventListener('scroll', this.handleScroll);
+    this.scroller.removeEventListener('scroll', this.handleScroll);
   };
   // componentWillReceiveProps = (nextProps) => {
   //   debugger;
@@ -106,24 +109,31 @@ class Home extends React.Component {
   render() {
     return (
         <div className="home-container">
+          <div className="scroll-container">
+            <div className="scroll-wrapper">
+              {
+                this.state.isExpect?
+                (<HomeNoResult />):
+                (
+                  <div className="list-wrap">
+                    <ul className="pro-list">
+                      {
+                        this.state.goodsList.map(function(pro) {
+                          return <HomeListItem key={pro.id} {...pro}/>;
+                        })
+                      }
+                    </ul>
+                    <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
+                  </div>
+                )
+              }
+              <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+            </div>
+            {
+              uaParser.isApp() ? '' : <Nav />
+            }
 
-          {
-            this.state.isExpect?
-            (<HomeNoResult />):
-            (
-              <div className="list-wrap">
-                <ul className="pro-list">
-                  {
-                    this.state.goodsList.map(function(pro) {
-                      return <HomeListItem key={pro.id} {...pro}/>;
-                    })
-                  }
-                </ul>
-                <ScrollingSpin isHidden={this.state.isHiddenScrollingSpin}/>
-              </div>
-            )
-          }
-          <PageSpin isHidden={this.state.isHiddenPageSpin}/>
+          </div>
           <Prompt msg={this.state.promptMsg} ref="prompt"/>
         </div>
     )
